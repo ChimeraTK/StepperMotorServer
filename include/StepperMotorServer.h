@@ -9,6 +9,8 @@
 #define INCLUDE_STEPPER_MOTOR_SERVER_H_
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
+#include <ChimeraTK/ApplicationCore/ConfigReader.h>
+
 #include <ChimeraTK/Device.h>
 
 #include "MotorControl.h"
@@ -17,15 +19,19 @@
 namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : ctk::Application{
+  StepperMotorServer() : Application("StepperMotorServer") {}
+  ~StepperMotorServer() { shutdown(); }
 
-  ctk::ControlSystemModule cs;
+  ctk::ConfigReader config{this, "Configuration", "CTK_StepperMotorConfig.xml"};
+
+  Trigger trigger{this, "TRIGGER", ""};
+  Timer timer{this, "TIMER", ""};
+
+  ctk::ControlSystemModule cs{"Motor"};
 
   MotorControl motorControl;
 
-  std::vector<ctk::DeviceModule> motors;
+  void defineConnections() override;
 
-
-  void defineConnections();
-
-} /* struct StepperMotorServer */
+}; /* struct StepperMotorServer */
 #endif /* INCLUDE_STEPPER_MOTOR_SERVER_H_ */

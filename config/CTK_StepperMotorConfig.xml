@@ -1,0 +1,5 @@
+<configuration>
+  <variable name="motorDriverType" type="string" value="MD22"/>
+  <variable name="numberOfMotors" type="int32" value="1"/>
+  <variable name="cycleTime" type="int32" value="5"/>
+</configuration>

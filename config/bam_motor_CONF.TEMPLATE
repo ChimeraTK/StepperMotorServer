@@ -1,0 +1,26 @@
+# Conf file created at 14:23.32  2. Nov. 2016
+# eq_fct_type's are defined in eq_fct_code.h
+
+eq_conf: 
+
+oper_uid:   -1
+oper_gid:   -1
+xpert_uid:  -1
+xpert_gid:  -1
+
+ring_buffer:      10000
+memory_buffer:    500
+
+eq_fct_name:    "CTK_STEPPER_MOTOR._SVR"
+eq_fct_type:    1
+{
+SVR.NAME:    "CTK_STEPPER_MOTOR._SVR"
+FCT_CODE:    1
+SVR.RPC_NUMBER:    610493148
+}
+eq_fct_name:    "DEVICE1"
+eq_fct_type:    10
+{
+NAME:      "MOTOR1"
+FCT_CODE:  10
+}
