@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="346,5,600,700"><fillColor>210,210,210</fillColor>
+<DOOCSToggleButton name="ToggleButton2" bounds="20,100,130,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.TIMER.UPDATE.ONCE</adr><textON>Timer update</textON><textOFF>Timer update</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="ToggleButton1" bounds="20,130,130,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.TIMER.UPDATE.AUTO</adr><textON>Auto update off</textON><textOFF>Auto update on</textOFF></DOOCSToggleButton>
+<DOOCSLabel name="Label4" bounds="20,150,110,20"><text>Timer cntdown</text></DOOCSLabel>
+<DOOCSValue name="Value3" bounds="150,150,50,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.TIMER.COUNTDOWN</adr></DOOCSValue>
+<DOOCSToggleButton name="Button_MotorStart" bounds="80,70,130,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.MOTOR_START</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSLabel name="Label3" bounds="350,20,70,20"><text>Motor state</text></DOOCSLabel>
+<DOOCSValue name="Value2" bounds="440,20,50,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.MOTOR_STATUS</adr></DOOCSValue>
+<DOOCSToggleButton name="EnableButton" bounds="80,40,130,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.MOTOR_ENABLE</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
+<DOOCSDial name="Dial1" bounds="430,60,80,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.MOTOR_POS_SETP_STEPS</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label2" bounds="370,80,50,20"><text>Actual</text></DOOCSLabel>
+<DOOCSLabel name="Label1" bounds="370,60,50,20"><text>Setpoint</text></DOOCSLabel>
+<DOOCSValue name="Value1" bounds="440,80,50,20"><adr>TEST.DOOCS/CTK_STEPPER_MOTOR/MOTOR1/MOTOR1.ACT_POS_IN_STEPS</adr></DOOCSValue>
+</DOOCSLayeredPane>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABDUlEQVR42u3WSwqDMBCAYe9/A3GnIIr42vkAceFSKHiH3kD6wMKUBLpoF6VSLdX8A0OMSPAjYxyrbVsxKS0V6mIYBmMS9D+k4zhSlqWEYShpmkoQBBJF0dMzfd+vj54bvu9vf6cVYm5S3gvmI8bLJON5ktP1pkfbtvV9NW62vJMkkbqu9VrqG8+y7O27KGxxOC6Hprx/lHEcS9M0+vQuikK6rlvn9N7bKf0Rem9lTEdGeVPeBpZ3VVXiuq5uCvI813PP83RzoJp/NX9d4NvfBzsNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNel9oE+MOIRSWBfQqDDcAAAAASUVORK5CYII=</thumbnail>
+</jdddPanel>
