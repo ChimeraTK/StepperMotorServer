@@ -22,6 +22,10 @@ void StepperMotorServer::defineConnections(){
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
 
 
+  //TODO Current wiring of the trigger and other push-type inputs
+  //     leads to updates inbetween samples. Rearrange triggers to have a
+  //     'hard' cycle time
+
   // Setup poll trigger
   //auto cycleTime = config.get<int32_t>("cycleTime");
   config("cycleTime") >> timer.timeout;
@@ -30,11 +34,9 @@ void StepperMotorServer::defineConnections(){
   cs("TIMER.UPDATE.AUTO") >> trigger.automaticUpdate;
   trigger.countdown >> cs("TIMER.COUNTDOWN");
 
+  auto &triggerNr = trigger.trigger;
+
   // Connect motorControl signals
-  motorControl.findTag("CS").connectTo(cs);
+  motorControl.findTag("CS").connectTo(cs, triggerNr);
 
 } /* defineConnections() */
-
-
-
-

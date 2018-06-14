@@ -10,10 +10,14 @@
 
 void MotorControl::mainLoop(){
 
+  std::cout << "  *** Starting MotorControl mainLoop..." << std::endl;
+
   // TODO Implement state machine in EqFct of BAMMotor, or improve it
   motorState = MotorState::MOTOR_DISABLED;
 
   while(true){
+
+    std::cout << "Current state is: " << static_cast<int>(motorState) << std::endl;
 
     switch (motorState){
       case MotorState::MOTOR_DISABLED:
@@ -32,6 +36,9 @@ void MotorControl::mainLoop(){
         stateMotorError();
         break;
     }
+    //FIXME: just to debug
+    motorStatus = static_cast<int>(motorState);
+    motorStatus.write();
 
   }
 }/* mainLoop() */
@@ -50,13 +57,17 @@ void MotorControl::stateMotorDisabled(){
 void MotorControl::stateMotorReady(){
   std::cout << "Entered state MotorReady." << std::endl;
   while(true){
-    readAll();
-    if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps){
+    readAny();
+    if(enableMotor == 0){
+      motorState = MotorState::MOTOR_DISABLED;
+    }
+    else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps){
       // TODO initiate movement here
       actualPositionInSteps = positionSetpointInSteps;
+      actualPositionInSteps.write();
       motorState = MotorState::MOTOR_RUNNING;
-      return;
     }
+    return;
   }
 }
 

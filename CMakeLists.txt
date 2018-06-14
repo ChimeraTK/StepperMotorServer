@@ -145,8 +145,7 @@ IF(ADAPTER STREQUAL "OPCUA")
   FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorMapping.xml DESTINATION ${PROJECT_BINARY_DIR})
 ELSEIF(ADAPTER STREQUAL "DOOCS")
   FILE( COPY ${CMAKE_SOURCE_DIR}/config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_BINARY_DIR})
-  # TODO Remove or adapt
-  #FILE( COPY ${CMAKE_SOURCE_DIR}/config/LLRFServer-DoocsVariableConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorServer-DoocsVariableConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
 ENDIF()
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/initMotorDriverHW.py DESTINATION ${PROJECT_BINARY_DIR})
 
@@ -160,7 +159,6 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
 
   # if no configuration exists, prepare configuration for dummy system
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/CTK_StepperMotorServer/${PROJECT_NAME}.conf")
-    MESSAGE("Installing scripts...")
     install(FILES config/dummies.dmap DESTINATION ${PROJECT_NAME})
     install(FILES config/newer_firmware_mapfile.map DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
@@ -170,6 +168,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(FILES config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_NAME})
     install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
     install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
+    install(FILES config/${PROJECT_NAME}-DoocsVariableConfig.xml DESTINATION ${PROJECT_NAME})
     install(FILES config/RPC_LIBNO DESTINATION ${PROJECT_NAME})
     install(CODE "
          EXECUTE_PROCESS(COMMAND ln -sf bin/${PROJECT_NAME} ${PROJECT_NAME}

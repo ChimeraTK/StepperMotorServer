@@ -19,7 +19,7 @@
 namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : ctk::Application{
-  StepperMotorServer() : Application("StepperMotorServer") {}
+  StepperMotorServer() : Application("CTK_StepperMotorServer") {}
   ~StepperMotorServer() { shutdown(); }
 
   ctk::ConfigReader config{this, "Configuration", "CTK_StepperMotorConfig.xml"};
@@ -27,9 +27,9 @@ struct StepperMotorServer : ctk::Application{
   Trigger trigger{this, "TRIGGER", ""};
   Timer timer{this, "TIMER", ""};
 
-  ctk::ControlSystemModule cs{"Motor"};
+  ctk::ControlSystemModule cs{"MOTOR1"};
 
-  MotorControl motorControl;
+  MotorControl motorControl{this, "MotorControl", ""};
 
   void defineConnections() override;
 
