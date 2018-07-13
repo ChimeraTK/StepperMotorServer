@@ -11,6 +11,9 @@
 #include "StepperMotorServer.h"
 #include "version.h"
 
+// FIXME
+//static int __TEMP_CS_INPUT_TBD_ = 0 ;
+
 void StepperMotorServer::defineConnections(){
 
   std::string dMapFileName{"dummies.dmap"};
@@ -38,5 +41,13 @@ void StepperMotorServer::defineConnections(){
 
   // Connect motorControl signals
   motorControl.findTag("CS").connectTo(cs, triggerNr);
+
+
+
+  /*
+   * Control system interface
+   * TODO This is for now defined as a spec taken from the BAM motor server
+   */
+   // First define signals in application modules, then map
 
 } /* defineConnections() */

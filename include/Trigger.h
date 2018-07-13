@@ -50,19 +50,19 @@ struct Trigger : public ctk::ApplicationModule {
         }
     }
 };
-
+template <typename timebaseT = std::chrono::milliseconds>
 struct Timer : public ctk::ApplicationModule {
     using ApplicationModule::ApplicationModule;
 
-    ctk::ScalarPollInput<int32_t> timeout{this, "timeout", "s", "Timeout in seconds"};
+    // TODO: template description?
+    ctk::ScalarPollInput<int32_t> timeout{this, "timeout", "", "Timeout (user-defined unit)"};
     ctk::ScalarOutput<int> tick{this, "tick", "", "Timer tick"};
 
     void mainLoop()
     {
         tick = 0;
         while (true) {
-        	//TODO change to us as input
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::this_thread::sleep_for(timebaseT(1));
             tick++;
             tick %= timeout;
             tick.write();

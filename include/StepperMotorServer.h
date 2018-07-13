@@ -16,6 +16,9 @@
 #include "MotorControl.h"
 #include "Trigger.h"
 
+#include <vector>
+#include <memory>
+
 namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : ctk::Application{
@@ -25,11 +28,14 @@ struct StepperMotorServer : ctk::Application{
   ctk::ConfigReader config{this, "Configuration", "CTK_StepperMotorConfig.xml"};
 
   Trigger trigger{this, "TRIGGER", ""};
-  Timer timer{this, "TIMER", ""};
+  Timer<> timer{this, "TIMER", ""};
 
   ctk::ControlSystemModule cs{"MOTOR1"};
 
   MotorControl motorControl{this, "MotorControl", ""};
+
+  //ctk::DeviceModule dm{"BeckhoffMotor"};
+  std::vector< std::shared_ptr<ctk::Module> > motor;
 
   void defineConnections() override;
 
