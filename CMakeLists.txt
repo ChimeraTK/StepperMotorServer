@@ -59,9 +59,9 @@ FIND_PACKAGE(Boost COMPONENTS thread system filesystem unit_test_framework REQUI
 ENABLE_TESTING()
 
 # extend compiler flags with flags from dependencies
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LLRFLibrary_CXX_FLAGS} ${ChimeraTK-ApplicationCore_CXX_FLAGS}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LLRFLibrary_CXX_FLAGS} ${ChimeraTK-ApplicationCore_CXX_FLAGS} ${mtca4u-MotorDriverCard_CXX_FLAGS}" )
 
-set(CMAKE_LINK_FLAGS "-Wl,--no-as-needed ${Adapter_LINK_FLAGS} ${ChimeraTK-ApplicationCore_LINK_FLAGS}")
+set(CMAKE_LINK_FLAGS "-Wl,--no-as-needed ${Adapter_LINK_FLAGS} ${ChimeraTK-ApplicationCore_LINK_FLAGS}" )
 
 # set include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -94,7 +94,7 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} ${Boost_LIBRARIES} ${ChimeraTK-Appl
 # main server executable
 add_executable(${PROJECT_NAME} src/dummy.cc)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_link_libraries(${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES})
 
 # TODO: can we use this here? XML file generation
 #add_executable(${PROJECT_NAME}-xmlGenerator src/dummy.cc)
@@ -107,12 +107,12 @@ target_link_libraries(${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES
 # Create the executable for automated unit testing.
 # add the test executable with all test source files
 # TODO Add test
-#aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
-#include_directories(${CMAKE_SOURCE_DIR}/test)
-#add_executable(test_${PROJECT_NAME} ${test_sources})
-#target_link_libraries(test_${PROJECT_NAME} ${PROJECT_NAME}lib)
-#set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-#add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
+aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
+include_directories(${CMAKE_SOURCE_DIR}/test)
+add_executable(test_${PROJECT_NAME} ${test_sources})
+target_link_libraries(test_${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES})
+set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
 
 # The make coverage command is only available in debug mode
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -134,11 +134,14 @@ ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
 
-# TODO: Sort this out later 
+# TODO: Sort this out later (also: use mapp or map)
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/dummies.dmap DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.mapp DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
 
 IF(ADAPTER STREQUAL "OPCUA")
   # TODO Implement [OPCUA]
@@ -160,8 +163,9 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
   # if no configuration exists, prepare configuration for dummy system
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/CTK_StepperMotorServer/${PROJECT_NAME}.conf")
     install(FILES config/dummies.dmap DESTINATION ${PROJECT_NAME})
-    install(FILES config/newer_firmware_mapfile.map DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
+    install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
+    
     # TODO Remove or adapt
     #install(FILES config/${PROJECT_NAME}_controller.xlmap DESTINATION ${PROJECT_NAME})
     #install(FILES config/${PROJECT_NAME}_adc0.xlmap DESTINATION ${PROJECT_NAME})

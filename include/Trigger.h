@@ -5,6 +5,8 @@
 #include <ChimeraTK/ApplicationCore/Application.h>
 #include <ChimeraTK/ApplicationCore/ApplicationModule.h>
 
+#include <chrono>
+
 namespace ctk = ChimeraTK;
 
 // TODO Evaluate this approach. Does it work  also with testing? Eventually move to App'Core

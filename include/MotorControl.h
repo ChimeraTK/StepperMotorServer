@@ -8,8 +8,6 @@
 #ifndef INCLUDE_MOTORCONTROL_H_
 #define INCLUDE_MOTORCONTROL_H_
 
-#include <memory>
-
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
 
@@ -18,8 +16,6 @@ namespace ctk = ChimeraTK;
 struct MotorControl : ctk::ApplicationModule{
 
   using ctk::ApplicationModule::ApplicationModule;
-
-  //std::shared_ptr<ctk::StepperMotorWithReference> motor;
 
   enum class MotorState : int32_t {
     MOTOR_READY=0, MOTOR_ERROR=1, MOTOR_RUNNING=2, MOTOR_RESETTING=3, MOTOR_DISABLED=4
@@ -56,11 +52,13 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CS"}};  /*TODO Obsolete in high level of DriverLib?*/
   ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CS"}};
 
-
+  // FIXME For testing
+  ctk::ScalarPollInput<double> currentPosition{this, "CURPOS", "", ""};
 
   void mainLoop() override;
 
   // Motor states
+  //FIXME Better be private
   void stateMotorDisabled();
   void stateMotorReady();
   void stateMotorRunning();

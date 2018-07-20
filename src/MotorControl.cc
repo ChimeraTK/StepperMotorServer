@@ -8,6 +8,7 @@
 #include "MotorControl.h"
 #include <iostream>
 
+
 void MotorControl::mainLoop(){
 
   std::cout << "  *** Starting MotorControl mainLoop..." << std::endl;
@@ -16,6 +17,8 @@ void MotorControl::mainLoop(){
   motorState = MotorState::MOTOR_DISABLED;
 
   while(true){
+
+    //TODO Read Status/Error words
 
     std::cout << "Current state is: " << static_cast<int>(motorState) << std::endl;
 
@@ -39,6 +42,11 @@ void MotorControl::mainLoop(){
     //FIXME: just to debug
     motorStatus = static_cast<int>(motorState);
     motorStatus.write();
+
+    currentPosition.read();
+    double cp = currentPosition;
+    actualPosition = cp;
+    actualPosition.write();
 
   }
 }/* mainLoop() */

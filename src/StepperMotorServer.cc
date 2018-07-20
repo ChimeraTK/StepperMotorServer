@@ -5,24 +5,45 @@
  *      Author: ckampm
  */
 
+#include "StepperMotorServer.h"
+
+#include "version.h"
+#include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
+#include "mtca4u/DMapFilesParser.h"
+
 #include <iostream>
 #include <string>
+#include <vector>
+#include <memory>
 
-#include "StepperMotorServer.h"
-#include "version.h"
 
-// FIXME
-//static int __TEMP_CS_INPUT_TBD_ = 0 ;
+// FIXME Get these from the CS
+static const std::string stepperMotorDeviceName("MOTOR_DUMMY");
+
 
 void StepperMotorServer::defineConnections(){
 
   std::string dMapFileName{"dummies.dmap"};
 
-  ChimeraTK::setDMapFilePath(dMapFileName);
+  mtca4u::setDMapFilePath(dMapFileName);
 
   std::cout << "****************************************************************" << std::endl;
   std::cout << "*** ChimeraTK Stepper Motor server version "
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
+
+  if(ctk::DMapFilesParser(".").getdMapFileElem(stepperMotorDeviceName).uri == "/dummy/MotorDriverCard"){
+    mtca4u::MotorDriverCardFactory::instance().setDummyMode();
+    std::cout << "*** Dummy motor in use." << std::endl;
+  }
+
+
+  auto nMotors = config.get<uint32_t>("nMotors");
+  for(size_t i = 0; i<nMotors; ++i){
+    motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i));
+    std::cout << "*** Created motorDriver " << i << std::endl;
+    motorDriver[i].findTag("CTRL").connectTo(motorControl);
+    motorDriver[i]("ACT_POS") >> motorControl("CURPOS");
+  }
 
 
   //TODO Current wiring of the trigger and other push-type inputs
@@ -42,12 +63,5 @@ void StepperMotorServer::defineConnections(){
   // Connect motorControl signals
   motorControl.findTag("CS").connectTo(cs, triggerNr);
 
-
-
-  /*
-   * Control system interface
-   * TODO This is for now defined as a spec taken from the BAM motor server
-   */
-   // First define signals in application modules, then map
 
 } /* defineConnections() */
