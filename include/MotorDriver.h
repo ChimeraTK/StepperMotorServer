@@ -25,17 +25,19 @@ struct MotorDriver : ctk::ModuleGroup {
 
   MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-//  std::shared_ptr<ctk::StepperMotor> _motor;
-  //ctk::StepperMotor _motor;
+  std::shared_ptr<ctk::StepperMotor> _motor;
+
 
 //  //                                      Owner, name, unit, descr, tags
 //  ctk::ScalarPushInput<int32_t> enableMotor{this, "MOTOR_ENABLE", "", "Enable the motor", {"CTRL"}};
-//  ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CTRL"}}; /* TODO Removed from new API */
-//  ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CTRL"}};
+
+
 //  ctk::ScalarPushInput<int32_t> stopMotor{this, "MOTOR_STOP", "", "Stop the motor", {"CTRL"}};
 //  ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
 //  ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "MOTOR_EMERGENCY_STOP", "", "Emergency stop motor", {"CTRL"}};
-//
+
+
+
 //  ctk::ScalarPushInput<double> positionSetpoint{this, "MOT_POS_SETP", "", "Motor position setpoint [scaled]", {"CTRL"}};
 //  ctk::ScalarPushInput<double> relativeMotorPositionSetpoint{this, "REL_MOT_POS_SETP", "", "Relative motor position setpoint [scaled]", {"CTRL"}};
 //  ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "MOT_POS_SETP_IN_STEPS", "", "Motor position setpoint [steps]", {"CTRL"}};
@@ -61,25 +63,27 @@ struct MotorDriver : ctk::ModuleGroup {
 
   struct ControlInputs : ctk::ApplicationModule {
 
-    ControlInputs(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+    ControlInputs(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
     funcmapT funcMap;
     std::shared_ptr<ctk::StepperMotor> _motor;
 
-    ctk::ScalarPushInput<int32_t> enableMotor{this, "MOTOR_ENABLE", "", "Enable the motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> stopMotor{this, "MOTOR_STOP", "", "Stop the motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "MOTOR_EMERGENCY_STOP", "", "Emergency stop motor", {"CTRL"}};
+//    FIXME Equivalents for start and reset methods
+    ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CTRL"}};
+    //ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CTRL"}};
+    //ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CTRL"}};
+    ctk::ScalarPushInput<int32_t> stopMotor{this, "stop", "", "Stop the motor", {"CTRL"}};
+    //ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
+    ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor", {"CTRL"}};
 
-    ctk::ScalarPushInput<double> positionSetpoint{this, "MOT_POS_SETP", "", "Motor position setpoint [scaled]", {"CTRL"}};
+    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [scaled]", {"CTRL"}};
 
     //FIXME
-    ctk::ScalarOutput<double> actualPosition{this, "ACT_POS", "", "Actual position [scaled]", {"MEAS"}};
+    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"MEAS"}};
 
     void prepare() override;
     void mainLoop() override;
-  } controlInputs{this, "ControlInputs", "Control inputs to the stepper motor"};
+  } controlInputs{_motor, this, "ControlInputs", "Control inputs to the stepper motor"};
 };
 
 
