@@ -9,6 +9,7 @@
 #define INCLUDE_MOTORDRIVER_H_
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
+#include <ChimeraTK/ReadAnyGroup.h>
 #include <mtca4u/MotorDriverCard/StepperMotor.h>
 
 #include <map>
@@ -28,25 +29,10 @@ struct MotorDriver : ctk::ModuleGroup {
   std::shared_ptr<ctk::StepperMotor> _motor;
 
 
-//  //                                      Owner, name, unit, descr, tags
-//  ctk::ScalarPushInput<int32_t> enableMotor{this, "MOTOR_ENABLE", "", "Enable the motor", {"CTRL"}};
 
 
-//  ctk::ScalarPushInput<int32_t> stopMotor{this, "MOTOR_STOP", "", "Stop the motor", {"CTRL"}};
-//  ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
-//  ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "MOTOR_EMERGENCY_STOP", "", "Emergency stop motor", {"CTRL"}};
+//  //                                      Owner, name, unit, descr, tag
 
-
-
-//  ctk::ScalarPushInput<double> positionSetpoint{this, "MOT_POS_SETP", "", "Motor position setpoint [scaled]", {"CTRL"}};
-//  ctk::ScalarPushInput<double> relativeMotorPositionSetpoint{this, "REL_MOT_POS_SETP", "", "Relative motor position setpoint [scaled]", {"CTRL"}};
-//  ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "MOT_POS_SETP_IN_STEPS", "", "Motor position setpoint [steps]", {"CTRL"}};
-//  ctk::ScalarPushInput<int32_t> relativeMotorPositionSetpointInSteps{this, "REL_MOT_POS_SETP_IN_STEPS", "", "Relative motor position setpoint [steps]", {"CTRL"}};
-//
-//  ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "SW_LIM_ENABLE", "", "Enable SW limits", {"CTRL"}};
-//  ctk::ScalarPushInput<double> positiveSWPositionLimit{this, "POS_SW_POS_LIM", "", "Positive SW position limit", {"CTRL"}};
-//  ctk::ScalarPushInput<double> negativeSWPositionLimit{this, "NEG_SW_POS_LIM", "", "Negative SW position limit", {"CTRL"}};
-//
 //  ctk::ScalarPushInput<double> speedLimitSetpoint{this, "SPEED_LIM_SETP", "", "Speed limit setpoint", {"CTRL"}};
 //  ctk::ScalarPushInput<double> actualSpeedLimit{this, "ACT_SPEED_LIM", "", "Actual speed limit", {"CTRL"}};
 //
@@ -67,6 +53,7 @@ struct MotorDriver : ctk::ModuleGroup {
 
     funcmapT funcMap;
     std::shared_ptr<ctk::StepperMotor> _motor;
+    ctk::ReadAnyGroup inputGroup;
 
 //    FIXME Equivalents for start and reset methods
     ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CTRL"}};
@@ -76,7 +63,14 @@ struct MotorDriver : ctk::ModuleGroup {
     //ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
     ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor", {"CTRL"}};
 
-    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [scaled]", {"CTRL"}};
+    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint"};
+    ctk::ScalarPushInput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint"};
+    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]"};
+    ctk::ScalarPushInput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]"};
+
+    //  ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "SW_LIM_ENABLE", "", "Enable SW limits", {"CTRL"}};
+    //  ctk::ScalarPushInput<double> positiveSWPositionLimit{this, "POS_SW_POS_LIM", "", "Positive SW position limit", {"CTRL"}};
+    //  ctk::ScalarPushInput<double> negativeSWPositionLimit{this, "NEG_SW_POS_LIM", "", "Negative SW position limit", {"CTRL"}};
 
     //FIXME
     ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"MEAS"}};

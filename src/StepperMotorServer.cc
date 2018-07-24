@@ -8,6 +8,7 @@
 #include "StepperMotorServer.h"
 
 #include "version.h"
+#include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "mtca4u/DMapFilesParser.h"
 
@@ -41,8 +42,10 @@ void StepperMotorServer::defineConnections(){
   for(size_t i = 0; i<nMotors; ++i){
     motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i));
     std::cout << "*** Created motorDriver " << i << std::endl;
+
+    motorControl.toMotorDriver.connectTo(motorDriver[i]);
     motorDriver[i].findTag("CTRL").connectTo(motorControl);
-    motorDriver[i]("ACT_POS") >> motorControl("CURPOS");
+    motorDriver[i]("actualPosition") >> motorControl("currentPosition");
   }
 
 
@@ -51,7 +54,6 @@ void StepperMotorServer::defineConnections(){
   //     'hard' cycle time
 
   // Setup poll trigger
-  //auto cycleTime = config.get<int32_t>("cycleTime");
   config("cycleTime") >> timer.timeout;
   timer.tick >> trigger.tick;
   cs("TIMER.UPDATE.ONCE") >> trigger.forceUpdate;
@@ -63,5 +65,12 @@ void StepperMotorServer::defineConnections(){
   // Connect motorControl signals
   motorControl.findTag("CS").connectTo(cs, triggerNr);
 
+  motorControl.dumpGraph("motorControlModuleGraph.dot");
+  motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");
+
+  dumpConnectionGraph();
 
 } /* defineConnections() */
+
+static StepperMotorServer server;
+

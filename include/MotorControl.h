@@ -9,6 +9,7 @@
 #define INCLUDE_MOTORCONTROL_H_
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
+#include <ChimeraTK/ReadAnyGroup.h>
 #include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
 
 namespace ctk = ChimeraTK;
@@ -22,14 +23,14 @@ struct MotorControl : ctk::ApplicationModule{
   } motorState;
 
   //                                      Owner, name, unit, descr, tags
-  ctk::ScalarPushInput<int32_t> enableMotor{this, "MOTOR_ENABLE", "", "Enable the motor", {"CS"}};
+  ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CS"}};
-  ctk::ScalarPushInput<int32_t> stopMotor{this, "MOTOR_STOP", "", "Stop the motor", {"CS"}};
+  ctk::ScalarPushInput<int32_t> stopMotor{this, "stop", "", "Stop the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CS"}};
-  ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "MOTOR_EMERGENCY_STOP", "", "Emergency stop motor", {"CS"}};
+  ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor", {"CS"}};
 
-  ctk::ScalarPushInput<double> positionSetpoint{this, "MOT_POS_SETP", "", "Motor position setpoint [scaled]", {"CS"}};
+  ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [scaled]", {"CS"}};
   ctk::ScalarPushInput<double> relativeMotorPositionSetpoint{this, "REL_MOT_POS_SETP", "", "Relative motor position setpoint [scaled]", {"CS"}};
   ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "MOT_POS_SETP_IN_STEPS", "", "Motor position setpoint [steps]", {"CS"}};
   ctk::ScalarPushInput<int32_t> relativeMotorPositionSetpointInSteps{this, "REL_MOT_POS_SETP_IN_STEPS", "", "Relative motor position setpoint [steps]", {"CS"}};
@@ -42,7 +43,7 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarPushInput<double> actualSpeedLimit{this, "ACT_SPEED_LIM", "", "Actual speed limit", {"CS"}};
 
   // Current status to control system
-  ctk::ScalarOutput<double> actualPosition{this, "ACT_POS", "", "Actual position [scaled]", {"CS"}};
+  ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
   ctk::ScalarOutput<double> actualPositionInSteps{this, "ACT_POS_IN_STEPS", "", "Actual position [steps]", {"CS"}};
   ctk::ScalarOutput<double> positiveEndSwitchPosition{this, "POS_END_SWITCH_POSITION", "", "Positive end switch position", {"CS"}}; /*TODO POS/NEG relevant, sensible?*/
   ctk::ScalarOutput<double> negativeEndSwitchPosition{this, "NEG_END_SWITCH_POSITION", "", "Positive end switch position", {"CS"}}; /*TODO POS/NEG relevant, sensible?*/
@@ -52,8 +53,20 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CS"}};  /*TODO Obsolete in high level of DriverLib?*/
   ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CS"}};
 
+  struct ToMotorDriver : ctk::VariableGroup {
+    using ctk::VariableGroup::VariableGroup;
+
+    ctk::ScalarOutput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint"};
+    ctk::ScalarOutput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint"};
+    ctk::ScalarOutput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]"};
+    ctk::ScalarOutput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]"};
+  } toMotorDriver{this, "toMotorDriver", "Control inputs to the motor driver"};
+
+
   // FIXME For testing
-  ctk::ScalarPollInput<double> currentPosition{this, "CURPOS", "", ""};
+  ctk::ScalarPollInput<double> currentPosition{this, "currentPosition", "", ""};
+
+  ctk::ReadAnyGroup inputGroup;
 
   void mainLoop() override;
 

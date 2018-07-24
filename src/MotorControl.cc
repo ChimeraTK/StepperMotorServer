@@ -11,6 +11,8 @@
 
 void MotorControl::mainLoop(){
 
+  inputGroup = readAnyGroup();
+
   std::cout << "  *** Starting MotorControl mainLoop..." << std::endl;
 
   // TODO Implement state machine in EqFct of BAMMotor, or improve it
@@ -54,7 +56,7 @@ void MotorControl::mainLoop(){
 void MotorControl::stateMotorDisabled(){
   std::cout << "Entered state MotorDisabled." << std::endl;
   while(true){
-    readAny();
+    inputGroup.readAny();
     if(enableMotor != 0){
       motorState = MotorState::MOTOR_READY;
       return;
@@ -65,13 +67,15 @@ void MotorControl::stateMotorDisabled(){
 void MotorControl::stateMotorReady(){
   std::cout << "Entered state MotorReady." << std::endl;
   while(true){
-    readAny();
+    inputGroup.readAny();
     if(enableMotor == 0){
       motorState = MotorState::MOTOR_DISABLED;
     }
     else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps){
       // TODO initiate movement here
       actualPositionInSteps = positionSetpointInSteps;
+      toMotorDriver.positionSetpoint = positionSetpointInSteps;
+      toMotorDriver.positionSetpoint.write();
       actualPositionInSteps.write();
       motorState = MotorState::MOTOR_RUNNING;
     }

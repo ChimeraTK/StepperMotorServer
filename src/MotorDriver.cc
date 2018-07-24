@@ -23,6 +23,13 @@ MotorDriver::ControlInputs::ControlInputs(std::shared_ptr<ctk::StepperMotor> mot
 
 
 void MotorDriver::ControlInputs::prepare(){
+//
+//  inputGroup.add(enableMotor);
+//  inputGroup.add(stopMotor);
+//  inputGroup.finalise();
+
+  inputGroup = this->readAnyGroup();
+
   funcMap[enableMotor.getId()] = [this](){_motor->setEnabled(enableMotor); std::cout << "****** Called setEnabled()" << std::endl;};
   funcMap[positionSetpoint.getId()] = [this](){_motor->moveToPosition(positionSetpoint);  std::cout << "****** Called moveToPostion()" << std::endl;};
   funcMap[stopMotor.getId()] = [this](){_motor->stop();};
@@ -33,7 +40,7 @@ void MotorDriver::ControlInputs::prepare(){
 void MotorDriver::ControlInputs::mainLoop(){
 
   while(true){
-    auto id = readAny();
+    auto id = inputGroup.readAny();
 
     funcMap[id]();
 

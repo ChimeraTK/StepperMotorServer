@@ -3,6 +3,7 @@
 #define INCLUDE_TRIGGER_H_
 
 #include <ChimeraTK/ApplicationCore/Application.h>
+#include <ChimeraTK/ReadAnyGroup.h>
 #include <ChimeraTK/ApplicationCore/ApplicationModule.h>
 
 #include <chrono>
@@ -16,6 +17,8 @@ struct Trigger : public ctk::ApplicationModule {
     using ApplicationModule::ApplicationModule;
     virtual ~Trigger() {}
 
+    ctk::ReadAnyGroup inputGroup;
+
     ctk::ScalarOutput<int> trigger{this, "trigger", "", ""};
     ctk::ScalarOutput<int> countdown{this, "countdown", "", ""};
     ctk::ScalarPushInput<int> forceUpdate{this, "forceUpdate", "", "Force an update of the ulog values"};
@@ -27,9 +30,11 @@ struct Trigger : public ctk::ApplicationModule {
         trigger = 0;
         countdown = 0;
 
+        inputGroup = readAnyGroup();
+
         while (true)
         {
-            auto id = readAny();
+            auto id = inputGroup.readAny();
             if (id == forceUpdate.getId() && automaticUpdate == 0) {
                 trigger++;
                 trigger.write();

@@ -71,6 +71,7 @@ set(${PROJECT_NAME}_INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS} ${CMAKE_SOURCE_
 
 # create lists with source files
 aux_source_directory(${CMAKE_SOURCE_DIR}/src library_sources)
+list(REMOVE_ITEM library_sources ${CMAKE_SOURCE_DIR}/src/StepperMotorServer.cc)
 
 # configure version.h
 configure_file(include/version.h.in ${PROJECT_BINARY_DIR}/version/version.h)
@@ -92,15 +93,15 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} ${Boost_LIBRARIES} ${ChimeraTK-Appl
 #    ${LLRFLibrary_LIBRARIES}  ${mtca4u-VirtualLab_LIBRARIES} )
 
 # main server executable
-add_executable(${PROJECT_NAME} src/dummy.cc)
+add_executable(${PROJECT_NAME} src/StepperMotorServer.cc)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
 target_link_libraries(${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES})
 
-# TODO: can we use this here? XML file generation
-#add_executable(${PROJECT_NAME}-xmlGenerator src/dummy.cc)
-#set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES COMPILE_FLAGS "-DGENERATE_XML")
-#set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-#target_link_libraries(${PROJECT_NAME}-xmlGenerator ${PROJECT_NAME}lib)
+#XML file generation
+add_executable(${PROJECT_NAME}-xmlGenerator src/StepperMotorServer.cc)
+set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES COMPILE_FLAGS "-DGENERATE_XML")
+set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+target_link_libraries(${PROJECT_NAME}-xmlGenerator ${LIBRARY_OUTPUT_NAME} ${mtca4u-MotorDriverCard_LIBRARIES})
 
 #add_custom_target(${PROJECT_NAME}-xml ALL DEPENDS ${PROJECT_NAME}-xmlGenerator COMMAND ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-xmlGenerator WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
