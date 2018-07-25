@@ -11,6 +11,7 @@
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ReadAnyGroup.h>
 #include <mtca4u/MotorDriverCard/StepperMotor.h>
+#include "ExecutionTimer.h"
 
 #include <map>
 #include <functional>
@@ -78,8 +79,40 @@ struct MotorDriver : ctk::ModuleGroup {
     void prepare() override;
     void mainLoop() override;
   } controlInputs{_motor, this, "ControlInputs", "Control inputs to the stepper motor"};
+
+
+  // TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
+  struct MotorDriverHWReadback : ctk::ApplicationModule {
+
+    MotorDriverHWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+
+    std::shared_ptr<ctk::StepperMotor> _motor;
+    ExecutionTimer<> execTimer;
+
+    ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
+
+    ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS", "MOTCTRL"}};
+    ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
+    ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS"}};
+
+    ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
+
+    void mainLoop() override;
+  } motorDriverHWReadback{_motor, this, "motorDriverHWReadback", "Signals read from the motor driver HW"};
+
+
+  struct MotorDriverSWReadBack : ctk::ApplicationModule {
+
+    MotorDriverSWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+
+    std::shared_ptr<ctk::StepperMotor> _motor;
+
+    ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
+    ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS", "MOTCTRL"}};
+
+    void mainLoop() override;
+  } motorDriverSWReadback{_motor, this, "motorDriverSWReadback", "Signals read from the motor driver SW"};
+
 };
-
-
 
 #endif /* INCLUDE_MOTORDRIVER_H_ */

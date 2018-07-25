@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="260,5,600,700"><fillColor>210,210,210</fillColor>
-<DOOCSLabel name="Label5" bounds="370,140,50,20"><text>Actual</text></DOOCSLabel>
-<DOOCSValue name="Value4" bounds="440,140,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.actualPosition</adr></DOOCSValue>
-<DOOCSToggleButton name="ToggleButton2" bounds="20,100,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.UPDATE.ONCE</adr><textON>Timer update</textON><textOFF>Timer update</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSToggleButton name="ToggleButton1" bounds="20,130,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.UPDATE.AUTO</adr><textON>Auto update off</textON><textOFF>Auto update on</textOFF></DOOCSToggleButton>
-<DOOCSLabel name="Label4" bounds="20,150,110,20"><text>Timer cntdown</text></DOOCSLabel>
-<DOOCSValue name="Value3" bounds="150,150,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.COUNTDOWN</adr></DOOCSValue>
-<DOOCSToggleButton name="Button_MotorStart" bounds="80,70,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOTOR_START</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSLabel name="Label3" bounds="350,20,70,20"><text>Motor state</text></DOOCSLabel>
-<DOOCSValue name="Value2" bounds="440,20,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOTOR_STATE</adr></DOOCSValue>
-<DOOCSToggleButton name="EnableButton" bounds="80,40,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.enable</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
-<DOOCSDial name="Dial1" bounds="430,60,80,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOT_POS_SETP_IN_STEPS</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label2" bounds="370,80,50,20"><text>Actual</text></DOOCSLabel>
-<DOOCSLabel name="Label1" bounds="370,60,50,20"><text>Setpoint</text></DOOCSLabel>
-<DOOCSValue name="Value1" bounds="440,80,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.ACT_POS_IN_STEPS</adr></DOOCSValue>
+<DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.emergencyStop</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSColouredIndicator name="ColouredIndicator2" bounds="430,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label8" bounds="370,20,80,20"><text>isIdle</text></DOOCSLabel>
+<DOOCSValue name="Value7" bounds="480,20,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isSystemIdle</adr></DOOCSValue>
+<DOOCSToggleButton name="Button_MotorStop" bounds="80,120,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.stop</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSLabel name="Label5" bounds="370,190,50,20"><text>Actual</text></DOOCSLabel>
+<DOOCSValue name="Value6" bounds="440,190,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.actualPositionInSteps</adr></DOOCSValue>
+<DOOCSColouredIndicator name="ColouredIndicator1" bounds="110,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label7" bounds="30,20,80,20"><text>isCalibrated</text></DOOCSLabel>
+<DOOCSLabel name="Label6" bounds="30,270,140,20"><text>MotorDriver cycle time</text></DOOCSLabel>
+<DOOCSValue name="Value5" bounds="170,270,140,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime></DOOCSValue>
+<DOOCSValue name="Value4" bounds="140,20,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isCalibrated</adr></DOOCSValue>
+<DOOCSToggleButton name="ToggleButton2" bounds="20,180,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.UPDATE.ONCE</adr><textON>Timer update</textON><textOFF>Timer update</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="ToggleButton1" bounds="20,210,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.UPDATE.AUTO</adr><textON>Auto update off</textON><textOFF>Auto update on</textOFF></DOOCSToggleButton>
+<DOOCSLabel name="Label4" bounds="20,230,110,20"><text>Timer cntdown</text></DOOCSLabel>
+<DOOCSValue name="Value3" bounds="150,230,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.TIMER.COUNTDOWN</adr></DOOCSValue>
+<DOOCSToggleButton name="Button_MotorStart" bounds="80,100,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOTOR_START</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSLabel name="Label3" bounds="350,50,70,20"><text>Motor state</text></DOOCSLabel>
+<DOOCSValue name="Value2" bounds="440,50,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOTOR_STATE</adr></DOOCSValue>
+<DOOCSToggleButton name="EnableButton" bounds="80,70,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.enable</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
+<DOOCSDial name="Dial1" bounds="430,90,80,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOT_POS_SETP_IN_STEPS</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label2" bounds="370,110,50,20"><text>Actual</text></DOOCSLabel>
+<DOOCSLabel name="Label1" bounds="370,90,50,20"><text>Setpoint</text></DOOCSLabel>
+<DOOCSValue name="Value1" bounds="440,110,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.ACT_POS_IN_STEPS</adr></DOOCSValue>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABDUlEQVR42u3WSwqDMBCAYe9/A3GnIIr42vkAceFSKHiH3kD6wMKUBLpoF6VSLdX8A0OMSMhHxiFW27ZiUloq1MMwDMYk6H9Ix3GkLEsJw1DSNJUgCCSKoqdv+r5fHz03fN/f/kkrxNykvBfMR4yXScbzJKfrTY+2bev3atxseSdJInVd67XUP55l2du9KGxxOC6Hprx/lHEcS9M0unsXRSFd163TvffWpT9C762MuZFR3pS3gd27qipxXVdfCvI813PP8/TlQF3+1fx1gW83wEmDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGD3hfaxLgDFoiUUm0MBAMAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABdElEQVR42u3YW4uCQBTA8b7/sy8hEpSIUXmJHrQieugxWPA79A1iL7Rwds8Bl2WDZV0rUf8DBy+IMz/mzIzOYL/fS59ioEVPiqLoTVRGfz5u0WCDa9d/hU7TVFarlWRZJp7nyXw+l9lsJsvl8qtSLXp+PB7vhtN2+L4vcRxfocv6y6jaDtIbdEPhuq7keS7T6dRSOwxDG1510vlf6KolCIL297QiqgbpfcMoy/n1IueXizy/vdtxOBzafT22Nr2jKJLNZmPv0jGeJMmvbVFs9nS6HbqX6d1ETy8WC9ntdjZ764fS4XB47OzNRNaXjxPWadK7A+ndtTT+E7prady69H7YOk16k94dnr3X67WMx2P7u9GNOb2eTCb2l6O7GHr98wX33Bykp0GDro/+vhs5Go1snSzH+Ha7tbVTx7fjOHa/jWObngYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0P1E97F8APJie0d1xWLBAAAAAElFTkSuQmCC</thumbnail>
 </jdddPanel>

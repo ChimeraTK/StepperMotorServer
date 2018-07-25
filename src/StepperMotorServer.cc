@@ -44,8 +44,12 @@ void StepperMotorServer::defineConnections(){
     std::cout << "*** Created motorDriver " << i << std::endl;
 
     motorControl.toMotorDriver.connectTo(motorDriver[i]);
-    motorDriver[i].findTag("CTRL").connectTo(motorControl);
+    //motorDriver[i].findTag("CTRL").connectTo(motorControl);
     motorDriver[i]("actualPosition") >> motorControl("currentPosition");
+    motorDriver[i].motorDriverHWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
+    motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
+    motorDriver[i].motorDriverSWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
+    motorDriver[i].motorDriverSWReadback.findTag("MOTCTRL").connectTo(motorControl);
   }
 
 
@@ -62,8 +66,10 @@ void StepperMotorServer::defineConnections(){
 
   auto &triggerNr = trigger.trigger;
 
-  // Connect motorControl signals
+  // Connect motorControl signals (TODO Keep this?)
   motorControl.findTag("CS").connectTo(cs, triggerNr);
+  triggerNr >>motorDriver[0].motorDriverHWReadback("trigger");
+  triggerNr >>motorDriver[0].motorDriverSWReadback("trigger");
 
   motorControl.dumpGraph("motorControlModuleGraph.dot");
   motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");

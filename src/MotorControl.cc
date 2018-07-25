@@ -58,6 +58,8 @@ void MotorControl::stateMotorDisabled(){
   while(true){
     inputGroup.readAny();
     if(enableMotor != 0){
+      toMotorDriver.enableMotor = 1;
+      toMotorDriver.enableMotor.write();
       motorState = MotorState::MOTOR_READY;
       return;
     }
@@ -69,25 +71,46 @@ void MotorControl::stateMotorReady(){
   while(true){
     inputGroup.readAny();
     if(enableMotor == 0){
+      toMotorDriver.enableMotor = 0;
+      toMotorDriver.enableMotor.write();
       motorState = MotorState::MOTOR_DISABLED;
+      return;
     }
-    else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps){
+    else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps && isCalibrated != 0){
       // TODO initiate movement here
       actualPositionInSteps = positionSetpointInSteps;
       toMotorDriver.positionSetpoint = positionSetpointInSteps;
       toMotorDriver.positionSetpoint.write();
       actualPositionInSteps.write();
+
       motorState = MotorState::MOTOR_RUNNING;
+      return;
     }
-    return;
   }
 }
 
 void MotorControl::stateMotorRunning(){
   std::cout << "Entered state MotorRunning." << std::endl;
-  //TODO Implement
-  motorState = MotorState::MOTOR_DISABLED;
-  return;
+  while(true){
+    auto id = inputGroup.readAny();
+    if(stopMotor != 0){
+      toMotorDriver.stopMotor = 1;
+      toMotorDriver.stopMotor.write();
+      //TODO Implement checking of motor.isBusy()
+      motorState = MotorState::MOTOR_READY;
+      return;
+    }
+    if(id == isSystemIdle.getId() && !isSystemIdle){
+      motorState = MotorState::MOTOR_READY;
+      return;
+    }
+    if(emergencyStopMotor != 0){
+      toMotorDriver.emergencyStopMotor = 1;
+      toMotorDriver.emergencyStopMotor.write();
+      motorState = MotorState::MOTOR_DISABLED;
+      return;
+    }
+  }
 }
 
 void MotorControl::stateMotorResetting(){

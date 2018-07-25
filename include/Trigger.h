@@ -45,13 +45,16 @@ struct Trigger : public ctk::ApplicationModule {
                 trigger++;
                 writeAll();
             } else if (id == tick.getId() && automaticUpdate != 0) {
+                // FIXME Countdown is the same as tick, if we set up the timer using sleep_for(period)
                 countdown = static_cast<int>(tick);
                 // Timer has spoken, trigger update if we have reached timeout (tick == 0) and
                 // the user wants us to update
-                if (tick == 0) {
-                    trigger++;
-                    trigger.write();
-                }
+//                if (tick == 0) {
+//                    trigger++;
+//                    trigger.write();
+//                }
+                trigger++;
+                trigger.write();
                 countdown.write();
             }
         }
@@ -69,10 +72,14 @@ struct Timer : public ctk::ApplicationModule {
     {
         tick = 0;
         while (true) {
-            std::this_thread::sleep_for(timebaseT(1));
-            tick++;
-            tick %= timeout;
-            tick.write();
+//            std::this_thread::sleep_for(timebaseT(1));
+//            tick++;
+//            tick %= timeout;
+//            tick.write();
+          tick++;
+          tick.write();
+          int period = timeout;
+          std::this_thread::sleep_for(timebaseT(period));
         }
     }
 };

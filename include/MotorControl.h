@@ -22,7 +22,8 @@ struct MotorControl : ctk::ApplicationModule{
     MOTOR_READY=0, MOTOR_ERROR=1, MOTOR_RUNNING=2, MOTOR_RESETTING=3, MOTOR_DISABLED=4
   } motorState;
 
-  //                                      Owner, name, unit, descr, tags
+
+  //  Inputs from CS                             Owner, name, unit, descr, tags
   ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CS"}};
@@ -53,13 +54,23 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CS"}};  /*TODO Obsolete in high level of DriverLib?*/
   ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CS"}};
 
+
+  // TODO Define inputs from the motor driver
+  ctk::ScalarPushInput<int> isCalibrated{this, "isCalibrated", "", "Flags the calibration state of the motor driver"};
+
+  ctk::ScalarPushInput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started"};
+
   struct ToMotorDriver : ctk::VariableGroup {
     using ctk::VariableGroup::VariableGroup;
+    ctk::ScalarOutput<int32_t> enableMotor{this, "enable", "", "Enable the motor"};
 
     ctk::ScalarOutput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint"};
     ctk::ScalarOutput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint"};
     ctk::ScalarOutput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]"};
     ctk::ScalarOutput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]"};
+
+    ctk::ScalarOutput<int32_t> stopMotor{this, "stop", "", "Stop the motor"};
+    ctk::ScalarOutput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor"};
   } toMotorDriver{this, "toMotorDriver", "Control inputs to the motor driver"};
 
 
