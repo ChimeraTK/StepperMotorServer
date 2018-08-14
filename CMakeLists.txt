@@ -26,7 +26,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic
 
 include(cmake/add_dependency.cmake)
 add_dependency(ChimeraTK-ApplicationCore 00.13 REQUIRED)
-# TODO which version?
+# TODO Move to new version after update of library?
 add_dependency(mtca4u-MotorDriverCard 01.04 REQUIRED)
 
 IF(ADAPTER STREQUAL "OPCUA")
@@ -51,10 +51,6 @@ ELSE()
                       "   -DADAPTER=EPICSIOC to build an EPICS IOC")
 ENDIF()
 
-## TODO Any use of these?
-#add_dependency(mtca4u-VirtualLab 00.06 REQUIRED)
-#add_dependency(ChimeraTK-DeviceAccess-DoocsBackend REQUIRED)
-
 FIND_PACKAGE(Boost COMPONENTS thread system filesystem unit_test_framework REQUIRED)
 ENABLE_TESTING()
 
@@ -66,6 +62,7 @@ set(CMAKE_LINK_FLAGS "-Wl,--no-as-needed ${Adapter_LINK_FLAGS} ${ChimeraTK-Appli
 # set include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(SYSTEM ${mtca4u-MotorDriverCard_INCLUDE_DIRS})
+message("MotorDriverCard include directories:   ${mtca4u-MotorDriverCard_INCLUDE_DIRS}")
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 set(${PROJECT_NAME}_INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/)
 

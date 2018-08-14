@@ -9,15 +9,17 @@
 #include <iostream>
 
 
-// FIXME Motor specs must be read from config
-MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ModuleGroup(owner, name, description, true), _motor{new ctk::StepperMotor{"MOTOR_DUMMY", "MD22.1", 1U, "motorConfig.xml"}}{}
+// TODO Is there a better way to pass Module and Motor parameters?
+MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, MotorDriverParameters driverParam)
+  : ctk::ModuleGroup(owner, name, description, true),
+    _motor{new ctk::StepperMotor{driverParam.motorDriverCardDeviceName,
+                                 driverParam.moduleName,
+                                 driverParam.motorDriverId,
+                                 driverParam.motorDriverCardConfigFileName}}{}
 
 // FIXME Change to delegate ctor once we use the prepare method
 MotorDriver::ControlInputs::ControlInputs(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {
-
-}
+  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
 
 
 void MotorDriver::ControlInputs::prepare(){
@@ -33,18 +35,21 @@ void MotorDriver::ControlInputs::prepare(){
 
 void MotorDriver::ControlInputs::mainLoop(){
 
+  std::cout << "Entered controlInputs mainLoop. Motor state: " << _motor->isSystemIdle() << "\n" << std::endl;
+
   // Initialize the motor
   _motor->setActualPositionInSteps(0);
+
+  std::cout << "Motor state: " << _motor->isCalibrated() << "\n" << std::endl;
 
 
   while(true){
 
     auto changedVarId = inputGroup.readAny();
-    funcMap.at(changedVarId)();
+    if(_motor->isSystemIdle()){
+      funcMap.at(changedVarId)();
+    }
 
-    std::cout << "Motor use count in ControlInputs instance: " << _motor.use_count() << std::endl;
-//    _motor->setEnabled(true);
-//    _motor->setActualPosition(42.1234f);
     actualPosition = .0;
 
     writeAll();
@@ -57,15 +62,6 @@ MotorDriver::MotorDriverHWReadback::MotorDriverHWReadback(std::shared_ptr<ctk::S
 
 
 void MotorDriver::MotorDriverHWReadback::mainLoop(){
-
-//  ctk::AccessModeFlags amf = trigger.getAccessModeFlags();
-//
-//  if(amf == ctk::AccessMode::wait_for_new_data){
-//    std::cout << "Access mode is 'wait_for_new_data'" << std::endl;
-//  }
-//  else{
-//    std::cout << "Wrong access mode for trigger in MotorDriverReadback." << std::endl;
-//  }
 
   while(true){
     //Wait for cyclic trigger
@@ -87,7 +83,6 @@ void MotorDriver::MotorDriverHWReadback::mainLoop(){
     motorErrorId = static_cast<int32_t>(error);
     actualPositionInSteps = _motor->getCurrentPositionInSteps();
 
-
     writeAll();
   }
 
@@ -98,10 +93,19 @@ MotorDriver::MotorDriverSWReadBack::MotorDriverSWReadBack(std::shared_ptr<ctk::S
 
 void MotorDriver::MotorDriverSWReadBack::mainLoop(){
 
+  std::string currentState = "";
+
   while(true){
     // TODO Change to more efficient sampling scheme
     trigger.read();
-    isSystemIdle = _motor->isSystemIdle() ? 1 : 0;
+
+    isSystemIdle = _motor->isSystemIdle();
+
+    if(_motor->getState() != currentState){
+      currentState = _motor->getState();
+      std::cout << "**** New motorDriver state: " << currentState << std::endl;
+    }
+
 
     writeAll();
   }

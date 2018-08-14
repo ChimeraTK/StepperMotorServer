@@ -15,6 +15,7 @@
 
 #include "MotorControl.h"
 #include "MotorDriver.h"
+#include "MotorDummy.h"
 #include "Trigger.h"
 
 
@@ -32,6 +33,7 @@ struct StepperMotorServer : ctk::Application{
   //std::vector<MotorControl> motorControl;
   MotorControl motorControl{this, "MotorControl", ""};
   std::vector<MotorDriver> motorDriver;
+  std::vector<MotorDummy> motorDummy;
 
   ctk::ControlSystemModule cs{"MOTOR1"};
 

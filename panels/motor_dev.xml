@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="260,5,600,700"><fillColor>210,210,210</fillColor>
+<DOOCSValue name="Value8" bounds="400,190,50,20"></DOOCSValue>
 <DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.emergencyStop</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSColouredIndicator name="ColouredIndicator2" bounds="430,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label8" bounds="370,20,80,20"><text>isIdle</text></DOOCSLabel>
@@ -25,5 +26,5 @@
 <DOOCSLabel name="Label1" bounds="370,90,50,20"><text>Setpoint</text></DOOCSLabel>
 <DOOCSValue name="Value1" bounds="440,110,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.ACT_POS_IN_STEPS</adr></DOOCSValue>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABdElEQVR42u3YW4uCQBTA8b7/sy8hEpSIUXmJHrQieugxWPA79A1iL7Rwds8Bl2WDZV0rUf8DBy+IMz/mzIzOYL/fS59ioEVPiqLoTVRGfz5u0WCDa9d/hU7TVFarlWRZJp7nyXw+l9lsJsvl8qtSLXp+PB7vhtN2+L4vcRxfocv6y6jaDtIbdEPhuq7keS7T6dRSOwxDG1510vlf6KolCIL297QiqgbpfcMoy/n1IueXizy/vdtxOBzafT22Nr2jKJLNZmPv0jGeJMmvbVFs9nS6HbqX6d1ETy8WC9ntdjZ764fS4XB47OzNRNaXjxPWadK7A+ndtTT+E7prady69H7YOk16k94dnr3X67WMx2P7u9GNOb2eTCb2l6O7GHr98wX33Bykp0GDro/+vhs5Go1snSzH+Ha7tbVTx7fjOHa/jWObngYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0P1E97F8APJie0d1xWLBAAAAAElFTkSuQmCC</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABfElEQVR42u3Y2WqDQBSA4bz/dW6CSEBFlCwu5EJjEC+8DBTyDnmD0IUUTnsGLKGBUhvToP4DBxeCMx9zZslMqqqSMcVEi94cDofRRGv0589NPLDBN9d/hU6SRDabjWRZJrZty3K5lMViIWmaflWqRe/3+/3dcNoOz/MkiqIrdFN/E23bQXqDflBYliV5nksYhia1gyAww+uWdP4Tum3xfb//Pa2ItkF6dxhNOb2e5fRylue3d3OdzWbmvV57m97r9VqKojDf0jEex/GPbVFs9nTsDj3K9H5ET69WKynL0szeulGq6/p/Z28msrFsTlinSe8BpPfQ0vhX6KGlce/S+3Kdbg4zNHSX1uk6TXqT3gOevbfbrTiOY8aNHszps+u65l+OnmLo8/cP3PNwkJ4GDfp29OVp5Hw+N+tkM8Z3u51ZO3V8T6dT876PY5ueBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQ40SPsXwAu41599UVDdYAAAAASUVORK5CYII=</thumbnail>
 </jdddPanel>

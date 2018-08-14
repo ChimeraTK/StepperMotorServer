@@ -70,6 +70,7 @@ void MotorControl::stateMotorReady(){
   std::cout << "Entered state MotorReady." << std::endl;
   while(true){
     inputGroup.readAny();
+
     if(enableMotor == 0){
       toMotorDriver.enableMotor = 0;
       toMotorDriver.enableMotor.write();

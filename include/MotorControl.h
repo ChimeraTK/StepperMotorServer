@@ -50,8 +50,8 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarOutput<double> negativeEndSwitchPosition{this, "NEG_END_SWITCH_POSITION", "", "Positive end switch position", {"CS"}}; /*TODO POS/NEG relevant, sensible?*/
 
   ctk::ScalarOutput<int32_t> motorEnabled{this, "MOTOR_ENABLED", "", "Motor enabled flag", {"CS"}};
-  ctk::ScalarOutput<int32_t> motorStateOut{this, "MOTOR_STATE", "", "Motor state", {"CS"}};   // FIXME How to match this with the enum class state?
-  ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CS"}};  /*TODO Obsolete in high level of DriverLib?*/
+  ctk::ScalarOutput<int32_t> motorStateOut{this, "MOTOR_STATE", "", "Motor state", {"CS"}};         // FIXME How to match this with the enum class state?
+  ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CS"}};    /*TODO Obsolete in high level of DriverLib?*/
   ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CS"}};
 
 

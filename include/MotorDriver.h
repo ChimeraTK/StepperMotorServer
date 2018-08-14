@@ -13,6 +13,9 @@
 #include <mtca4u/MotorDriverCard/StepperMotor.h>
 #include "ExecutionTimer.h"
 
+//FIXME Include the dummy in this module or reimplement the library's dummy, so we dont need this
+#include "MotorDriverParameters.h"
+
 #include <map>
 #include <functional>
 #include <memory>
@@ -23,13 +26,12 @@ namespace ctk = ChimeraTK;
 typedef std::map<ctk::TransferElementID, std::function<void(void)>> funcmapT;
 
 
+
 struct MotorDriver : ctk::ModuleGroup {
 
-  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, MotorDriverParameters motorDriverParams);
 
   std::shared_ptr<ctk::StepperMotor> _motor;
-
-
 
 
 //  //                                      Owner, name, unit, descr, tag
@@ -56,6 +58,8 @@ struct MotorDriver : ctk::ModuleGroup {
     std::shared_ptr<ctk::StepperMotor> _motor;
     ctk::ReadAnyGroup inputGroup;
 
+    ctk::ScalarPollInput<int32_t> systemIdle{this, "systemIdle", "", "System idle flag"};
+
 //    FIXME Equivalents for start and reset methods
     ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CTRL"}};
     //ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CTRL"}};
@@ -81,7 +85,9 @@ struct MotorDriver : ctk::ModuleGroup {
   } controlInputs{_motor, this, "ControlInputs", "Control inputs to the stepper motor"};
 
 
+
   // TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
+  /** Values read from the motor driver hardware. */
   struct MotorDriverHWReadback : ctk::ApplicationModule {
 
     MotorDriverHWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);

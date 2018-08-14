@@ -12,6 +12,8 @@
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "mtca4u/DMapFilesParser.h"
 
+#include <boost/shared_ptr.hpp>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -32,15 +34,24 @@ void StepperMotorServer::defineConnections(){
   std::cout << "*** ChimeraTK Stepper Motor server version "
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
 
+  // TODO Handle mix of real and dummy motors in dMap file
+  bool useDummyMotors = false;
   if(ctk::DMapFilesParser(".").getdMapFileElem(stepperMotorDeviceName).uri == "/dummy/MotorDriverCard"){
+
+    useDummyMotors = true;
     mtca4u::MotorDriverCardFactory::instance().setDummyMode();
+
+    //_motorControlerDummy = boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(deviceFileName,  moduleName, stepperMotorDeviceConfigFile)->getMotorControler(0));
     std::cout << "*** Dummy motor in use." << std::endl;
   }
 
 
   auto nMotors = config.get<uint32_t>("nMotors");
   for(size_t i = 0; i<nMotors; ++i){
-    motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i));
+
+    //FIXME Read from config and handle multiple motors
+    MotorDriverParameters dp{"MOTOR_DUMMY", "MD22.1", 1U, "motorConfig.xml"};
+    motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i), dp);
     std::cout << "*** Created motorDriver " << i << std::endl;
 
     motorControl.toMotorDriver.connectTo(motorDriver[i]);
@@ -50,6 +61,11 @@ void StepperMotorServer::defineConnections(){
     motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
     motorDriver[i].motorDriverSWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
     motorDriver[i].motorDriverSWReadback.findTag("MOTCTRL").connectTo(motorControl);
+    //motorDriver[i].motorDriverSWReadback.isSystemIdle >> motorDriver[i].controlInputs.systemIdle;
+
+    if(useDummyMotors){
+      motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), dp);
+    }
   }
 
 
@@ -71,6 +87,8 @@ void StepperMotorServer::defineConnections(){
   triggerNr >>motorDriver[0].motorDriverHWReadback("trigger");
   triggerNr >>motorDriver[0].motorDriverSWReadback("trigger");
 
+
+  // Document module structure and connections
   motorControl.dumpGraph("motorControlModuleGraph.dot");
   motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");
 
