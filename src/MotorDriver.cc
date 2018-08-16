@@ -47,10 +47,11 @@ void MotorDriver::ControlInputs::mainLoop(){
 
     auto changedVarId = inputGroup.readAny();
     if(_motor->isSystemIdle()){
+      // TODO Make this wait for system idle,then read and call so we dont loose inputs
       funcMap.at(changedVarId)();
     }
 
-    actualPosition = .0;
+    dummyMotorTrigger++;
 
     writeAll();
   }
@@ -85,7 +86,6 @@ void MotorDriver::MotorDriverHWReadback::mainLoop(){
 
     writeAll();
   }
-
 }
 
 MotorDriver::MotorDriverSWReadBack::MotorDriverSWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)

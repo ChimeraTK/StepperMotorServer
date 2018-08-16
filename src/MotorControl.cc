@@ -45,13 +45,9 @@ void MotorControl::mainLoop(){
     motorStatus = static_cast<int>(motorState);
     motorStatus.write();
 
-    currentPosition.read();
-    double cp = currentPosition;
-    actualPosition = cp;
-    actualPosition.write();
-
   }
 }/* mainLoop() */
+
 
 void MotorControl::stateMotorDisabled(){
   std::cout << "Entered state MotorDisabled." << std::endl;
@@ -66,6 +62,7 @@ void MotorControl::stateMotorDisabled(){
   }
 }
 
+
 void MotorControl::stateMotorReady(){
   std::cout << "Entered state MotorReady." << std::endl;
   while(true){
@@ -79,7 +76,7 @@ void MotorControl::stateMotorReady(){
     }
     else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps && isCalibrated != 0){
       // TODO initiate movement here
-      actualPositionInSteps = positionSetpointInSteps;
+      //actualPositionInSteps = positionSetpointInSteps;
       toMotorDriver.positionSetpoint = positionSetpointInSteps;
       toMotorDriver.positionSetpoint.write();
       actualPositionInSteps.write();
@@ -88,7 +85,8 @@ void MotorControl::stateMotorReady(){
       return;
     }
   }
-}
+}/* MotorControl::stateMotorReady() */
+
 
 void MotorControl::stateMotorRunning(){
   std::cout << "Entered state MotorRunning." << std::endl;
@@ -101,7 +99,7 @@ void MotorControl::stateMotorRunning(){
       motorState = MotorState::MOTOR_READY;
       return;
     }
-    if(id == isSystemIdle.getId() && !isSystemIdle){
+    if(id == isSystemIdle.getId() && isSystemIdle){
       motorState = MotorState::MOTOR_READY;
       return;
     }

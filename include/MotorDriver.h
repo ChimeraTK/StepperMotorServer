@@ -77,8 +77,8 @@ struct MotorDriver : ctk::ModuleGroup {
     //  ctk::ScalarPushInput<double> positiveSWPositionLimit{this, "POS_SW_POS_LIM", "", "Positive SW position limit", {"CTRL"}};
     //  ctk::ScalarPushInput<double> negativeSWPositionLimit{this, "NEG_SW_POS_LIM", "", "Negative SW position limit", {"CTRL"}};
 
-    //FIXME
-    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"MEAS"}};
+    //FIXME Move dummy to this module
+    ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input"};
 
     void prepare() override;
     void mainLoop() override;
@@ -99,7 +99,10 @@ struct MotorDriver : ctk::ModuleGroup {
 
     ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS", "MOTCTRL"}};
     ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
-    ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS"}};
+    ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS", "MOTCTRL"}};
+
+    // PVs having a static relation to HW readback values TODO Move to own module?
+    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS", "MOTCTRL"}};
 
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
 
@@ -107,6 +110,7 @@ struct MotorDriver : ctk::ModuleGroup {
   } motorDriverHWReadback{_motor, this, "motorDriverHWReadback", "Signals read from the motor driver HW"};
 
 
+  /**  Variables read from the motor driver library (residing in SW) */
   struct MotorDriverSWReadBack : ctk::ApplicationModule {
 
     MotorDriverSWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);

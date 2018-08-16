@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="260,5,600,700"><fillColor>210,210,210</fillColor>
-<DOOCSValue name="Value8" bounds="400,190,50,20"></DOOCSValue>
 <DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.emergencyStop</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSColouredIndicator name="ColouredIndicator2" bounds="430,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label8" bounds="370,20,80,20"><text>isIdle</text></DOOCSLabel>
 <DOOCSValue name="Value7" bounds="480,20,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isSystemIdle</adr></DOOCSValue>
 <DOOCSToggleButton name="Button_MotorStop" bounds="80,120,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.stop</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSLabel name="Label5" bounds="370,190,50,20"><text>Actual</text></DOOCSLabel>
+<DOOCSLabel name="Label5" bounds="310,190,120,20"><text>Act pos in steps</text></DOOCSLabel>
 <DOOCSValue name="Value6" bounds="440,190,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.actualPositionInSteps</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator1" bounds="110,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.motorDriverReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label7" bounds="30,20,80,20"><text>isCalibrated</text></DOOCSLabel>
@@ -26,5 +25,5 @@
 <DOOCSLabel name="Label1" bounds="370,90,50,20"><text>Setpoint</text></DOOCSLabel>
 <DOOCSValue name="Value1" bounds="440,110,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.ACT_POS_IN_STEPS</adr></DOOCSValue>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABfElEQVR42u3Y2WqDQBSA4bz/dW6CSEBFlCwu5EJjEC+8DBTyDnmD0IUUTnsGLKGBUhvToP4DBxeCMx9zZslMqqqSMcVEi94cDofRRGv0589NPLDBN9d/hU6SRDabjWRZJrZty3K5lMViIWmaflWqRe/3+/3dcNoOz/MkiqIrdFN/E23bQXqDflBYliV5nksYhia1gyAww+uWdP4Tum3xfb//Pa2ItkF6dxhNOb2e5fRylue3d3OdzWbmvV57m97r9VqKojDf0jEex/GPbVFs9nTsDj3K9H5ET69WKynL0szeulGq6/p/Z28msrFsTlinSe8BpPfQ0vhX6KGlce/S+3Kdbg4zNHSX1uk6TXqT3gOevbfbrTiOY8aNHszps+u65l+OnmLo8/cP3PNwkJ4GDfp29OVp5Hw+N+tkM8Z3u51ZO3V8T6dT876PY5ueBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQ40SPsXwAu41599UVDdYAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABh0lEQVR42u3YbWuCUBTA8b7/696EhKASiZYZEaYivehlMOg77BvEHmhwtnPBsS0Yc+ac+r9w8Bqh98c998E72u/3MqQYadHK6XQaTFRGv/3dRIsNrv3+K3Qcx7LZbCRJEplOpxKGoQRBIOv1+v2lWrR+PB4bw2k7PM+TKIqu0OX7y6jaDtIbdEthWZbsdjvxfd+k9nw+N8OrTjr/Cl21zGaz7ve0IqoG6X3DKMv56SLnx4s8PL+Y62QyMb/rtbPpvVwuJcsy8ywd46vV6tu2KDa5u78depDp3UZPLxYLKYrCzN66UTocDn87ezORDWVzwjpNevcgvfuWxj9C9y2N/216l+txufPSXZjuvvSqX1fb7dbUG/vKIr1J7x7P3mmaiuM4ZgzpwZzeu65rxpqeYuj91wc0eThIT4MGXR/98TTStm3zPVuO8TzPzZqq43s8Hn9aP7s0tulp0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwYNGjRo0KBBgwY9TPQQyysSR3lw6LcqxgAAAABJRU5ErkJggg==</thumbnail>
 </jdddPanel>

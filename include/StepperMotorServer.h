@@ -27,7 +27,7 @@ struct StepperMotorServer : ctk::Application{
 
   ctk::ConfigReader config{this, "Configuration", "CTK_StepperMotorConfig.xml"};
 
-  Trigger trigger{this, "TRIGGER", ""};
+  Trigger trigger{this, "trigger", ""};
   Timer<std::chrono::milliseconds> timer{this, "TIMER", ""};
 
   //std::vector<MotorControl> motorControl;

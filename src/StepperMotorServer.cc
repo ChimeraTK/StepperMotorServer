@@ -40,12 +40,10 @@ void StepperMotorServer::defineConnections(){
 
     useDummyMotors = true;
     mtca4u::MotorDriverCardFactory::instance().setDummyMode();
-
-    //_motorControlerDummy = boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(deviceFileName,  moduleName, stepperMotorDeviceConfigFile)->getMotorControler(0));
     std::cout << "*** Dummy motor in use." << std::endl;
   }
 
-
+  // Set up modules for each motor
   auto nMotors = config.get<uint32_t>("nMotors");
   for(size_t i = 0; i<nMotors; ++i){
 
@@ -55,8 +53,6 @@ void StepperMotorServer::defineConnections(){
     std::cout << "*** Created motorDriver " << i << std::endl;
 
     motorControl.toMotorDriver.connectTo(motorDriver[i]);
-    //motorDriver[i].findTag("CTRL").connectTo(motorControl);
-    motorDriver[i]("actualPosition") >> motorControl("currentPosition");
     motorDriver[i].motorDriverHWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
     motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
     motorDriver[i].motorDriverSWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
@@ -65,6 +61,7 @@ void StepperMotorServer::defineConnections(){
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), dp);
+      motorDriver[i]("dummyMotorTrigger") >> motorDummy[i]("trigger");
     }
   }
 
@@ -84,8 +81,8 @@ void StepperMotorServer::defineConnections(){
 
   // Connect motorControl signals (TODO Keep this?)
   motorControl.findTag("CS").connectTo(cs, triggerNr);
-  triggerNr >>motorDriver[0].motorDriverHWReadback("trigger");
-  triggerNr >>motorDriver[0].motorDriverSWReadback("trigger");
+  triggerNr >> motorDriver[0].motorDriverHWReadback("trigger");
+  triggerNr >> motorDriver[0].motorDriverSWReadback("trigger");
 
 
   // Document module structure and connections

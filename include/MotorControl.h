@@ -43,9 +43,9 @@ struct MotorControl : ctk::ApplicationModule{
   ctk::ScalarPushInput<double> speedLimitSetpoint{this, "SPEED_LIM_SETP", "", "Speed limit setpoint", {"CS"}};
   ctk::ScalarPushInput<double> actualSpeedLimit{this, "ACT_SPEED_LIM", "", "Actual speed limit", {"CS"}};
 
-  // Current status to control system
-  ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
-  ctk::ScalarOutput<double> actualPositionInSteps{this, "ACT_POS_IN_STEPS", "", "Actual position [steps]", {"CS"}};
+  // Current status to control system TODO Most values can be mapped directly from Driver to CS
+  //ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
+  //ctk::ScalarOutput<double> actualPositionInSteps{this, "ACT_POS_IN_STEPS", "", "Actual position [steps]", {"CS"}};
   ctk::ScalarOutput<double> positiveEndSwitchPosition{this, "POS_END_SWITCH_POSITION", "", "Positive end switch position", {"CS"}}; /*TODO POS/NEG relevant, sensible?*/
   ctk::ScalarOutput<double> negativeEndSwitchPosition{this, "NEG_END_SWITCH_POSITION", "", "Positive end switch position", {"CS"}}; /*TODO POS/NEG relevant, sensible?*/
 
@@ -56,9 +56,10 @@ struct MotorControl : ctk::ApplicationModule{
 
 
   // TODO Define inputs from the motor driver
-  ctk::ScalarPushInput<int> isCalibrated{this, "isCalibrated", "", "Flags the calibration state of the motor driver"};
-
-  ctk::ScalarPushInput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started"};
+  ctk::ScalarPollInput<int> isCalibrated{this, "isCalibrated", "", "Flags the calibration state of the motor driver"};
+  ctk::ScalarPollInput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started"};
+  ctk::ScalarPollInput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]"};
+  ctk::ScalarPollInput<int>    actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]"};
 
   struct ToMotorDriver : ctk::VariableGroup {
     using ctk::VariableGroup::VariableGroup;
@@ -73,9 +74,6 @@ struct MotorControl : ctk::ApplicationModule{
     ctk::ScalarOutput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor"};
   } toMotorDriver{this, "toMotorDriver", "Control inputs to the motor driver"};
 
-
-  // FIXME For testing
-  ctk::ScalarPollInput<double> currentPosition{this, "currentPosition", "", ""};
 
   ctk::ReadAnyGroup inputGroup;
 
