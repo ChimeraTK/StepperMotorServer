@@ -57,7 +57,7 @@ struct MotorControl : ctk::ApplicationModule{
 
   // TODO Define inputs from the motor driver
   ctk::ScalarPollInput<int> isCalibrated{this, "isCalibrated", "", "Flags the calibration state of the motor driver"};
-  ctk::ScalarPollInput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started"};
+  ctk::ScalarPushInput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started"};
   ctk::ScalarPollInput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]"};
   ctk::ScalarPollInput<int>    actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]"};
 
@@ -70,8 +70,8 @@ struct MotorControl : ctk::ApplicationModule{
     ctk::ScalarOutput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]"};
     ctk::ScalarOutput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]"};
 
-    ctk::ScalarOutput<int32_t> stopMotor{this, "stop", "", "Stop the motor"};
-    ctk::ScalarOutput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor"};
+    ctk::ScalarOutput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor"};
+    ctk::ScalarOutput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor"};
   } toMotorDriver{this, "toMotorDriver", "Control inputs to the motor driver"};
 
 

@@ -21,8 +21,8 @@ struct Trigger : public ctk::ApplicationModule {
 
     ctk::ScalarOutput<int> trigger{this, "trigger", "", ""};
     ctk::ScalarOutput<int> countdown{this, "countdown", "", ""};
-    ctk::ScalarPushInput<int> forceUpdate{this, "forceUpdate", "", "Force an update of the ulog values"};
-    ctk::ScalarPushInput<int> automaticUpdate{this, "automaticUpdate", "", "Whether the values should should be polled periodically from the device"};
+    ctk::ScalarPushInput<int> forceUpdate{this, "forceUpdate", "", "Force a single trigger"};
+    ctk::ScalarPushInput<int> automaticUpdate{this, "automaticUpdate", "", "Enable cyclic triggering"};
     ctk::ScalarPushInput<int> tick{this, "timerTick", "", "Tick of the 1Hz timer"};
 
     void mainLoop()

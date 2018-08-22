@@ -10,47 +10,45 @@
 
 
 // TODO Is there a better way to pass Module and Motor parameters?
-MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, MotorDriverParameters driverParam)
+MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, const MotorDriverParameters &driverParam)
   : ctk::ModuleGroup(owner, name, description, true),
     _motor{new ctk::StepperMotor{driverParam.motorDriverCardDeviceName,
                                  driverParam.moduleName,
                                  driverParam.motorDriverId,
                                  driverParam.motorDriverCardConfigFileName}}{}
 
-// FIXME Change to delegate ctor once we use the prepare method
+
+// Definitions of ControlInputs module
 MotorDriver::ControlInputs::ControlInputs(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
 
 
 void MotorDriver::ControlInputs::prepare(){
 
-  inputGroup = this->readAnyGroup();
-
-  funcMap[enableMotor.getId()] = [this](){_motor->setEnabled(enableMotor); std::cout << "****** Called setEnabled()" << std::endl;};
-  funcMap[positionSetpoint.getId()] = [this](){_motor->moveToPosition(positionSetpoint);  std::cout << "****** Called moveToPostion()" << std::endl;};
-  funcMap[stopMotor.getId()] = [this](){_motor->stop(); std::cout << "****** Called stop()" << std::endl;};
-  funcMap[emergencyStopMotor.getId()] = [this](){_motor->emergencyStop(); std::cout << "****** Called emergencyStop()" << std::endl;};
+  funcMap[enableMotor.getId()]             = [this](){ _motor->setEnabled(enableMotor); };
+  funcMap[positionSetpointInSteps.getId()] = [this](){ _motor->moveToPositionInSteps(positionSetpointInSteps); };
+  funcMap[stopMotor.getId()]               = [this](){ if(stopMotor){_motor->stop();}};
+  funcMap[emergencyStopMotor.getId()]      = [this](){ if(emergencyStopMotor){ _motor->emergencyStop();}};
 
 }
 
 void MotorDriver::ControlInputs::mainLoop(){
 
-  std::cout << "Entered controlInputs mainLoop. Motor state: " << _motor->isSystemIdle() << "\n" << std::endl;
+  inputGroup = this->readAnyGroup();
 
   // Initialize the motor
   _motor->setActualPositionInSteps(0);
 
-  std::cout << "Motor state: " << _motor->isCalibrated() << "\n" << std::endl;
-
-
   while(true){
 
     auto changedVarId = inputGroup.readAny();
-    if(_motor->isSystemIdle()){
-      // TODO Make this wait for system idle,then read and call so we dont loose inputs
+
+    if(_motor->isSystemIdle()
+        || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
       funcMap.at(changedVarId)();
     }
 
+    dummyMotorStop = stopMotor || emergencyStopMotor;
     dummyMotorTrigger++;
 
     writeAll();
@@ -58,11 +56,12 @@ void MotorDriver::ControlInputs::mainLoop(){
 }
 
 
-MotorDriver::MotorDriverHWReadback::MotorDriverHWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+
+MotorDriver::HWReadback::HWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
 
 
-void MotorDriver::MotorDriverHWReadback::mainLoop(){
+void MotorDriver::HWReadback::mainLoop(){
 
   while(true){
     //Wait for cyclic trigger
@@ -88,12 +87,12 @@ void MotorDriver::MotorDriverHWReadback::mainLoop(){
   }
 }
 
-MotorDriver::MotorDriverSWReadBack::MotorDriverSWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+MotorDriver::SWReadBack::SWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
 
-void MotorDriver::MotorDriverSWReadBack::mainLoop(){
+void MotorDriver::SWReadBack::mainLoop(){
 
-  std::string currentState = "";
+  std::string currentState{"NO_STATE_AVAILABLE"};
 
   while(true){
     // TODO Change to more efficient sampling scheme

@@ -9,6 +9,7 @@
 #define INCLUDE_MOTORDRIVERPARAMETERS_H_
 
 struct MotorDriverParameters {
+
   std::string const & motorDriverCardDeviceName;
   std::string const & moduleName;
   unsigned int motorDriverId;

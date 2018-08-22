@@ -34,6 +34,21 @@ void StepperMotorServer::defineConnections(){
   std::cout << "*** ChimeraTK Stepper Motor server version "
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
 
+
+  //TODO Current wiring of the trigger and other push-type inputs
+  //     leads to updates inbetween samples. Rearrange triggers to have a
+  //     'hard' cycle time
+
+  // Setup poll trigger
+  config("cycleTime") >> timer.timeout;
+  timer.tick >> trigger.tick;
+  cs("TIMER.UPDATE.ONCE") >> trigger.forceUpdate;
+  cs("TIMER.UPDATE.AUTO") >> trigger.automaticUpdate;
+  trigger.countdown >> cs("TIMER.COUNTDOWN");
+
+  auto &cyclicTrigger = trigger.trigger;
+
+
   // TODO Handle mix of real and dummy motors in dMap file
   bool useDummyMotors = false;
   if(ctk::DMapFilesParser(".").getdMapFileElem(stepperMotorDeviceName).uri == "/dummy/MotorDriverCard"){
@@ -52,41 +67,27 @@ void StepperMotorServer::defineConnections(){
     motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i), dp);
     std::cout << "*** Created motorDriver " << i << std::endl;
 
-    motorControl.toMotorDriver.connectTo(motorDriver[i]);
+    motorDriver[i].controlInputs.findTag("CS").connectTo(cs["controlInput"]);
     motorDriver[i].motorDriverHWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
-    motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
+    //motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
     motorDriver[i].motorDriverSWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
-    motorDriver[i].motorDriverSWReadback.findTag("MOTCTRL").connectTo(motorControl);
-    //motorDriver[i].motorDriverSWReadback.isSystemIdle >> motorDriver[i].controlInputs.systemIdle;
+    //motorDriver[i].motorDriverSWReadback.findTag("MOTCTRL").connectTo(motorControl);
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), dp);
       motorDriver[i]("dummyMotorTrigger") >> motorDummy[i]("trigger");
+      motorDriver[i]("dummyMotorStop") >> motorDummy[i]("stop");
     }
   }
 
-
-  //TODO Current wiring of the trigger and other push-type inputs
-  //     leads to updates inbetween samples. Rearrange triggers to have a
-  //     'hard' cycle time
-
-  // Setup poll trigger
-  config("cycleTime") >> timer.timeout;
-  timer.tick >> trigger.tick;
-  cs("TIMER.UPDATE.ONCE") >> trigger.forceUpdate;
-  cs("TIMER.UPDATE.AUTO") >> trigger.automaticUpdate;
-  trigger.countdown >> cs("TIMER.COUNTDOWN");
-
-  auto &triggerNr = trigger.trigger;
-
   // Connect motorControl signals (TODO Keep this?)
-  motorControl.findTag("CS").connectTo(cs, triggerNr);
-  triggerNr >> motorDriver[0].motorDriverHWReadback("trigger");
-  triggerNr >> motorDriver[0].motorDriverSWReadback("trigger");
+  //motorControl.findTag("CS").connectTo(cs, cyclicTrigger);
+  cyclicTrigger >> motorDriver[0].motorDriverHWReadback("trigger");
+  cyclicTrigger >> motorDriver[0].motorDriverSWReadback("trigger");
 
 
   // Document module structure and connections
-  motorControl.dumpGraph("motorControlModuleGraph.dot");
+  //motorControl.dumpGraph("motorControlModuleGraph.dot");
   motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");
 
   dumpConnectionGraph();

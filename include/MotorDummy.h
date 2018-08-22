@@ -16,6 +16,7 @@
 #include "mtca4u/MotorDriverCard/MotorControlerDummy.h"
 
 #include <boost/shared_ptr.hpp>
+#include <thread>
 
 namespace ctk = ChimeraTK;
 
@@ -23,31 +24,48 @@ namespace ctk = ChimeraTK;
 #include "MotorDriverParameters.h"
 
 
-/** MotorDummy - A dummy application module to employ the MotorControlerDummy functionality of the MotorDriverCard library */
+/** MotorDummy - A dummy application module to employ the MotorControlerDummy functionality of the MotorDriverCard library
+ *
+ * Note: This is a workaround to handle the dummy provided by the MotorDriverCard library, which requires specific function calls
+ *       not supported by the real MotorControler.
+ */
 struct MotorDummy : public ctk::ApplicationModule {
 
-  MotorDummy(ctk::EntityOwner *owner, const std::string &name, const std::string &description, MotorDriverParameters dp)
-    : ctk::ApplicationModule(owner, name, description, true), _dp(dp){};
+  MotorDummy(ctk::EntityOwner *owner, const std::string &name, const std::string &description,const MotorDriverParameters &dp)
+    : ctk::ApplicationModule(owner, name, description, true),
+      _motorControlerDummy(boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(
+          mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(dp.motorDriverCardDeviceName, dp.moduleName, dp.motorDriverCardConfigFileName)->getMotorControler(dp.motorDriverId)))
+      {};
 
-    MotorDriverParameters _dp;
+    //MotorDriverParameters _dp;
     boost::shared_ptr<mtca4u::MotorControlerDummy> _motorControlerDummy;
 
 
-  ctk::ScalarPushInput<int32_t> trigger{this, "trigger", "", "Triggers one execution step"};
+  ctk::ScalarPushInput<int32_t> trigger{this, "trigger", "", "Triggers movement of the dummy motor"};
+  ctk::ScalarPollInput<int32_t> stop{this, "stop","", "Stops the dummy motor"};
 
   void mainLoop(){
 
-  mtca4u::MotorDriverCardFactory& factory{mtca4u::MotorDriverCardFactory::instance()};
-  // FIXME Here we get bad alloc
-  boost::shared_ptr<mtca4u::MotorDriverCard> motorDriverCard{factory.createMotorDriverCard(_dp.motorDriverCardDeviceName, _dp.moduleName, _dp.motorDriverCardConfigFileName)};
-  _motorControlerDummy = boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(motorDriverCard->getMotorControler(0));
-
-//  _motorControlerDummy = boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(
-//      mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(_dp.motorDriverCardDeviceName, _dp.moduleName, _dp.motorDriverCardConfigFileName)->getMotorControler(0));
+    // FIXME HACK enabled this permanently because there is no relation between StepperMotor and the dummy
+    _motorControlerDummy->setMotorCurrentEnabled(true);
+    _motorControlerDummy->setEndSwitchPowerEnabled(true);
 
     while(true){
       trigger.read();
-      _motorControlerDummy->moveTowardsTarget(1.f);
+      while(!_motorControlerDummy->isMotorMoving()){
+       std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      }
+
+      while(_motorControlerDummy->isMotorMoving()){
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        stop.read();
+        if(!stop){
+          _motorControlerDummy->moveTowardsTarget(.1f);
+        }
+        else{
+          continue;
+        }
+      }
     }
   }
 };

@@ -29,7 +29,7 @@ typedef std::map<ctk::TransferElementID, std::function<void(void)>> funcmapT;
 
 struct MotorDriver : ctk::ModuleGroup {
 
-  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, MotorDriverParameters motorDriverParams);
+  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, const MotorDriverParameters &motorDriverParams);
 
   std::shared_ptr<ctk::StepperMotor> _motor;
 
@@ -58,39 +58,43 @@ struct MotorDriver : ctk::ModuleGroup {
     std::shared_ptr<ctk::StepperMotor> _motor;
     ctk::ReadAnyGroup inputGroup;
 
-    ctk::ScalarPollInput<int32_t> systemIdle{this, "systemIdle", "", "System idle flag"};
+    //ctk::ScalarPollInput<int32_t> systemIdle{this, "systemIdle", "", "System idle flag"};
 
-//    FIXME Equivalents for start and reset methods
-    ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CTRL"}};
+//    TODO Equivalent reset method?
+    ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
+    ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"CS"}};
+    ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor", {"CS"}};
+    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]", {"CS"}};
+
+    //FIXME Move dummy to this module
+    ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input"};
+    ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor"};
+
     //ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CTRL"}};
     //ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> stopMotor{this, "stop", "", "Stop the motor", {"CTRL"}};
     //ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
-    ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStop", "", "Emergency stop motor", {"CTRL"}};
 
-    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint"};
-    ctk::ScalarPushInput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint"};
-    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]"};
-    ctk::ScalarPushInput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]"};
+//    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint", {"CS"}};
+//    ctk::ScalarPushInput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint", {"CS"}};
+//    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]", {"CS"}};
+//    ctk::ScalarPushInput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]", {"CS"}};
 
     //  ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "SW_LIM_ENABLE", "", "Enable SW limits", {"CTRL"}};
     //  ctk::ScalarPushInput<double> positiveSWPositionLimit{this, "POS_SW_POS_LIM", "", "Positive SW position limit", {"CTRL"}};
     //  ctk::ScalarPushInput<double> negativeSWPositionLimit{this, "NEG_SW_POS_LIM", "", "Negative SW position limit", {"CTRL"}};
 
-    //FIXME Move dummy to this module
-    ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input"};
-
     void prepare() override;
     void mainLoop() override;
+
   } controlInputs{_motor, this, "ControlInputs", "Control inputs to the stepper motor"};
 
 
 
   // TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
   /** Values read from the motor driver hardware. */
-  struct MotorDriverHWReadback : ctk::ApplicationModule {
+  struct HWReadback : ctk::ApplicationModule {
 
-    MotorDriverHWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+    HWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
     std::shared_ptr<ctk::StepperMotor> _motor;
     ExecutionTimer<> execTimer;
@@ -111,9 +115,9 @@ struct MotorDriver : ctk::ModuleGroup {
 
 
   /**  Variables read from the motor driver library (residing in SW) */
-  struct MotorDriverSWReadBack : ctk::ApplicationModule {
+  struct SWReadBack : ctk::ApplicationModule {
 
-    MotorDriverSWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+    SWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
     std::shared_ptr<ctk::StepperMotor> _motor;
 

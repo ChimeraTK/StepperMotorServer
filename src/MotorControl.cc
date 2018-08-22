@@ -22,8 +22,6 @@ void MotorControl::mainLoop(){
 
     //TODO Read Status/Error words
 
-    std::cout << "Current state is: " << static_cast<int>(motorState) << std::endl;
-
     switch (motorState){
       case MotorState::MOTOR_DISABLED:
         stateMotorDisabled();
@@ -65,6 +63,7 @@ void MotorControl::stateMotorDisabled(){
 
 void MotorControl::stateMotorReady(){
   std::cout << "Entered state MotorReady." << std::endl;
+  std::cout << "**** Actual position: " << actualPositionInSteps << std::endl;
   while(true){
     inputGroup.readAny();
 
@@ -75,11 +74,9 @@ void MotorControl::stateMotorReady(){
       return;
     }
     else if(startMotor != 0 && positionSetpointInSteps != actualPositionInSteps && isCalibrated != 0){
-      // TODO initiate movement here
-      //actualPositionInSteps = positionSetpointInSteps;
+      // TODO initiate movement here once we implement the autostart flag
       toMotorDriver.positionSetpoint = positionSetpointInSteps;
       toMotorDriver.positionSetpoint.write();
-      actualPositionInSteps.write();
 
       motorState = MotorState::MOTOR_RUNNING;
       return;
@@ -93,7 +90,7 @@ void MotorControl::stateMotorRunning(){
   while(true){
     auto id = inputGroup.readAny();
     if(stopMotor != 0){
-      toMotorDriver.stopMotor = 1;
+      toMotorDriver.stopMotor++;
       toMotorDriver.stopMotor.write();
       //TODO Implement checking of motor.isBusy()
       motorState = MotorState::MOTOR_READY;
@@ -104,7 +101,7 @@ void MotorControl::stateMotorRunning(){
       return;
     }
     if(emergencyStopMotor != 0){
-      toMotorDriver.emergencyStopMotor = 1;
+      toMotorDriver.emergencyStopMotor++;
       toMotorDriver.emergencyStopMotor.write();
       motorState = MotorState::MOTOR_DISABLED;
       return;
