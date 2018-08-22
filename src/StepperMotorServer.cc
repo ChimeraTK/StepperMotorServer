@@ -35,18 +35,27 @@ void StepperMotorServer::defineConnections(){
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
 
 
-  //TODO Current wiring of the trigger and other push-type inputs
-  //     leads to updates inbetween samples. Rearrange triggers to have a
-  //     'hard' cycle time
-
   // Setup poll trigger
   config("cycleTime") >> timer.timeout;
   timer.tick >> trigger.tick;
-  cs("TIMER.UPDATE.ONCE") >> trigger.forceUpdate;
-  cs("TIMER.UPDATE.AUTO") >> trigger.automaticUpdate;
-  trigger.countdown >> cs("TIMER.COUNTDOWN");
+  cs["Timer"]("updateOnce") >> trigger.forceUpdate;
+  cs["Timer"]("updateAuto") >> trigger.automaticUpdate;
+  trigger.countdown >> cs["Timer"]("countdown");
 
   auto &cyclicTrigger = trigger.trigger;
+
+
+  // Publish configuration
+  //config.connectTo(cs["Configuration"]);
+  /// @todo This is a work-around until string arrays do not crash the OPC UA adapter any more!
+  for(auto &a : config.getAccessorList()) {
+    if(a.getValueType() == typeid(std::string) && a.getNumberOfElements() > 1) {
+      std::cout << "*** WARNING: Workaround active: Not publishing /Configuration/"+a.getName()+
+                   " to avoid crash of OPC UA adapter." << std::endl;
+      continue;
+    }
+    a >> cs["Configuration"](a.getName());
+  }
 
 
   // TODO Handle mix of real and dummy motors in dMap file
@@ -64,13 +73,13 @@ void StepperMotorServer::defineConnections(){
 
     //FIXME Read from config and handle multiple motors
     MotorDriverParameters dp{"MOTOR_DUMMY", "MD22.1", 1U, "motorConfig.xml"};
-    motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i), "Driver of motor "+std::to_string(i), dp);
+    motorDriver.emplace_back(this, "MotorDriver"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), dp);
     std::cout << "*** Created motorDriver " << i << std::endl;
 
-    motorDriver[i].controlInputs.findTag("CS").connectTo(cs["controlInput"]);
-    motorDriver[i].motorDriverHWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
+    motorDriver[i].controlInputs.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["controlInputs"]);
+    motorDriver[i].hwReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
     //motorDriver[i].motorDriverHWReadback.findTag("MOTCTRL").connectTo(motorControl);
-    motorDriver[i].motorDriverSWReadback.findTag("CS").connectTo(cs["motorDriverReadback"]);
+    motorDriver[i].swReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["swReadback"]);
     //motorDriver[i].motorDriverSWReadback.findTag("MOTCTRL").connectTo(motorControl);
 
     if(useDummyMotors){
@@ -82,8 +91,8 @@ void StepperMotorServer::defineConnections(){
 
   // Connect motorControl signals (TODO Keep this?)
   //motorControl.findTag("CS").connectTo(cs, cyclicTrigger);
-  cyclicTrigger >> motorDriver[0].motorDriverHWReadback("trigger");
-  cyclicTrigger >> motorDriver[0].motorDriverSWReadback("trigger");
+  cyclicTrigger >> motorDriver[0].hwReadback("trigger");
+  cyclicTrigger >> motorDriver[0].swReadback("trigger");
 
 
   // Document module structure and connections

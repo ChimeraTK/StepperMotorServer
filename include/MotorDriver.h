@@ -111,7 +111,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
 
     void mainLoop() override;
-  } motorDriverHWReadback{_motor, this, "motorDriverHWReadback", "Signals read from the motor driver HW"};
+  } hwReadback{_motor, this, "motorDriverHWReadback", "Signals read from the motor driver HW"};
 
 
   /**  Variables read from the motor driver library (residing in SW) */
@@ -125,7 +125,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS", "MOTCTRL"}};
 
     void mainLoop() override;
-  } motorDriverSWReadback{_motor, this, "motorDriverSWReadback", "Signals read from the motor driver SW"};
+  } swReadback{_motor, this, "motorDriverSWReadback", "Signals read from the motor driver SW"};
 
 };
 

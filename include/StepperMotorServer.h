@@ -36,8 +36,7 @@ struct StepperMotorServer : ctk::Application{
   std::vector<MotorDriver> motorDriver;
   std::vector<MotorDummy> motorDummy;
 
-  ctk::ControlSystemModule cs{"MOTOR1"};
-
+  ctk::ControlSystemModule cs;
   void defineConnections() override;
 
 }; /* struct StepperMotorServer */
