@@ -170,7 +170,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(FILES config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_NAME})
     install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
     install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
-    install(FILES config/${PROJECT_NAME}-DoocsVariableConfig.xml DESTINATION ${PROJECT_NAME})
+    #install(FILES config/${PROJECT_NAME}-DoocsVariableConfig.xml DESTINATION ${PROJECT_NAME}) # Do not export until adapted to internal structure
     install(FILES config/RPC_LIBNO DESTINATION ${PROJECT_NAME})
     install(CODE "
          EXECUTE_PROCESS(COMMAND ln -sf bin/${PROJECT_NAME} ${PROJECT_NAME}

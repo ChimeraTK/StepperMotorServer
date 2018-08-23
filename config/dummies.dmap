@@ -1,3 +1,4 @@
 #MOTOR_DUMMY sdm://./dfmc_md22dummy=newer_firmware_mapfile.map,MD22_0 newer_firmware_mapfile.map
 
-MOTOR_DUMMY /dummy/MotorDriverCard DFMC_MD22_test.map
+MOTOR_DUMMY1 /dummy/MotorDriverCard DFMC_MD22_test.map
+MOTOR_DUMMY2 /dummy/MotorDriverCard DFMC_MD22_test.map

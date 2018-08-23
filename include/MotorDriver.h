@@ -50,9 +50,9 @@ struct MotorDriver : ctk::ModuleGroup {
 //  ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CTRL"}};  /*TODO Obsolete in high level of DriverLib?*/
 //  ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CTRL"}};
 
-  struct ControlInputs : ctk::ApplicationModule {
+  struct ControlInput : ctk::ApplicationModule {
 
-    ControlInputs(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+    ControlInput(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
     funcmapT funcMap;
     std::shared_ptr<ctk::StepperMotor> _motor;
@@ -86,7 +86,7 @@ struct MotorDriver : ctk::ModuleGroup {
     void prepare() override;
     void mainLoop() override;
 
-  } controlInputs{_motor, this, "ControlInputs", "Control inputs to the stepper motor"};
+  } controlInput{_motor, this, "controlInput", "Control inputs to the stepper motor"};
 
 
 
@@ -111,7 +111,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
 
     void mainLoop() override;
-  } hwReadback{_motor, this, "motorDriverHWReadback", "Signals read from the motor driver HW"};
+  } hwReadback{_motor, this, "hwReadback", "Signals read from the motor driver HW"};
 
 
   /**  Variables read from the motor driver library (residing in SW) */
@@ -125,7 +125,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS", "MOTCTRL"}};
 
     void mainLoop() override;
-  } swReadback{_motor, this, "motorDriverSWReadback", "Signals read from the motor driver SW"};
+  } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};
 
 };
 

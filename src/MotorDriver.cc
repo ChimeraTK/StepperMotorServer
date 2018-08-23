@@ -19,11 +19,11 @@ MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const
 
 
 // Definitions of ControlInputs module
-MotorDriver::ControlInputs::ControlInputs(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+MotorDriver::ControlInput::ControlInput(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
 
 
-void MotorDriver::ControlInputs::prepare(){
+void MotorDriver::ControlInput::prepare(){
 
   funcMap[enableMotor.getId()]             = [this](){ _motor->setEnabled(enableMotor); };
   funcMap[positionSetpointInSteps.getId()] = [this](){ _motor->moveToPositionInSteps(positionSetpointInSteps); };
@@ -32,7 +32,7 @@ void MotorDriver::ControlInputs::prepare(){
 
 }
 
-void MotorDriver::ControlInputs::mainLoop(){
+void MotorDriver::ControlInput::mainLoop(){
 
   inputGroup = this->readAnyGroup();
 

@@ -21,11 +21,13 @@
 
 namespace ctk = ChimeraTK;
 
+static std::string serverConfigFile{"CTK_StepperMotorConfig.xml"};
+
 struct StepperMotorServer : ctk::Application{
   StepperMotorServer() : Application("CTK_StepperMotorServer") {}
   ~StepperMotorServer() { shutdown(); }
 
-  ctk::ConfigReader config{this, "Configuration", "CTK_StepperMotorConfig.xml"};
+  ctk::ConfigReader config{this, "Configuration", serverConfigFile};
 
   Trigger trigger{this, "trigger", ""};
   Timer<std::chrono::milliseconds> timer{this, "TIMER", ""};

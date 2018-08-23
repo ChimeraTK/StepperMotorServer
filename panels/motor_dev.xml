@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="300,5,600,700"><fillColor>210,210,210</fillColor>
 <DOOCSValue name="Value1" bounds="170,300,140,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor2/hwReadback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime></DOOCSValue>
-<DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInputs.emergencyStopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInput.emergencyStopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSColouredIndicator name="ColouredIndicator2" bounds="430,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label8" bounds="370,20,80,20"><text>isIdle</text></DOOCSLabel>
 <DOOCSValue name="Value7" bounds="480,20,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/swReadback.isSystemIdle</adr></DOOCSValue>
-<DOOCSToggleButton name="Button_MotorStop" bounds="80,120,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInputs.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="Button_MotorStop" bounds="80,120,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInput.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSLabel name="Label5" bounds="330,130,120,20"><text>Act pos in steps</text></DOOCSLabel>
 <DOOCSValue name="Value6" bounds="460,130,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.actualPositionInSteps</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator1" bounds="110,20,20,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
@@ -18,8 +18,8 @@
 <DOOCSLabel name="Label4" bounds="20,230,110,20"><text>Timer cntdown</text></DOOCSLabel>
 <DOOCSValue name="Value3" bounds="150,230,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Timer/countdown</adr></DOOCSValue>
 <DOOCSToggleButton name="Button_MotorStart" bounds="80,100,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/MOTOR1/MOTOR1.MOTOR_START</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSToggleButton name="EnableButton" bounds="80,70,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInputs.enable</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
-<DOOCSDial name="Dial1" bounds="430,90,80,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInputs.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSToggleButton name="EnableButton" bounds="80,70,130,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInput.enable</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
+<DOOCSDial name="Dial1" bounds="430,90,80,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="370,90,50,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
 <thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABZklEQVR42u3Y74qCQBSH4e7/c19EQjARwzSNCE0JL0BY8B72DmL/0MLZPQMFu8GyorHkvAMHNULnwd+R0VnTNGJTzXToTtd11lRv9NffTf3jhAdf/wad57nsdjspikIWi4Ws12uJ41i22+31ojp0v23bu+F0HkEQyGazuUFfrn+pvvMg3qBtR/cdYRg+PloRfYt4j1iXcXo7y+n1LC/vH2brOI75XbcPG+80TaWqKnOusiwly7Jf56LY4ul5PLSV8eZBxoNsvEqSRI7H47WHtZ+1j3Wry+D9fm/2hyw/iTfxtm0ZOrUY/wk9tRgTb+JNvC2M9+FwEN/3zcpHP8zp8XK5NCsk/UCnxz9PcM+Pg9xp0KCHo13XNT28Wq3E8zyJouja43Vdmzch7e/5fP7treeReps7DbpnEW/QoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEGDBg0aNGjQoEFPBG3j+ASXxn3qZqeBQQAAAABJRU5ErkJggg==</thumbnail>
