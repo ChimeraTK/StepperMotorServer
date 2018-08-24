@@ -1,4 +1,5 @@
-#MOTOR_DUMMY sdm://./dfmc_md22dummy=newer_firmware_mapfile.map,MD22_0 newer_firmware_mapfile.map
+
+#MOTOR sdm://./pci:pcieunis4 controller_pzt4_md22_md22_fmc25_70t_r2261.map
 
 MOTOR_DUMMY1 /dummy/MotorDriverCard DFMC_MD22_test.map
 MOTOR_DUMMY2 /dummy/MotorDriverCard DFMC_MD22_test.map

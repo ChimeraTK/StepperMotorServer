@@ -82,6 +82,7 @@ void MotorDriver::HWReadback::mainLoop(){
     ctk::StepperMotorError error = _motor->getError();
     motorErrorId = static_cast<int32_t>(error);
     actualPositionInSteps = _motor->getCurrentPositionInSteps();
+    targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
 
     writeAll();
   }
@@ -99,6 +100,7 @@ void MotorDriver::SWReadBack::mainLoop(){
     trigger.read();
 
     isSystemIdle = _motor->isSystemIdle();
+    motorState   = _motor->getState();
 
     if(_motor->getState() != currentState){
       currentState = _motor->getState();

@@ -85,7 +85,7 @@ void StepperMotorServer::defineConnections(){
     mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
 
     // Create a motor driver
-    MotorDriverParameters dp{motorDriverCardModuleNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
+    MotorDriverParameters dp{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
     motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), dp);
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << std::endl;

@@ -101,12 +101,13 @@ struct MotorDriver : ctk::ModuleGroup {
 
     ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
 
-    ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS", "MOTCTRL"}};
+    ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS"}};
     ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
-    ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS", "MOTCTRL"}};
+    ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS"}};
+    ctk::ScalarOutput<int> targetPositionInStepsRBV{this, "targetPositionInStepsRBV", "", "Readback value of the target position", {"CS"}};
 
     // PVs having a static relation to HW readback values TODO Move to own module?
-    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS", "MOTCTRL"}};
+    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
 
@@ -122,7 +123,8 @@ struct MotorDriver : ctk::ModuleGroup {
     std::shared_ptr<ctk::StepperMotor> _motor;
 
     ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
-    ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS", "MOTCTRL"}};
+    ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS"}};
+    ctk::ScalarOutput<std::string> motorState{this, "motorState", "", "State of the motor driver", {"CS"}};
 
     void mainLoop() override;
   } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};

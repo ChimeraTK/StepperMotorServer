@@ -56,11 +56,13 @@ struct MotorDummy : public ctk::ApplicationModule {
        std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
 
+      float moveFraction = .2f;
       while(_motorControlerDummy->isMotorMoving()){
         std::this_thread::sleep_for(std::chrono::seconds(1));
         stop.read();
         if(!stop){
-          _motorControlerDummy->moveTowardsTarget(.1f);
+          _motorControlerDummy->moveTowardsTarget(moveFraction);
+          moveFraction *= 1.5f; // Quick hack so the dummy actually reaches its target
         }
         else{
           continue;
