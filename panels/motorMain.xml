@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="315,5,610,130"><fillColor>210,210,210</fillColor><adr>TEST.DOOCS/LOCALHOST_610498009/*/*</adr>
+<DOOCSButton name="Motor2" bounds="40,50,100,20"><function>New Window</function><text>Motor 2</text><buttonColor>238,238,238</buttonColor><adr>//Motor2/*</adr><xmlFile>./motor_dev.xml</xmlFile></DOOCSButton>
+<DOOCSToggleButton name="ToggleButton2" bounds="420,20,130,20"><adr>//Timer/updateOnce</adr><textON>Timer update</textON><textOFF>Timer update</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="ToggleButton1" bounds="420,50,130,20"><adr>//Timer/updateAuto</adr><textON>Auto update off</textON><textOFF>Auto update on</textOFF></DOOCSToggleButton>
+<DOOCSLabel name="Label4" bounds="420,70,110,20"><text>Timer cntdown</text></DOOCSLabel>
+<DOOCSValue name="Value3" bounds="550,70,50,20"><adr>//Timer/countdown</adr></DOOCSValue>
+<DOOCSButton name="Motor1" bounds="40,20,100,20"><function>New Window</function><text>Motor 1</text><buttonColor>238,238,238</buttonColor><adr>//Motor1/*</adr><xmlFile>./motor_dev.xml</xmlFile></DOOCSButton>
+</DOOCSLayeredPane>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD4AAAAOCAYAAAB3u6/pAAAAcklEQVR42u2SMQoAMQgE8/9nJGArljFNHpDKD3kkZQiH14QDXVjQQtjBTb139eY0NQcRceUjuEUAcD3sV71lPILPA4tvg1tzWTJG1aPqUXWHVf+rmVlzztpaUyJaeylFa62KiGvfb8YY8fEAD3Cv4F71AMTLn5mRROq2AAAAAElFTkSuQmCC</thumbnail>
+</jdddPanel>
