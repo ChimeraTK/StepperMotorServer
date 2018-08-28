@@ -82,6 +82,10 @@ void MotorDriver::HWReadback::mainLoop(){
     ctk::StepperMotorError error = _motor->getError();
     motorErrorId = static_cast<int32_t>(error);
     actualPositionInSteps = _motor->getCurrentPositionInSteps();
+    decoderPosition = _motor->getDecoderPosition();
+
+    // FIXME Debug RBVs
+    enabledRBV = _motor->getEnabled();
     targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
 
     writeAll();

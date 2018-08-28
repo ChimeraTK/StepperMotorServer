@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="300,5,600,700"><fillColor>210,210,210</fillColor>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="320,5,600,700"><fillColor>210,210,210</fillColor>
+<DOOCSValue name="Value3" bounds="410,230,140,20"><adr>///hwReadback.decoderPosition</adr></DOOCSValue>
 <DOOCSLabel name="Label2" bounds="290,50,40,20"><text>Error</text></DOOCSLabel>
 <DOOCSValue name="Value2" bounds="350,50,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.motorError</adr></DOOCSValue>
-<DOOCSValue name="Value1" bounds="430,160,100,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
+<DOOCSValue name="Value1" bounds="430,160,100,20"><adr>///hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
 <DOOCSToggleButton name="ToggleButton3" bounds="80,150,130,20"><adr>///controlInput.emergencyStopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSColouredIndicator name="ColouredIndicator2" bounds="350,20,20,20"><adr>///swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label8" bounds="290,20,80,20"><text>isIdle</text></DOOCSLabel>
@@ -20,5 +21,5 @@
 <DOOCSDial name="Dial1" bounds="330,160,80,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="270,160,50,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABVElEQVR42u3Y22qDQBCA4bz/tTciIogEg8cEEYMSvMilUPAd+gahB1KYdhYSCC0FUwOV/ReGlSWs+2VnxHXV973YFCttejGOozUxGf31cxMPXNBD5/8Rvd1upaoqaZpGfN+XNE0lSRLZ7XbXRWnT62EY7r6x3ieKIimK4ht6jvln3Wkr0xv0H0JLJgxDOR6PN+OPSunJ6KltvV4vf6cVMTVI7yWiSW9b0pud5kHGg4z0nrqQSzu9neX0epaX9w/Tu65rxrVfbHrneS5t25o/Zr/fS1mWv2aTYpun5yt6jtdUahq0TWjP80ytbTYbCYJA4jg2NahfOrquk8PhYL52OI5jxu85EmZZZua51LXOo7WtvR4567q+mXvuIyc7DRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aND/GG1j+wRVp4HU29uklgAAAABJRU5ErkJggg==</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABV0lEQVR42u3Y22qDQBCA4bz/dW5EJCAiiomHEIISES+8FAq+Q94g9EAK085CQkNLwdRAZf+FYWUJ637ZGXFdtG0rNsVCm14Mw2BNjEZ//tzEAxf00Pl/RBdFIbvdTsqyFM/zZL1eS5Ikst1ur4vSptd93999Y71PEASSZdk39BTzT7rTVqY36D+Elozv+9J13c34o1J6NHpsC8Nw/jutiLFBes8RTXrbkt7sNA8yHmSk99iFXNrp9Synl7M8v72b3nEcM679bNM7TVM5HA7mj6mqSvI8/zWbFFs+Ha/oKV5TqWnQNqFd1zW1FsexrFYriaLI1KB+6ajrWpqmMV87lsulGb/nSLjZbMw8l7rWebS2tdcj536/v5l76iMnOw36nwXpDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRr0V7SN7QM3gIHCRrZJgwAAAABJRU5ErkJggg==</thumbnail>
 </jdddPanel>

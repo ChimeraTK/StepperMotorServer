@@ -95,6 +95,8 @@ void StepperMotorServer::defineConnections(){
     motorDriver[i].swReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["swReadback"]);
 //    motorDriver[i].findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
 
+    cyclicTrigger >> motorDriver[i].hwReadback("trigger");
+    cyclicTrigger >> motorDriver[i].swReadback("trigger");
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), dp);
@@ -105,9 +107,6 @@ void StepperMotorServer::defineConnections(){
 
   // Connect motorControl signals (TODO Keep this?)
   //motorControl.findTag("CS").connectTo(cs, cyclicTrigger);
-  cyclicTrigger >> motorDriver[0].hwReadback("trigger");
-  cyclicTrigger >> motorDriver[0].swReadback("trigger");
-
 
   // Document module structure and connections
   //motorControl.dumpGraph("motorControlModuleGraph.dot");
