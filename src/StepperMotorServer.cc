@@ -88,7 +88,8 @@ void StepperMotorServer::defineConnections(){
     MotorDriverParameters dp{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
     motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), dp);
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
-              << " on device " << motorDriverCardDeviceNames[i] << std::endl;
+              << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
+              <<std::endl;
 
     motorDriver[i].controlInput.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["controlInput"]);
     motorDriver[i].hwReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
