@@ -17,11 +17,30 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 #include <memory>
 #include <algorithm>
 
 
 
+static StepperMotorServer server;
+
+/** Hardware initialization
+ *  This is called from within defineConnections() because there we have the device name available
+ *  and this has to be done per FMC carrier board, not per motor (represented by the ApplicationModules).
+ *  TODO Review this once additional driver HW gets supported
+ */
+static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias){
+  std::string command{"./initMotorDriverHW.py " + dMapFileName + " " + deviceAlias};
+
+  int result = std::system(command.c_str());
+  if(result != 0) {
+    std::cout << "*** Error calling initialization script " << command << std::endl;
+    std::exit(result);
+  }
+};
+
+/** Define interconnection of modules */
 void StepperMotorServer::defineConnections(){
 
   std::string dMapFileName{"dummies.dmap"};
@@ -74,8 +93,8 @@ void StepperMotorServer::defineConnections(){
   }
 
   // Set up modules for each motor
+  std::unordered_set<std::string> initializedMotorDriverHW;
   for(size_t i = 0; i<nMotors; ++i){
-
 
     bool useDummyMotors = false;
     if(ctk::DMapFilesParser(".").getdMapFileElem(motorDriverCardDeviceNames[i]).uri == "/dummy/MotorDriverCard"){
@@ -84,8 +103,15 @@ void StepperMotorServer::defineConnections(){
     }
     mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
 
-    // Create a motor driver
+    // Motor data
     MotorDriverParameters dp{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
+
+    // Configure motor driver HW
+    if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && !useDummyMotors){
+      initMotorDriverHW(dMapFileName, motorDriverCardDeviceNames[i]);
+    }
+
+    // Create a motor driver
     motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), dp);
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
@@ -117,5 +143,4 @@ void StepperMotorServer::defineConnections(){
 
 } /* defineConnections() */
 
-static StepperMotorServer server;
 

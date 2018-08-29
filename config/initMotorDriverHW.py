@@ -1,9 +1,18 @@
+#!/usr/bin/python3
+
 import mtca4u
-from array import *
+import sys
 
-mtca4u.set_dmap_location("../bam_motor.dmap")
+if len(sys.argv) < 3 :
+  print("Usage: initMotorDriverHW.py <dMapFileName> <boardAliasName>")
+  sys.exit(1)
 
-motorDevice = mtca4u.Device("MOTOR_DEVICE")
+dMapFileName = sys.argv[1]
+deviceName   = sys.argv[2]
+
+print("Performing initialization of device "+deviceName+".")
+mtca4u.set_dmap_location(dMapFileName)
+device = mtca4u.Device(deviceName)
  
-motorDevice.write("BOARD0", "WORD_RESET_N", 1);
+device.write("BOARD0", "WORD_RESET_N", 1);
 
