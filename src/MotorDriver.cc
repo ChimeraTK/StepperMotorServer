@@ -7,6 +7,11 @@
 
 #include "MotorDriver.h"
 #include <iostream>
+#include <mutex>
+
+
+// Protects the StepperMotor instance shared by the modules
+static std::mutex motorMutex;
 
 
 // TODO Is there a better way to pass Module and Motor parameters?
@@ -29,6 +34,11 @@ void MotorDriver::ControlInput::prepare(){
   funcMap[positionSetpointInSteps.getId()] = [this](){ _motor->moveToPositionInSteps(positionSetpointInSteps); };
   funcMap[stopMotor.getId()]               = [this](){ if(stopMotor){_motor->stop();}};
   funcMap[emergencyStopMotor.getId()]      = [this](){ if(emergencyStopMotor){ _motor->emergencyStop();}};
+  funcMap[enableSWPositionLimits.getId()]  = [this](){ _motor->setSoftwareLimitsEnabled(enableSWPositionLimits); };
+  funcMap[maxSWPositionLimit.getId()]        = [this](){ _motor->setMaxPositionLimit(maxSWPositionLimit); };
+  funcMap[minSWPositionLimit.getId()]        = [this](){ _motor->setMaxPositionLimit(minSWPositionLimit); };
+  funcMap[maxSWPositionLimitInSteps.getId()] = [this](){ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
+  funcMap[minSWPositionLimitInSteps.getId()] = [this](){ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
 
 }
 
@@ -43,9 +53,12 @@ void MotorDriver::ControlInput::mainLoop(){
 
     auto changedVarId = inputGroup.readAny();
 
-    if(_motor->isSystemIdle()
-        || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
-      funcMap.at(changedVarId)();
+    {
+      std::lock_guard<std::mutex> lock(motorMutex);
+      if(_motor->isSystemIdle()
+          || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
+        funcMap.at(changedVarId)();
+      }
     }
 
     dummyMotorStop = stopMotor || emergencyStopMotor;
@@ -78,15 +91,22 @@ void MotorDriver::HWReadback::mainLoop(){
     actualCycleTime = static_cast<float>(ct.count())/1000.f;
 
     // Read from HW
-    isCalibrated = _motor->isCalibrated() ? 1 : 0;
-    ctk::StepperMotorError error = _motor->getError();
-    motorErrorId = static_cast<int32_t>(error);
-    actualPositionInSteps = _motor->getCurrentPositionInSteps();
-    decoderPosition = _motor->getDecoderPosition();
+    {
+      std::lock_guard<std::mutex> lock(motorMutex);
 
-    // FIXME Debug RBVs
-    enabledRBV = _motor->getEnabled();
-    targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
+      isCalibrated = _motor->isCalibrated() ? 1 : 0;
+      ctk::StepperMotorError error = _motor->getError();
+      motorErrorId = static_cast<int32_t>(error);
+      actualPositionInSteps = _motor->getCurrentPositionInSteps();
+      decoderPosition = _motor->getDecoderPosition();
+
+      // Update values that have a static relation to HW readback
+      actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
+
+      // FIXME Debug RBVs
+      enabledRBV = _motor->getEnabled();
+      targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
+    }
 
     writeAll();
   }
@@ -103,14 +123,14 @@ void MotorDriver::SWReadBack::mainLoop(){
     // TODO Change to more efficient sampling scheme
     trigger.read();
 
-    isSystemIdle = _motor->isSystemIdle();
-    motorState   = _motor->getState();
+    {
+      std::lock_guard<std::mutex> lock(motorMutex);
 
-    if(_motor->getState() != currentState){
-      currentState = _motor->getState();
-      std::cout << "**** New motorDriver state: " << currentState << std::endl;
+      isSystemIdle = _motor->isSystemIdle();
+      motorState   = _motor->getState();
+      swPositionLimitsEnabled = _motor->getSoftwareLimitsEnabled();
+
     }
-
 
     writeAll();
   }

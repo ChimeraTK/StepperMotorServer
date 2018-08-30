@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="320,5,600,700"><fillColor>210,210,210</fillColor>
+<DOOCSLabel name="Label9" bounds="70,340,50,20"><text>max.</text></DOOCSLabel>
+<DOOCSDial name="Dial3" bounds="110,340,80,20"><adr>///controlInput.maxSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial2" bounds="110,310,80,20"><adr>///controlInput.minSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label4" bounds="70,310,50,20"><text>min.</text></DOOCSLabel>
+<DOOCSLabel name="Label3" bounds="80,250,100,20"><text>swEndswitches</text></DOOCSLabel>
+<DOOCSToggleButton name="ToggleButton1" bounds="80,280,130,20"><adr>///controlInput.enableSWPositionLimits</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
 <DOOCSValue name="Value3" bounds="410,230,140,20"><adr>///hwReadback.decoderPosition</adr></DOOCSValue>
 <DOOCSLabel name="Label2" bounds="290,50,40,20"><text>Error</text></DOOCSLabel>
 <DOOCSValue name="Value2" bounds="350,50,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.motorError</adr></DOOCSValue>
@@ -21,5 +27,5 @@
 <DOOCSDial name="Dial1" bounds="330,160,80,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="270,160,50,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABV0lEQVR42u3Y22qDQBCA4bz/dW5EJCAiiomHEIISES+8FAq+Q94g9EAK085CQkNLwdRAZf+FYWUJ637ZGXFdtG0rNsVCm14Mw2BNjEZ//tzEAxf00Pl/RBdFIbvdTsqyFM/zZL1eS5Ikst1ur4vSptd93999Y71PEASSZdk39BTzT7rTVqY36D+Elozv+9J13c34o1J6NHpsC8Nw/jutiLFBes8RTXrbkt7sNA8yHmSk99iFXNrp9Synl7M8v72b3nEcM679bNM7TVM5HA7mj6mqSvI8/zWbFFs+Ha/oKV5TqWnQNqFd1zW1FsexrFYriaLI1KB+6ajrWpqmMV87lsulGb/nSLjZbMw8l7rWebS2tdcj536/v5l76iMnOw36nwXpDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRo0aNCgQYMGDRr0V7SN7QM3gIHCRrZJgwAAAABJRU5ErkJggg==</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABlElEQVR42u2Z22rCQBCGff9rb0RCQCQoiacgIVERL7wUGnyHvoH0gIVp/4UIohViYzHkGxg2LDLZz/1n2Nm0NpuNNclbMj3s9/vGeGnon587f+CCHhr/KvRsNrP5fG5pmprneRZFkYVhaHEcnxYl0/Nut7v7xXpPv9+3yWRyAV1F/Ep3upHyBvoPrpTp9Xq23W7P5h8l6dLQZS0IgvrvtCDKOvKuIzTyboq82WkKGYUMeZddSGGHj6Md3o/29vnlxk6n4+Y11lbe4/HYlsul+2OyLLPpdHpTTYJNX15P0FUcU8lpoJsE3e12Xa4Nh0Pzfd8Gg4HLQd10rFYrW6/X7raj3W67+XtawtFo5OIUea04ym2NajmTJDmLXXXLyU4D/WSOvP8DWkVFxUtFZrFYuOvgYk7XuNcKD/Km4aDhQN5PC/1bC6hOqPgGVXtoVWwdEfM8v5nfgpZTvZF3zeStb9U6lEjiyJuGA2iggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBvoBuon0DW8+IHrDOZYEAAAAASUVORK5CYII=</thumbnail>
 </jdddPanel>

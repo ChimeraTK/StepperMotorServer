@@ -79,9 +79,11 @@ struct MotorDriver : ctk::ModuleGroup {
 //    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]", {"CS"}};
 //    ctk::ScalarPushInput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]", {"CS"}};
 
-    //  ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "SW_LIM_ENABLE", "", "Enable SW limits", {"CTRL"}};
-    //  ctk::ScalarPushInput<double> positiveSWPositionLimit{this, "POS_SW_POS_LIM", "", "Positive SW position limit", {"CTRL"}};
-    //  ctk::ScalarPushInput<double> negativeSWPositionLimit{this, "NEG_SW_POS_LIM", "", "Negative SW position limit", {"CTRL"}};
+    ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "enableSWPositionLimits", "", "Enable SW limits", {"CS"}};
+    ctk::ScalarPushInput<float>   maxSWPositionLimit{this, "maxSWPositionLimit", "", "Positive SW position limit", {"CS"}};
+    ctk::ScalarPushInput<float>   minSWPositionLimit{this, "minSWPositionLimit", "", "Negative SW position limit", {"CS"}};
+    ctk::ScalarPushInput<int32_t> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "", "Positive SW position limit", {"CS"}};
+    ctk::ScalarPushInput<int32_t> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "", "Negative SW position limit", {"CS"}};
 
     void prepare() override;
     void mainLoop() override;
@@ -111,7 +113,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<int> targetPositionInStepsRBV{this, "targetPositionInStepsRBV", "", "Readback value of the target position", {"CS"}};
 
     // PVs having a static relation to HW readback values TODO Move to own module?
-    ctk::ScalarOutput<double> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
+    ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
 
@@ -127,8 +129,10 @@ struct MotorDriver : ctk::ModuleGroup {
     std::shared_ptr<ctk::StepperMotor> _motor;
 
     ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
+
     ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS"}};
     ctk::ScalarOutput<std::string> motorState{this, "motorState", "", "State of the motor driver", {"CS"}};
+    ctk::ScalarOutput<int32_t> swPositionLimitsEnabled{this, "swPositionLimitsEnabled", "", "Flags if SW end switches are enabled.", {"CS"}};
 
     void mainLoop() override;
   } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};
