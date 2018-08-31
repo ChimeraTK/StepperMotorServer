@@ -81,6 +81,9 @@ void StepperMotorServer::defineConnections(){
   std::vector<uint32_t> motorDriverCardIds            = config.get<std::vector<uint32_t>>("motorDriverId");
   std::vector<std::string> motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
 
+  std::vector<double> userUnitToStepsRatios = config.get<std::vector<double>>("userUnitToStepsRatio");
+  std::vector<std::string> userPositionUnits     = config.get<std::vector<std::string>>("userPositionUnit");
+
   if(motorDriverCardDeviceNames.size() != nMotors ||
      motorDriverCardModuleNames.size() != nMotors ||
      motorDriverCardIds.size()         != nMotors ||
@@ -104,7 +107,8 @@ void StepperMotorServer::defineConnections(){
     mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
 
     // Motor data
-    MotorDriverParameters dp{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
+    MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
+    std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter = std::make_shared<MotorUnitConverter>(userUnitToStepsRatios[i], userPositionUnits[i]);
 
     // Configure motor driver HW
     if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && !useDummyMotors){
@@ -112,7 +116,8 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver
-    motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), dp);
+    motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter);
+
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               <<std::endl;
@@ -126,7 +131,7 @@ void StepperMotorServer::defineConnections(){
     cyclicTrigger >> motorDriver[i].swReadback("trigger");
 
     if(useDummyMotors){
-      motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), dp);
+      motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), driverParams);
       motorDriver[i]("dummyMotorTrigger") >> motorDummy[i]("trigger");
       motorDriver[i]("dummyMotorStop") >> motorDummy[i]("stop");
     }

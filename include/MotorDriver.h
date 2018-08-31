@@ -26,30 +26,52 @@ namespace ctk = ChimeraTK;
 typedef std::map<ctk::TransferElementID, std::function<void(void)>> funcmapT;
 
 
+/**
+ * @class MotorUnitsConverter
+ * @details This class provides a basic converter to relate the motor steps to a user-defined unit.
+ */
+class MotorUnitConverter : public ctk::StepperMotorUnitsConverter{
+public:
 
+  MotorUnitConverter(const float userUnitToStepsRatio, const std::string &userUnit);
+  virtual ~MotorUnitConverter(){};
+
+  float stepsToUnits(int steps);
+  int unitsToSteps(float units);
+
+  double geUserUnitToStepsRatio(){
+    return _userUnitToStepsRatio;
+  };
+
+  std::string getUserUnit(){
+    return _userUnit;
+  }
+
+private:
+  const float _userUnitToStepsRatio;
+  const std::string _userUnit;
+};
+
+
+/**
+ * @class MotorDriver
+ * @details Module group for all modules accessing the motor driver library.
+ *          It provides shared objects provided by the library
+ */
 struct MotorDriver : ctk::ModuleGroup {
 
-  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, const MotorDriverParameters &motorDriverParams);
+  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+              const MotorDriverParameters &motorDriverParams,
+              std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter);
 
   std::shared_ptr<ctk::StepperMotor> _motor;
+  std::shared_ptr<ctk::StepperMotorUnitsConverter> _motorUnitsConverter;
 
 
-//  //                                      Owner, name, unit, descr, tag
-
-//  ctk::ScalarPushInput<double> speedLimitSetpoint{this, "SPEED_LIM_SETP", "", "Speed limit setpoint", {"CTRL"}};
-//  ctk::ScalarPushInput<double> actualSpeedLimit{this, "ACT_SPEED_LIM", "", "Actual speed limit", {"CTRL"}};
-//
-//  // Current status to control system
-//  ctk::ScalarOutput<double> actualPosition{this, "ACT_POS", "", "Actual position [scaled]", {"CTRL"}};
-//  ctk::ScalarOutput<double> actualPositionInSteps{this, "ACT_POS_IN_STEPS", "", "Actual position [steps]", {"CTRL"}};
-//  ctk::ScalarOutput<double> positiveEndSwitchPosition{this, "POS_END_SWITCH_POSITION", "", "Positive end switch position", {"CTRL"}}; /*TODO POS/NEG relevant, sensible?*/
-//  ctk::ScalarOutput<double> negativeEndSwitchPosition{this, "NEG_END_SWITCH_POSITION", "", "Positive end switch position", {"CTRL"}}; /*TODO POS/NEG relevant, sensible?*/
-//
-//  ctk::ScalarOutput<int32_t> motorEnabled{this, "MOTOR_ENABLED", "", "Motor enabled flag", {"CTRL"}};
-//  ctk::ScalarOutput<int32_t> motorStateOut{this, "MOTOR_STATE", "", "Motor state", {"CTRL"}};   // FIXME How to match this with the enum class state?
-//  ctk::ScalarOutput<int32_t> motorStatus{this, "MOTOR_STATUS", "", "Motor status word", {"CTRL"}};  /*TODO Obsolete in high level of DriverLib?*/
-//  ctk::ScalarOutput<int32_t> motorError{this, "MOTOR_ERROR", "", "Motor error word", {"CTRL"}};
-
+  /**
+   * @class ControlInput
+   * @details This module manages commands towards to motor driver.
+   */
   struct ControlInput : ctk::ApplicationModule {
 
     ControlInput(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
@@ -92,8 +114,11 @@ struct MotorDriver : ctk::ModuleGroup {
 
 
 
-  // TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
-  /** Values read from the motor driver hardware. */
+  /**
+   * @class HWReadback
+   * @details This module cyclically reads data from the motor driver card.
+   * TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
+   */
   struct HWReadback : ctk::ApplicationModule {
 
     HWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
@@ -121,7 +146,11 @@ struct MotorDriver : ctk::ModuleGroup {
   } hwReadback{_motor, this, "hwReadback", "Signals read from the motor driver HW"};
 
 
-  /**  Variables read from the motor driver library (residing in SW) */
+  /**
+   * @class HWReadback
+   * @details Variables read from the motor driver library (residing in SW)
+   * TODO Which values must be passed through MotorControl and what can be piped to the CS directly?
+   */
   struct SWReadBack : ctk::ApplicationModule {
 
     SWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
@@ -132,7 +161,11 @@ struct MotorDriver : ctk::ModuleGroup {
 
     ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS"}};
     ctk::ScalarOutput<std::string> motorState{this, "motorState", "", "State of the motor driver", {"CS"}};
-    ctk::ScalarOutput<int32_t> swPositionLimitsEnabled{this, "swPositionLimitsEnabled", "", "Flags if SW end switches are enabled.", {"CS"}};
+    ctk::ScalarOutput<int> swPositionLimitsEnabled{this, "swPositionLimitsEnabled", "", "Flags if SW end switches are enabled.", {"CS"}};
+    ctk::ScalarOutput<float> maxSWPositionLimit{this, "maxSWPositionLimit", "", "Currently set max. SW position limit", {"CS"}};
+    ctk::ScalarOutput<float> minSWPositionLimit{this, "minSWPositionLimit", "", "Currently set min. SW position limit", {"CS"}};
+    ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
+    ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
 
     void mainLoop() override;
   } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};

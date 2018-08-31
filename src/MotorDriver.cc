@@ -13,14 +13,33 @@
 // Protects the StepperMotor instance shared by the modules
 static std::mutex motorMutex;
 
+// Definitions of MotorUnitsConverter class
+MotorUnitConverter::MotorUnitConverter(const float userUnitToStepsRatio, const std::string &userUnit)
+  : _userUnitToStepsRatio(userUnitToStepsRatio), _userUnit(userUnit){}
+
+float MotorUnitConverter::stepsToUnits(int steps){
+  return _userUnitToStepsRatio * steps;
+}
+
+int MotorUnitConverter::unitsToSteps(float units){
+  return units/_userUnitToStepsRatio;
+}
 
 // TODO Is there a better way to pass Module and Motor parameters?
-MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description, const MotorDriverParameters &driverParam)
+MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                         const MotorDriverParameters &driverParam,
+                         std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter
+                         )
   : ctk::ModuleGroup(owner, name, description, true),
     _motor{new ctk::StepperMotor{driverParam.motorDriverCardDeviceName,
                                  driverParam.moduleName,
                                  driverParam.motorDriverId,
-                                 driverParam.motorDriverCardConfigFileName}}{}
+                                 driverParam.motorDriverCardConfigFileName}},
+   _motorUnitsConverter(unitsConverter)
+{
+  // TODO Prompt the library developer to provide a constructor that inits the desired converter directly
+  _motor->setStepperMotorUnitsConverter(_motorUnitsConverter);
+}
 
 
 // Definitions of ControlInputs module
@@ -128,7 +147,11 @@ void MotorDriver::SWReadBack::mainLoop(){
 
       isSystemIdle = _motor->isSystemIdle();
       motorState   = _motor->getState();
-      swPositionLimitsEnabled = _motor->getSoftwareLimitsEnabled();
+      swPositionLimitsEnabled   = _motor->getSoftwareLimitsEnabled();
+      maxSWPositionLimit        = _motor->getMaxPositionLimit();
+      minSWPositionLimit        = _motor->getMinPositionLimit();
+      maxSWPositionLimitInSteps = _motor->getMaxPositionLimitInSteps();
+      minSWPositionLimitInSteps = _motor->getMinPositionLimitInSteps();
 
     }
 

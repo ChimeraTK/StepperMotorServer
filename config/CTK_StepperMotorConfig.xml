@@ -6,16 +6,24 @@
     <value i="0" v="MOTOR_DUMMY1"/>
     <value i="1" v="MOTOR_DUMMY2"/>
   </variable>
-    <variable name="motorDriverModuleName" type="string">
+  <variable name="motorDriverModuleName" type="string">
     <value i="0" v="MD22.0"/>
     <value i="1" v="MD22.1"/>
   </variable>
-    <variable name="motorDriverId" type="uint32">
+  <variable name="motorDriverId" type="uint32">
     <value i="0" v="0"/>
     <value i="1" v="1"/>
   </variable>
-    <variable name="motorDriverConfigFile" type="string">
+  <variable name="motorDriverConfigFile" type="string">
     <value i="0" v="motorConfig.xml"/>
     <value i="1" v="MOTOR_DUMMY2"/>
+  </variable>
+    <variable name="userUnitToStepsRatio" type="float">
+    <value i="0" v="2.0"/>
+    <value i="1" v="0.5"/>
+  </variable>
+    <variable name="userPositionUnits" type="string">
+    <value i="0" v="0.5 steps"/>
+    <value i="1" v="2.0 steps"/>
   </variable>
 </configuration>
