@@ -10,9 +10,6 @@
 #include <mutex>
 
 
-// Protects the StepperMotor instance shared by the modules
-static std::mutex motorMutex;
-
 // Definitions of MotorUnitsConverter class
 MotorUnitConverter::MotorUnitConverter(const float userUnitToStepsRatio, const std::string &userUnit)
   : _userUnitToStepsRatio(userUnitToStepsRatio), _userUnit(userUnit){}
@@ -43,8 +40,9 @@ MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const
 
 
 // Definitions of ControlInputs module
-MotorDriver::ControlInput::ControlInput(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
+MotorDriver::ControlInput::ControlInput(std::shared_ptr<ctk::StepperMotor> motor,
+                                        ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+  : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}
 
 
 void MotorDriver::ControlInput::prepare(){
@@ -72,12 +70,9 @@ void MotorDriver::ControlInput::mainLoop(){
 
     auto changedVarId = inputGroup.readAny();
 
-    {
-      std::lock_guard<std::mutex> lock(motorMutex);
-      if(_motor->isSystemIdle()
-          || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
-        funcMap.at(changedVarId)();
-      }
+    if(_motor->isSystemIdle()
+        || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
+      funcMap.at(changedVarId)();
     }
 
     dummyMotorStop = stopMotor || emergencyStopMotor;
@@ -90,7 +85,7 @@ void MotorDriver::ControlInput::mainLoop(){
 
 
 MotorDriver::HWReadback::HWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
+  : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}
 
 
 void MotorDriver::HWReadback::mainLoop(){
@@ -110,29 +105,25 @@ void MotorDriver::HWReadback::mainLoop(){
     actualCycleTime = static_cast<float>(ct.count())/1000.f;
 
     // Read from HW
-    {
-      std::lock_guard<std::mutex> lock(motorMutex);
+    isCalibrated = _motor->isCalibrated() ? 1 : 0;
+    ctk::StepperMotorError error = _motor->getError();
+    motorErrorId = static_cast<int32_t>(error);
+    actualPositionInSteps = _motor->getCurrentPositionInSteps();
+    decoderPosition = _motor->getDecoderPosition();
 
-      isCalibrated = _motor->isCalibrated() ? 1 : 0;
-      ctk::StepperMotorError error = _motor->getError();
-      motorErrorId = static_cast<int32_t>(error);
-      actualPositionInSteps = _motor->getCurrentPositionInSteps();
-      decoderPosition = _motor->getDecoderPosition();
+    // Update values that have a static relation to HW readback
+    actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
 
-      // Update values that have a static relation to HW readback
-      actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
-
-      // FIXME Debug RBVs
-      enabledRBV = _motor->getEnabled();
-      targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
-    }
+    // FIXME Debug RBVs
+    enabledRBV = _motor->getEnabled();
+    targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
 
     writeAll();
   }
 }
 
 MotorDriver::SWReadBack::SWReadBack(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {}
+  : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}
 
 void MotorDriver::SWReadBack::mainLoop(){
 
@@ -142,18 +133,13 @@ void MotorDriver::SWReadBack::mainLoop(){
     // TODO Change to more efficient sampling scheme
     trigger.read();
 
-    {
-      std::lock_guard<std::mutex> lock(motorMutex);
-
-      isSystemIdle = _motor->isSystemIdle();
-      motorState   = _motor->getState();
-      swPositionLimitsEnabled   = _motor->getSoftwareLimitsEnabled();
-      maxSWPositionLimit        = _motor->getMaxPositionLimit();
-      minSWPositionLimit        = _motor->getMinPositionLimit();
-      maxSWPositionLimitInSteps = _motor->getMaxPositionLimitInSteps();
-      minSWPositionLimitInSteps = _motor->getMinPositionLimitInSteps();
-
-    }
+    isSystemIdle = _motor->isSystemIdle();
+    motorState   = _motor->getState();
+    swPositionLimitsEnabled   = _motor->getSoftwareLimitsEnabled();
+    maxSWPositionLimit        = _motor->getMaxPositionLimit();
+    minSWPositionLimit        = _motor->getMinPositionLimit();
+    maxSWPositionLimitInSteps = _motor->getMaxPositionLimitInSteps();
+    minSWPositionLimitInSteps = _motor->getMinPositionLimitInSteps();
 
     writeAll();
   }

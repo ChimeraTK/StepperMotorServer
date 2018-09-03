@@ -64,6 +64,7 @@ struct MotorDriver : ctk::ModuleGroup {
               const MotorDriverParameters &motorDriverParams,
               std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter);
 
+  // Todo: We assume that the library is thread-safe. To be checked.
   std::shared_ptr<ctk::StepperMotor> _motor;
   std::shared_ptr<ctk::StepperMotorUnitsConverter> _motorUnitsConverter;
 
