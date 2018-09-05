@@ -168,6 +168,7 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
     ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
 
+
     void mainLoop() override;
   } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};
 

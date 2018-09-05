@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="320,5,600,700"><fillColor>210,210,210</fillColor>
+<DOOCSLabel name="Label10" bounds="390,200,100,20"><text>Act pos in TODO</text></DOOCSLabel>
+<DOOCSValue name="Value10" bounds="400,230,80,20"><adr>///hwReadback.actualPosition</adr></DOOCSValue>
+<DOOCSValue name="Value9" bounds="210,340,140,20"><adr>///swReadback.maxSWPositionLimitInSteps</adr></DOOCSValue>
+<DOOCSValue name="Value8" bounds="210,310,140,20"><adr>///swReadback.minSWPositionLimitInSteps</adr></DOOCSValue>
+<DOOCSColouredIndicator name="ColouredIndicator3" bounds="190,250,20,20"><adr>///swReadback.swPositionLimitsEnabled</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label9" bounds="70,340,50,20"><text>max.</text></DOOCSLabel>
 <DOOCSDial name="Dial3" bounds="110,340,80,20"><adr>///controlInput.maxSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSDial name="Dial2" bounds="110,310,80,20"><adr>///controlInput.minSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label4" bounds="70,310,50,20"><text>min.</text></DOOCSLabel>
 <DOOCSLabel name="Label3" bounds="80,250,100,20"><text>swEndswitches</text></DOOCSLabel>
 <DOOCSToggleButton name="ToggleButton1" bounds="80,280,130,20"><adr>///controlInput.enableSWPositionLimits</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
-<DOOCSValue name="Value3" bounds="410,230,140,20"><adr>///hwReadback.decoderPosition</adr></DOOCSValue>
+<DOOCSValue name="Value3" bounds="340,270,140,20"><adr>///hwReadback.decoderPosition</adr></DOOCSValue>
 <DOOCSLabel name="Label2" bounds="290,50,40,20"><text>Error</text></DOOCSLabel>
 <DOOCSValue name="Value2" bounds="350,50,50,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/hwReadback.motorError</adr></DOOCSValue>
 <DOOCSValue name="Value1" bounds="430,160,100,20"><adr>///hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
@@ -16,7 +21,7 @@
 <DOOCSValue name="Value7" bounds="380,20,110,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/swReadback.motorState</adr></DOOCSValue>
 <DOOCSToggleButton name="Button_MotorStop" bounds="80,120,130,20"><adr>///controlInput.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSLabel name="Label5" bounds="280,200,120,20"><text>Act pos in steps</text></DOOCSLabel>
-<DOOCSValue name="Value6" bounds="410,200,140,20"><adr>///hwReadback.actualPositionInSteps</adr></DOOCSValue>
+<DOOCSValue name="Value6" bounds="290,230,80,20"><adr>///hwReadback.actualPositionInSteps</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator1" bounds="110,20,20,20"><adr>///hwReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label7" bounds="30,20,80,20"><text>isCalibrated</text></DOOCSLabel>
 <DOOCSLabel name="Label6" bounds="30,200,140,20"><text>MotorDriver cycle time</text></DOOCSLabel>
@@ -27,5 +32,5 @@
 <DOOCSDial name="Dial1" bounds="330,160,80,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="270,160,50,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABlElEQVR42u2Z22rCQBCGff9rb0RCQCQoiacgIVERL7wUGnyHvoH0gIVp/4UIohViYzHkGxg2LDLZz/1n2Nm0NpuNNclbMj3s9/vGeGnon587f+CCHhr/KvRsNrP5fG5pmprneRZFkYVhaHEcnxYl0/Nut7v7xXpPv9+3yWRyAV1F/Ep3upHyBvoPrpTp9Xq23W7P5h8l6dLQZS0IgvrvtCDKOvKuIzTyboq82WkKGYUMeZddSGGHj6Md3o/29vnlxk6n4+Y11lbe4/HYlsul+2OyLLPpdHpTTYJNX15P0FUcU8lpoJsE3e12Xa4Nh0Pzfd8Gg4HLQd10rFYrW6/X7raj3W67+XtawtFo5OIUea04ym2NajmTJDmLXXXLyU4D/WSOvP8DWkVFxUtFZrFYuOvgYk7XuNcKD/Km4aDhQN5PC/1bC6hOqPgGVXtoVWwdEfM8v5nfgpZTvZF3zeStb9U6lEjiyJuGA2iggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBvoBuon0DW8+IHrDOZYEAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAD0AAABHCAYAAAC0209OAAABrElEQVR42u2Z22rCQBCGff9rb0REkCCK5qCIxAPihZeBiu/QN5AesDDtv6BYrNLVGJR8C8OGTdjsl/1n2JlUlsullckqarrYbDalMW/on8ed3XFBd53/T+jBYGCj0cjSNLVGo2H9ft96vZ4Nh8PDotR0nWXZ1S/We4IgsDiOT6DzmD/XnS6lvIG+weQyrVbLVqvVr/F7Sdob2re12+3n32lB+BryfkZo5F0WebPTBDICGfL2Xci+bT92tn3f2dvnl+trtZobV/+08o6iyGazmfswk8nEkiS5qCbBpi+vB+g8jqn4NNBlgq7X687Xut2uNZtN63Q6zgdV6ZjP57ZYLFy1o1qtuvFrUsIwDN08e7/WPPJt9Uo5x+PxYe5zz06nU3dP61TPTgP9QNA+7pB3NSV36CJKuIVAK3goeCnIKICoHLwfUxn3OPAcl3CRNwlHMb5LPo28PaHPpYDKhB49gP0bWhFbx771en3RvwUtK9o/kTfyvlHe+letQ4kkjrxJOIAGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYa6BPoMrZvyex9R9vu8LsAAAAASUVORK5CYII=</thumbnail>
 </jdddPanel>

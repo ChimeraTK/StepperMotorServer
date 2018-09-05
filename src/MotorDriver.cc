@@ -53,9 +53,9 @@ void MotorDriver::ControlInput::prepare(){
   funcMap[emergencyStopMotor.getId()]      = [this](){ if(emergencyStopMotor){ _motor->emergencyStop();}};
   funcMap[enableSWPositionLimits.getId()]  = [this](){ _motor->setSoftwareLimitsEnabled(enableSWPositionLimits); };
   funcMap[maxSWPositionLimit.getId()]        = [this](){ _motor->setMaxPositionLimit(maxSWPositionLimit); };
-  funcMap[minSWPositionLimit.getId()]        = [this](){ _motor->setMaxPositionLimit(minSWPositionLimit); };
+  funcMap[minSWPositionLimit.getId()]        = [this](){ _motor->setMinPositionLimit(minSWPositionLimit); };
   funcMap[maxSWPositionLimitInSteps.getId()] = [this](){ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
-  funcMap[minSWPositionLimitInSteps.getId()] = [this](){ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
+  funcMap[minSWPositionLimitInSteps.getId()] = [this](){ _motor->setMinPositionLimitInSteps(minSWPositionLimitInSteps); };
 
 }
 

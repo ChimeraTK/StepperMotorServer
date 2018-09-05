@@ -1,6 +1,7 @@
 <configuration>
   <variable name="motorDriverType" type="string" value="MD22"/>
   <variable name="cycleTime" type="int32" value="1000"/>
+  <variable name="cycleTimeEnable" type="int32" value="1"/>
   <variable name="nMotors" type="uint32" value="2"/>
   <variable name="motorDriverDeviceName" type="string">
     <value i="0" v="MOTOR_DUMMY1"/>
@@ -18,11 +19,11 @@
     <value i="0" v="motorConfig.xml"/>
     <value i="1" v="MOTOR_DUMMY2"/>
   </variable>
-    <variable name="userUnitToStepsRatio" type="float">
+  <variable name="userUnitToStepsRatio" type="float">
     <value i="0" v="2.0"/>
     <value i="1" v="0.5"/>
   </variable>
-    <variable name="userPositionUnits" type="string">
+  <variable name="userPositionUnit" type="string">
     <value i="0" v="0.5 steps"/>
     <value i="1" v="2.0 steps"/>
   </variable>

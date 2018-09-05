@@ -56,7 +56,7 @@ void StepperMotorServer::defineConnections(){
   config("cycleTime") >> timer.timeout;
   timer.tick >> trigger.tick;
   cs["Timer"]("updateOnce") >> trigger.forceUpdate;
-  cs["Timer"]("updateAuto") >> trigger.automaticUpdate;
+  config("cycleTimeEnable") >> trigger.automaticUpdate;
   trigger.countdown >> cs["Timer"]("countdown");
 
   auto &cyclicTrigger = trigger.trigger;
@@ -81,7 +81,7 @@ void StepperMotorServer::defineConnections(){
   std::vector<uint32_t> motorDriverCardIds            = config.get<std::vector<uint32_t>>("motorDriverId");
   std::vector<std::string> motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
 
-  std::vector<double> userUnitToStepsRatios = config.get<std::vector<double>>("userUnitToStepsRatio");
+  std::vector<float> userUnitToStepsRatios       = config.get<std::vector<float>>("userUnitToStepsRatio");
   std::vector<std::string> userPositionUnits     = config.get<std::vector<std::string>>("userPositionUnit");
 
   if(motorDriverCardDeviceNames.size() != nMotors ||
@@ -137,11 +137,7 @@ void StepperMotorServer::defineConnections(){
     }
   }
 
-  // Connect motorControl signals (TODO Keep this?)
-  //motorControl.findTag("CS").connectTo(cs, cyclicTrigger);
-
   // Document module structure and connections
-  //motorControl.dumpGraph("motorControlModuleGraph.dot");
   motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");
 
   dumpConnectionGraph();
