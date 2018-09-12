@@ -17,7 +17,7 @@
   </variable>
   <variable name="motorDriverConfigFile" type="string">
     <value i="0" v="motorConfig.xml"/>
-    <value i="1" v="MOTOR_DUMMY2"/>
+    <value i="1" v="motorConfig.xml"/>
   </variable>
   <variable name="userUnitToStepsRatio" type="float">
     <value i="0" v="2.0"/>

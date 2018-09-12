@@ -10,7 +10,7 @@
 #include "version.h"
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
-#include "mtca4u/DMapFilesParser.h"
+#include "ChimeraTK/DMapFilesParser.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -45,7 +45,7 @@ void StepperMotorServer::defineConnections(){
 
   std::string dMapFileName{"dummies.dmap"};
 
-  mtca4u::setDMapFilePath(dMapFileName);
+  ChimeraTK::setDMapFilePath(dMapFileName);
 
   std::cout << "****************************************************************" << std::endl;
   std::cout << "*** ChimeraTK Stepper Motor Server version "
