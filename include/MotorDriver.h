@@ -11,7 +11,10 @@
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ReadAnyGroup.h>
 #include <mtca4u/MotorDriverCard/StepperMotor.h>
+#include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
 #include "ExecutionTimer.h"
+
+#include "ControlInput.h"
 
 //FIXME Include the dummy in this module or reimplement the library's dummy, so we dont need this
 #include "MotorDriverParameters.h"
@@ -58,62 +61,21 @@ private:
  * @details Module group for all modules accessing the motor driver library.
  *          It provides shared objects provided by the library
  */
-struct MotorDriver : ctk::ModuleGroup {
+struct MotorDriver : public ctk::ModuleGroup {
 
   MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
               const MotorDriverParameters &motorDriverParams,
               std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter);
+
+  virtual ~MotorDriver(){};
 
   // Todo: We assume that the library is thread-safe. To be checked.
   std::shared_ptr<ctk::StepperMotor> _motor;
   std::shared_ptr<ctk::StepperMotorUnitsConverter> _motorUnitsConverter;
 
 
-  /**
-   * @class ControlInput
-   * @details This module manages commands towards to motor driver.
-   */
-  struct ControlInput : ctk::ApplicationModule {
-
-    ControlInput(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-
-    funcmapT funcMap;
-    std::shared_ptr<ctk::StepperMotor> _motor;
-    ctk::ReadAnyGroup inputGroup;
-
-    //ctk::ScalarPollInput<int32_t> systemIdle{this, "systemIdle", "", "System idle flag"};
-
-//    TODO Equivalent reset method?
-    ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
-    ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"CS"}};
-    ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor", {"CS"}};
-    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]", {"CS"}};
-
-    //FIXME Move dummy to this module
-    ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input"};
-    ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor"};
-
-    //ctk::ScalarPushInput<int32_t> startMotor{this, "MOTOR_START", "", "Start the motor", {"CTRL"}};
-    //ctk::ScalarPushInput<int32_t> startMotorRelative{this, "MOTOR_START_REL", "", "Start relative movement of motor", {"CTRL"}};
-    //ctk::ScalarPushInput<int32_t> resetMotor{this, "MOTOR_RESET", "", "Reset the motor", {"CTRL"}};
-
-//    ctk::ScalarPushInput<double> positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint", {"CS"}};
-//    ctk::ScalarPushInput<double> relativePositionSetpoint{this, "relativePositionSetpoint", "", "Relative motor position setpoint", {"CS"}};
-//    ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "", "Motor position setpoint [steps]", {"CS"}};
-//    ctk::ScalarPushInput<int32_t> relativePositionSetpointInSteps{this, "relativePositionSetpointInSteps", "", "Relative motor position setpoint [steps]", {"CS"}};
-
-    ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "enableSWPositionLimits", "", "Enable SW limits", {"CS"}};
-    ctk::ScalarPushInput<float>   maxSWPositionLimit{this, "maxSWPositionLimit", "", "Positive SW position limit", {"CS"}};
-    ctk::ScalarPushInput<float>   minSWPositionLimit{this, "minSWPositionLimit", "", "Negative SW position limit", {"CS"}};
-    ctk::ScalarPushInput<int32_t> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "", "Positive SW position limit", {"CS"}};
-    ctk::ScalarPushInput<int32_t> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "", "Negative SW position limit", {"CS"}};
-
-    void prepare() override;
-    void mainLoop() override;
-
-  } controlInput{_motor, this, "controlInput", "Control inputs to the stepper motor"};
-
-
+//  BasicControlInput controlInput{_motor, this, "controlInput", "Control inputs to the stepper motor"};
+   std::shared_ptr<ControlInputHandler> ctrlInputHandler;
 
   /**
    * @class HWReadback
@@ -168,9 +130,53 @@ struct MotorDriver : ctk::ModuleGroup {
     ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
     ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
 
-
     void mainLoop() override;
   } swReadback{_motor, this, "swReadback", "Signals read from the motor driver SW"};
+
+
+}; /* MotorDriver */
+
+struct BasicMotorDriver : MotorDriver {
+  BasicMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                    const MotorDriverParameters &driverParam,
+                    std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
+    : MotorDriver(owner, name,description, driverParam, unitsConverter),
+    _motor{std::make_shared<ctk::StepperMotor>(driverParam.motorDriverCardDeviceName,
+        driverParam.moduleName,
+        driverParam.motorDriverId,
+        driverParam.motorDriverCardConfigFileName)} /*,
+    ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", _motor} */ {
+    ctrlInputHandler = std::make_shared<BasicControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
+  };
+
+  std::shared_ptr<ctk::StepperMotor> _motor;
+  //BasicControlInputHandler ctrlInputHandler;
+
+};
+
+
+struct LinearMotorDriver : MotorDriver {
+
+  LinearMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                    const MotorDriverParameters &driverParam,
+                    std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
+    : MotorDriver(owner, name,description, driverParam, unitsConverter),
+     _motor{std::make_shared<ctk::StepperMotorWithReference>(driverParam.motorDriverCardDeviceName,
+                                                               driverParam.moduleName,
+                                                               driverParam.motorDriverId,
+                                                               driverParam.motorDriverCardConfigFileName)}/*,
+     ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", _motor}*/ {
+
+    ctrlInputHandler = std::make_shared<LinearMotorControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
+  };
+
+  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  //LinearMotorControlInputHandler ctrlInputHandler;
+
+//    controlInput = std::make_shared<LinearMotorControlInput>(std::unique_ptr<BasicControlInput>(
+//                                               new BasicControlInput(this, "controlInput", "Control inputs to the stepper motor")));
+
+//  LinearMotorControlInput _linearMotorControlInput{new BasicControlInput{_motor, this, "controlInput", "Control inputs to the stepper motor"}};
 
 };
 

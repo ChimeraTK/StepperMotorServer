@@ -41,8 +41,8 @@ struct MotorDummy : public ctk::ApplicationModule {
     boost::shared_ptr<mtca4u::MotorControlerDummy> _motorControlerDummy;
 
 
-  ctk::ScalarPushInput<int32_t> trigger{this, "trigger", "", "Triggers movement of the dummy motor"};
-  ctk::ScalarPollInput<int32_t> stop{this, "stop","", "Stops the dummy motor"};
+  ctk::ScalarPushInput<int32_t> trigger{this, "dummyMotorTrigger", "", "Triggers movement of the dummy motor"};
+  ctk::ScalarPollInput<int32_t> stop{this, "dummyMotorStop","", "Stops the dummy motor"};
 
   void mainLoop(){
 

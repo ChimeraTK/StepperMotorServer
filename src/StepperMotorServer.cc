@@ -115,30 +115,38 @@ void StepperMotorServer::defineConnections(){
       initMotorDriverHW(dMapFileName, motorDriverCardDeviceNames[i]);
     }
 
-    // Create a motor driver
-    motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter);
+    // Create a motor driver according to the motor type
+    if(i == 0){
+      motorDriver.push_back(std::make_shared<BasicMotorDriver>(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1),   driverParams, unitsConverter));
+    }
+    else{
+      motorDriver.push_back(std::make_shared<LinearMotorDriver>(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1),   driverParams, unitsConverter));
+    }
+    //motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), "BASIC_STEPPER_MOTOR",  driverParams, unitsConverter);
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               <<std::endl;
 
-    motorDriver[i].controlInput.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["controlInput"]);
-    motorDriver[i].hwReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
-    motorDriver[i].swReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["swReadback"]);
+    motorDriver[i]->ctrlInputHandler->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["controlInput"]);
+    motorDriver[i]->hwReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
+    motorDriver[i]->swReadback.findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["swReadback"]);
 //    motorDriver[i].findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
 
-    cyclicTrigger >> motorDriver[i].hwReadback("trigger");
-    cyclicTrigger >> motorDriver[i].swReadback("trigger");
+    cyclicTrigger >> motorDriver[i]->hwReadback("trigger");
+    cyclicTrigger >> motorDriver[i]->swReadback("trigger");
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), driverParams);
-      motorDriver[i]("dummyMotorTrigger") >> motorDummy[i]("trigger");
-      motorDriver[i]("dummyMotorStop") >> motorDummy[i]("stop");
+      motorDriver[i]->ctrlInputHandler->findTag("DUMMY").connectTo(motorDummy[i]);
+//      motorDriver[i]->ctrlInputHandler("dummyMotorTrigger") >> motorDummy[i]("trigger");
+//      motorDriver[i]->ctrlInputHandler("dummyMotorStop") >> motorDummy[i]("stop");
     }
   }
 
   // Document module structure and connections
-  motorDriver[0].dumpGraph("motorDriverModuleGraph.dot");
+  motorDriver[0]->dumpGraph("motorDriverModuleGraph0.dot");
+  motorDriver[1]->dumpGraph("motorDriverModuleGraph1.dot");
 
   dumpConnectionGraph();
 

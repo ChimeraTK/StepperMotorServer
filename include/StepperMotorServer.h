@@ -18,6 +18,8 @@
 #include "MotorDummy.h"
 #include "Trigger.h"
 
+#include <memory>
+
 
 namespace ctk = ChimeraTK;
 
@@ -35,7 +37,7 @@ struct StepperMotorServer : ctk::Application{
   //std::vector<MotorControl> motorControl;
   //MotorControl motorControl{this, "MotorControl", ""};
 
-  std::vector<MotorDriver> motorDriver;
+  std::vector<std::shared_ptr<MotorDriver>> motorDriver;
   std::vector<MotorDummy> motorDummy;
 
   ctk::ControlSystemModule cs;

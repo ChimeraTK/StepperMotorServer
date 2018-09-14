@@ -32,55 +32,12 @@ MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const
                                  driverParam.moduleName,
                                  driverParam.motorDriverId,
                                  driverParam.motorDriverCardConfigFileName}},
-   _motorUnitsConverter(unitsConverter)
+    _motorUnitsConverter(unitsConverter)
 {
   // TODO Prompt the library developer to provide a constructor that inits the desired converter directly
   _motor->setStepperMotorUnitsConverter(_motorUnitsConverter);
 }
 
-
-// Definitions of ControlInputs module
-MotorDriver::ControlInput::ControlInput(std::shared_ptr<ctk::StepperMotor> motor,
-                                        ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}
-
-
-void MotorDriver::ControlInput::prepare(){
-
-  funcMap[enableMotor.getId()]             = [this](){ _motor->setEnabled(enableMotor); };
-  funcMap[positionSetpointInSteps.getId()] = [this](){ _motor->moveToPositionInSteps(positionSetpointInSteps); };
-  funcMap[stopMotor.getId()]               = [this](){ if(stopMotor){_motor->stop();}};
-  funcMap[emergencyStopMotor.getId()]      = [this](){ if(emergencyStopMotor){ _motor->emergencyStop();}};
-  funcMap[enableSWPositionLimits.getId()]  = [this](){ _motor->setSoftwareLimitsEnabled(enableSWPositionLimits); };
-  funcMap[maxSWPositionLimit.getId()]        = [this](){ _motor->setMaxPositionLimit(maxSWPositionLimit); };
-  funcMap[minSWPositionLimit.getId()]        = [this](){ _motor->setMinPositionLimit(minSWPositionLimit); };
-  funcMap[maxSWPositionLimitInSteps.getId()] = [this](){ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
-  funcMap[minSWPositionLimitInSteps.getId()] = [this](){ _motor->setMinPositionLimitInSteps(minSWPositionLimitInSteps); };
-
-}
-
-void MotorDriver::ControlInput::mainLoop(){
-
-  inputGroup = this->readAnyGroup();
-
-  // Initialize the motor
-  _motor->setActualPositionInSteps(0);
-
-  while(true){
-
-    auto changedVarId = inputGroup.readAny();
-
-    if(_motor->isSystemIdle()
-        || changedVarId == stopMotor.getId() || changedVarId == emergencyStopMotor.getId()){
-      funcMap.at(changedVarId)();
-    }
-
-    dummyMotorStop = stopMotor || emergencyStopMotor;
-    dummyMotorTrigger++;
-
-    writeAll();
-  }
-}
 
 
 
