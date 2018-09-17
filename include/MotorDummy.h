@@ -52,9 +52,14 @@ struct MotorDummy : public ctk::ApplicationModule {
 
     while(true){
       trigger.read();
-      while(!_motorControlerDummy->isMotorMoving()){
+      std::cout << "   ** Dummmy has been triggered!    " << _motorControlerDummy-> isMotorMoving() << ", " << _motorControlerDummy->getActualPosition()
+                << ", " << _motorControlerDummy->getTargetPosition();
+      while(!_motorControlerDummy->isMotorMoving() &&
+            _motorControlerDummy->getTargetPosition() != _motorControlerDummy->getActualPosition()){
        std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
+
+      std::cout << "     -> Performing action." << std::endl;
 
       float moveFraction = .2f;
       while(_motorControlerDummy->isMotorMoving()){
