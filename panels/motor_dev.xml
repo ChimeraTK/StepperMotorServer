@@ -31,7 +31,7 @@
 <DOOCSLabel name="Label6" bounds="49,250,229,20"><text>MotorDriver cycle time</text></DOOCSLabel>
 <DOOCSValue name="Value5" bounds="196,250,229,20"><adr>///hwReadback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>6</precision></DOOCSValue>
 <DOOCSValue name="Value4" bounds="229,20,82,20"><adr>///hwReadback.isCalibrated</adr></DOOCSValue>
-<DOOCSToggleButton name="Button_MotorStart" bounds="49,190,212,20"><adr>///controlInput.calibrateMotor</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="Button_MotorStart" bounds="49,190,212,20"><adr>///controlInput.calibrateMotor</adr><textON>Calibrate</textON><textOFF>Calibrate</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSToggleButton name="EnableButton" bounds="49,70,212,20"><adr>///controlInput.enable</adr><textON>Disable</textON><textOFF>Enable</textOFF></DOOCSToggleButton>
 <DOOCSDial name="Dial1" bounds="539,160,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="441,160,82,20"><text>Setpoint</text></DOOCSLabel>

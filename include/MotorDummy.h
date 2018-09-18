@@ -46,20 +46,18 @@ struct MotorDummy : public ctk::ApplicationModule {
 
   void mainLoop(){
 
-    // FIXME HACK enabled this permanently because there is no relation between StepperMotor and the dummy
+    // FIXME HACK: enabled this permanently because there is no relation between StepperMotor and the dummy of the library
+    //             and I don't want to reprogram it here
     _motorControlerDummy->setMotorCurrentEnabled(true);
     _motorControlerDummy->setEndSwitchPowerEnabled(true);
 
     while(true){
       trigger.read();
-      std::cout << "   ** Dummmy has been triggered!    " << _motorControlerDummy-> isMotorMoving() << ", " << _motorControlerDummy->getActualPosition()
-                << ", " << _motorControlerDummy->getTargetPosition();
+
       while(!_motorControlerDummy->isMotorMoving() &&
             _motorControlerDummy->getTargetPosition() != _motorControlerDummy->getActualPosition()){
        std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
-
-      std::cout << "     -> Performing action." << std::endl;
 
       float moveFraction = .2f;
       while(_motorControlerDummy->isMotorMoving()){
