@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="130,5,980,700"><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<DOOCSColouredIndicator name="ColouredIndicator4" bounds="278,110,32,20"><adr>///swReadback.autostartEnabled</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSToggleButton name="ToggleButton2" bounds="49,100,212,20"><adr>///controlInput.startMotor</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSCheckBox name="CheckBox1" bounds="261,100,163,20"><adr>///controlInput.enableAutostart</adr></DOOCSCheckBox>
+<DOOCSCheckBox name="CheckBox1" bounds="310,110,82,20"><adr>///controlInput.enableAutostart</adr></DOOCSCheckBox>
 <DOOCSValue name="Value11" bounds="490,70,457,20"><adr>TEST.DOOCS/LOCALHOST_610498009/Motor1/controlInput.userMessage</adr></DOOCSValue>
 <DOOCSLabel name="Label11" bounds="392,70,163,20"><text>User Message</text></DOOCSLabel>
 <DOOCSLabel name="Label10" bounds="637,250,163,20"><text>Act pos in TODO</text></DOOCSLabel>
@@ -36,5 +37,5 @@
 <DOOCSDial name="Dial1" bounds="539,160,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="441,160,82,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABHCAYAAAATBvm1AAACH0lEQVR42u2b2WoCMRRA+9E+9RP6KL6IiCAiiruIjAsqIrhCxX/oH0gXLNz2BqagLdrR2T2Bw4yjjDGH3JtM4sNkMhEIngcterLb7SBgXJXxfasjfP4hgX235zJarZZ0Oh2xLEuy2axUq1WpVCrSbrfPNohd7AbZbDY3VVDrUSgUpNFoXJTh9ndHumcAMpDhFxoa8/m8zGazs5+LWkj6twwvSrFYlEQiQQ9wKkMbTRvPba6RoYl7MBgYksnkz7migwtFz2PbM+BOwtTjU1rm87ksFgtZrVayXq/N6+l0Ksvl0oAMn8KUyqAXkMDpGbcmcOYZQJhCRozD1Lmyfz/I/u0grx+f5phOp811PRKmHFCv181ETwX3ej1pNpsyHo8dyTgtKsF6fjmS4fdEkpxBzgCGtgxtARnIAGQgA3yTkclkzISqXC5LLpeTUqlkJlq6dWY4HMpoNDKrcKlUylwPYj26VquZetiTP62HTgD1qGvn3W73V92c3Kff75v3tA30SM+gZwAyrsCtkBiGDQ2By4jDHtnAZWiS0wSuiVITne7Bta/p3lg7eV5KoH/tkUUGMTu6Mrx6shvmvBJaGV481fVKBmEKgpURtTXnyMvQ0ZM+Kthut5FfcyZMAWEqtmFK/xOhE73TUEWYIkwhA5CBDEAGMgAZgAxkADKQAchABiADGYAMZAAykAHIAGQgA5CBDEAGMgAZyABk3IMMSnjKF6njRFgZWG2IAAAAAElFTkSuQmCC</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABHCAYAAAATBvm1AAACJklEQVR42u2b22rCQBBA/Wif+gl9FF+CiCAiincRiRdURFBUUPyH/oH0goVpZyFFbdHGJubSs3BIGkXXPexMJrtNTCYTgeBJaNOT3W4HAeOpjM+POuHOPySw7/ZdRqvVkk6nI7ZtSzablWq1KpVKRdrt9sUBcZozIOv1+k8d1H4UCgVpNBpXZXj93ZGeGYAMZNwLDY35fF5ms9nF90UtJP1ahh+tWCxKMplkBriVoYOmg+c1t8jQxD0YDAypVOrrXNGbC0XPYzszgDCFjCDC1HFx9vBoGebzuSwWC1kul7Jarczf0+lUNpsNM8PPmXFcoDkymBkRSODUGUACR0aMw9Sltn89yP7lIM9v7+ZoWZa5rkfClAvq9bop9FRwr9eTZrMp4/HYlYzzphLszdOJjHsXkuQMcgZwa8utLSADGYAMZMDdZGQyGVNQlctlyeVyUiqVTKGlW2eGw6GMRiOzCpdOp831INaja7Wa6YdT/Gk/tADUo66dd7vdb31z8zn9ft+8pmOgR2YGMwOQcQNehcQwbGgIXEYc9sgGLkOTnCZwTZSa6HQPrnNN98Y6yfNaAv1pjywyiNnRleHXk90w55XQyvDjqa5fMghTEKyMqK05R16G3j3po4Ltdhv5NWfCFBCmYhum9H8itNA7D1WEKcIUMgAZyABkIAOQAchABiADGYAMZAAykAHIQAYgAxmADEAGMgAZyABkIAOQgQxAxn+QQQtP+wDLmDoJmULPOQAAAABJRU5ErkJggg==</thumbnail>
 </jdddPanel>

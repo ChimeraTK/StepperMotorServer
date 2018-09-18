@@ -19,19 +19,25 @@ BasicControlInput::BasicControlInput(ctk::EntityOwner *owner,
                                      const std::string &description)
   : ctk::VariableGroup{owner, name, description, true} {};
 
-void BasicControlInput::createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor){
+void BasicControlInput::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
-  funcMap[enableMotor.getId()]               = [this, _motor]{/*std::cout << "Hit enabled " << enableMotor <<std::endl;*/ _motor->setEnabled(enableMotor); };
-  funcMap[positionSetpointInSteps.getId()]   = [this, _motor]{ _motor->setTargetPositionInSteps(positionSetpointInSteps); };
-  funcMap[startMotor.getId()]                = [this, _motor]{ _motor->start();};
-  funcMap[stopMotor.getId()]                 = [this, _motor]{ if(stopMotor){_motor->stop();}};
-  funcMap[emergencyStopMotor.getId()]        = [this, _motor]{ if(emergencyStopMotor){ _motor->emergencyStop();}};
-  funcMap[enableAutostart.getId()]           = [this, _motor]{ _motor->setAutostart(enableAutostart);};
-  funcMap[enableSWPositionLimits.getId()]    = [this, _motor]{ _motor->setSoftwareLimitsEnabled(enableSWPositionLimits); };
-  funcMap[maxSWPositionLimit.getId()]        = [this, _motor]{ _motor->setMaxPositionLimit(maxSWPositionLimit); };
-  funcMap[minSWPositionLimit.getId()]        = [this, _motor]{ _motor->setMinPositionLimit(minSWPositionLimit); };
-  funcMap[maxSWPositionLimitInSteps.getId()] = [this, _motor]{ _motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
-  funcMap[minSWPositionLimitInSteps.getId()] = [this, _motor]{ _motor->setMinPositionLimitInSteps(minSWPositionLimitInSteps); };
+  funcMap[enableMotor.getId()]               = [this, motor]{/*std::cout << "Hit enabled " << enableMotor <<std::endl;*/ motor->setEnabled(enableMotor); };
+  funcMap[positionSetpointInSteps.getId()]   = [this, motor]{ motor->setTargetPositionInSteps(positionSetpointInSteps); };
+  funcMap[positionSetpoint.getId()]          = [this, motor]{ motor->setTargetPosition(positionSetpoint); };
+  funcMap[startMotor.getId()]                = [this, motor]{ motor->start();};
+  funcMap[stopMotor.getId()]                 = [this, motor]{ if(stopMotor){motor->stop();}};
+  funcMap[emergencyStopMotor.getId()]        = [this, motor]{ if(emergencyStopMotor){ motor->emergencyStop();}};
+  funcMap[enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(enableAutostart);};
+  funcMap[moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(moveRelativeInSteps); };
+  funcMap[moveRelative.getId()]              = [this, motor]{ motor->moveRelative(moveRelative); };
+  funcMap[enableSWPositionLimits.getId()]    = [this, motor]{ motor->setSoftwareLimitsEnabled(enableSWPositionLimits); };
+  funcMap[maxSWPositionLimit.getId()]        = [this, motor]{ motor->setMaxPositionLimit(maxSWPositionLimit); };
+  funcMap[minSWPositionLimit.getId()]        = [this, motor]{ motor->setMinPositionLimit(minSWPositionLimit); };
+  funcMap[maxSWPositionLimitInSteps.getId()] = [this, motor]{ motor->setMaxPositionLimitInSteps(maxSWPositionLimitInSteps); };
+  funcMap[minSWPositionLimitInSteps.getId()] = [this, motor]{ motor->setMinPositionLimitInSteps(minSWPositionLimitInSteps); };
+  funcMap[currentLimit.getId()]              = [this, motor]{ motor->setUserCurrentLimit(currentLimit); };
+  funcMap[speedLimit.getId()]                = [this, motor]{ motor->setUserSpeedLimit(currentLimit); };
+  funcMap[enableFullStepping.getId()]        = [this, motor]{ motor->enableFullStepping(); };
 }
 
 

@@ -28,6 +28,7 @@ namespace ctk = ChimeraTK;
 
     std::shared_ptr<ctk::StepperMotor> _motor;
     ExecutionTimer<> execTimer;
+    ExecutionTimer<> receiveTimer;
 
     ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
 
@@ -43,7 +44,9 @@ namespace ctk = ChimeraTK;
     // PVs having a static relation to HW readback values TODO Move to own module?
     ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 
+    // Diagnostics
     ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
+    ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "", "Actual time required to read all variables in this module from the HW.", {"CS"}};
 
     void mainLoop() override;
   };
@@ -61,6 +64,7 @@ namespace ctk = ChimeraTK;
     SWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
     std::shared_ptr<ctk::StepperMotor> _motor;
+    ExecutionTimer<> receiveTimer;
 
     ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
 
@@ -71,6 +75,17 @@ namespace ctk = ChimeraTK;
     ctk::ScalarOutput<float> minSWPositionLimit{this, "minSWPositionLimit", "", "Currently set min. SW position limit", {"CS"}};
     ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
     ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
+
+    ctk::ScalarOutput<double> currentLimit{this, "currentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
+    ctk::ScalarOutput<double> maxCurrentLimit{this, "maxCurrentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
+    ctk::ScalarOutput<double> speedLimit{this, "speedLimit", "", "Speed limit set for the motor", {"CS"}};
+    ctk::ScalarOutput<double> maxSpeedCapability{this, "maxSpeedCapability", "", "Maximum velocity of the motor", {"CS"}};
+
+    ctk::ScalarOutput<int32_t> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"CS"}};
+    ctk::ScalarOutput<int32_t> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"CS"}};
+
+    //Diagnostics
+    ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "", "Actual time required to get all variables in this module from the driver instance.", {"CS"}};
 
     void mainLoop() override;
   };
