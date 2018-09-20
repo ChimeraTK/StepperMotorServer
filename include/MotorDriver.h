@@ -97,7 +97,7 @@ struct BasicMotorDriver : MotorDriver {
 //    ctrlInputHandler = std::make_shared<ControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
     ctrlInputHandler = std::make_shared<BasicControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
 //    hwReadbackHandler = std::move(std::unique_ptr<ReadbackHandler>{new ReadbackHandler(_motor, false, this, "hwReadback", "Signals read from the motor driver HW")});
-    hwReadbackHandler = std::move(std::unique_ptr<BasicHWReadbackHandler>{new BasicHWReadbackHandler(_motor, this, "hwReadback", "Signals read from the motor driver HW")});
+    hwReadbackHandler = std::move(std::unique_ptr<BasicHWReadbackHandler>{new BasicHWReadbackHandler(_motor, this, "hwReadbackHandler", "Signals read from the motor driver HW")});
     swReadback = std::move(std::unique_ptr<SWReadback>{new SWReadback(_motor, this, "swReadback", "Signals read from the motor driver SW")});
   };
 

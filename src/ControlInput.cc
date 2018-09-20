@@ -10,7 +10,7 @@
 
 // Definitions of ControlInputHandler module
 ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true) {}
+  : ctk::ApplicationModule(owner, name, description) {}
 
 
 /* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
@@ -51,6 +51,6 @@ void LinearMotorControlInput::createFunctionMap(std::shared_ptr<ctk::StepperMoto
 
   BasicControlInput::createFunctionMap(_motor);
 
-  funcMap[calibrateMotor.getId()] = [this, _motor]{_motor->calibrate(); isPositiveEndSwitchActive = _motor->isPositiveReferenceActive(); };
+  funcMap[calibrateMotor.getId()] = [this, _motor]{_motor->calibrate();};
 
 }

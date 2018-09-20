@@ -7,41 +7,9 @@
 
 #include "MotorDriverReadback.h"
 
-//void HWReadbackValues::readback(){
-//
-//  // Read from HW
-//  isCalibrated = _motor->isCalibrated() ? 1 : 0;
-//  ctk::StepperMotorError error = _motor->getError();
-//  motorErrorId = static_cast<int32_t>(error);
-//  actualPositionInSteps = _motor->getCurrentPositionInSteps();
-//  decoderPosition = _motor->getDecoderPosition();
-//
-//  // Update values that have a static relation to HW readback
-//  actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
-//
-//  // FIXME Debug RBVs
-//  enabledRBV = _motor->getEnabled();
-//  targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
-//
-//}
-//
-//void HWReadbackValuesExt::readback(){
-//
-//  HWReadbackValues::readback();
-//  isNegativeReferenceActive = _motor->isNegativeReferenceActive();
-//  isPositiveReferenceActive = _motor->isPositiveReferenceActive();
-//}
-
-
 ReadbackHandler::ReadbackHandler(/*std::shared_ptr<ctk::StepperMotor> motor,*/
                                  ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true) /*,_motor(motor) */{
-
-
-//    _readbackValues = std::move(std::unique_ptr<HWReadbackValuesExt>(new HWReadbackValuesExt(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
-//
-//    _readbackValues = std::move(std::unique_ptr<HWReadbackValues>(new HWReadbackValues(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
-}
+  : ctk::ApplicationModule(owner, name, description) {}
 
 void ReadbackHandler::mainLoop(){
 
@@ -99,13 +67,6 @@ void BasicHWReadbackHandler::readback(){
 
   }
 
-//  void HWReadbackValuesExt::readback(){
-//
-//    HWReadbackValues::readback();
-//    isNegativeReferenceActive = _motor->isNegativeReferenceActive();
-//    isPositiveReferenceActive = _motor->isPositiveReferenceActive();
-//}
-
 
 ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor,
                                             ctk::EntityOwner *owner, const std::string &name, const std::string &description)
@@ -124,7 +85,7 @@ void ExtHWReadbackHandler::readback(){
 
 
 SWReadback::SWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}
+  : ctk::ApplicationModule(owner, name, description), _motor(motor){}
 
 void SWReadback::mainLoop(){
 

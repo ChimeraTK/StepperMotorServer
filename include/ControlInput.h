@@ -80,7 +80,6 @@ struct LinearMotorControlInput : BasicControlInput {
 
 
   ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"CS"}};
-  ctk::ScalarOutput<int32_t> isPositiveEndSwitchActive{this, "isPositiveEndSwitchActive", "", "Flags if the positive end switch is activated."};
 
   virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> _motor);
 

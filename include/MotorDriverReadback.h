@@ -26,10 +26,8 @@ struct ReadbackValues : public ctk::VariableGroup {
 
 struct HWReadbackValues : ReadbackValues {
 
-  HWReadbackValues(/*std::shared_ptr<ctk::StepperMotor> motor, */ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    : ReadbackValues(owner, name, description, true)/*, _motor(motor)*/ {};
-
-  //std::shared_ptr<ctk::StepperMotor> _motor;
+  HWReadbackValues(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+    : ReadbackValues(owner, name, description, true) {};
 
   ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS"}};
   ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
@@ -42,21 +40,21 @@ struct HWReadbackValues : ReadbackValues {
 
   // PVs having a static relation to HW readback values TODO Move to own module?
   ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
-
-  //virtual void readback() override;
 };
 
 struct HWReadbackValuesExt : ReadbackValues {
 
-  HWReadbackValuesExt(/*std::shared_ptr<ctk::StepperMotor> motor, */ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    :ReadbackValues(/*motor, */owner, name, description, true)/*, _motor(std::dynamic_pointer_cast<ctk::StepperMotorWithReference>(motor))*/ {};
-
-  //std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  HWReadbackValuesExt(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+    :ReadbackValues(owner, name, description, true) {};
 
   ctk::ScalarOutput<int> isPositiveReferenceActive{this, "isPositiveReferenceActive", "", "Status of positive end switch",{"CS"}};
   ctk::ScalarOutput<int> isNegativeReferenceActive{this, "isNegativeReferenceActive", "", "Status of negative end switch",{"CS"}};
 
-  //virtual void readback() override;
+  // TODO Move to sw readback
+  ctk::ScalarOutput<int> positiveEndReferenceInSteps{this, "positiveEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<int> negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<float> positiveEndReference{this, "positiveEndReference", "", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<float> negativeEndReference{this, "negativeEndReference", "", "Position of the positive reference switch",{"CS"}};
 };
 
 /**
@@ -82,8 +80,6 @@ protected:
   std::function<void(void)> readbackFunction;
 
 private:
-//  std::shared_ptr<ctk::StepperMotor> _motor;
-//  std::unique_ptr<ReadbackValues> _readbackValues;
   ExecutionTimer<> execTimer;
   ExecutionTimer<> receiveTimer;
 };

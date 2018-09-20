@@ -28,7 +28,7 @@ MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const
                          bool isExtendedDriver,
                          std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter
                          )
-  : ctk::ModuleGroup(owner, name, description, true),
+  : ctk::ModuleGroup(owner, name, description),
     _motorUnitsConverter(unitsConverter)/*,
     _motor{new ctk::StepperMotor{driverParam.motorDriverCardDeviceName,
                                  driverParam.moduleName,
