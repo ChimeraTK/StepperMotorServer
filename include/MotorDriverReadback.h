@@ -14,20 +14,22 @@
 #include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
 #include "ExecutionTimer.h"
 
+#include <functional>
+
 namespace ctk = ChimeraTK;
 
-struct ReadbackValues : ctk::VariableGroup {
+struct ReadbackValues : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
-  virtual void readback() = 0;
+  //virtual void readback() = 0;
 };
 
 struct HWReadbackValues : ReadbackValues {
 
-  HWReadbackValues(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    : ReadbackValues(owner, name, description, true), _motor(motor) {};
+  HWReadbackValues(/*std::shared_ptr<ctk::StepperMotor> motor, */ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+    : ReadbackValues(owner, name, description, true)/*, _motor(motor)*/ {};
 
-  std::shared_ptr<ctk::StepperMotor> _motor;
+  //std::shared_ptr<ctk::StepperMotor> _motor;
 
   ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS"}};
   ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
@@ -41,35 +43,32 @@ struct HWReadbackValues : ReadbackValues {
   // PVs having a static relation to HW readback values TODO Move to own module?
   ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 
-  virtual void readback() override;
+  //virtual void readback() override;
 };
 
-struct HWReadbackValuesExt : HWReadbackValues {
+struct HWReadbackValuesExt : ReadbackValues {
 
-  HWReadbackValuesExt(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    : HWReadbackValues(motor, owner, name, description), _motor(std::dynamic_pointer_cast<ctk::StepperMotorWithReference>(motor)) {};
+  HWReadbackValuesExt(/*std::shared_ptr<ctk::StepperMotor> motor, */ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+    :ReadbackValues(/*motor, */owner, name, description, true)/*, _motor(std::dynamic_pointer_cast<ctk::StepperMotorWithReference>(motor))*/ {};
 
-  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  //std::shared_ptr<ctk::StepperMotorWithReference> _motor;
 
   ctk::ScalarOutput<int> isPositiveReferenceActive{this, "isPositiveReferenceActive", "", "Status of positive end switch",{"CS"}};
   ctk::ScalarOutput<int> isNegativeReferenceActive{this, "isNegativeReferenceActive", "", "Status of negative end switch",{"CS"}};
 
-  virtual void readback() override;
+  //virtual void readback() override;
 };
 
 /**
  * @class ReadbackHandler
  * @brief This module cyclically reads data from the motor driver card.
  */
-struct ReadbackHandler : ctk::ApplicationModule {
+class ReadbackHandler : public ctk::ApplicationModule {
 
-  ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, bool useExtendedVarGroup,
+public:
+  ReadbackHandler(/*std::shared_ptr<ctk::StepperMotor> motor,*/
                   ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-
-  std::shared_ptr<ctk::StepperMotor> _motor;
-  std::unique_ptr<ReadbackValues> _readbackValues;
-  ExecutionTimer<> execTimer;
-  ExecutionTimer<> receiveTimer;
+  using ctk::ApplicationModule::ApplicationModule;
 
   ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
 
@@ -77,11 +76,47 @@ struct ReadbackHandler : ctk::ApplicationModule {
   ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
   ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "", "Actual time required to read all variables in this module from the HW.", {"CS"}};
 
-  void mainLoop() override;
+  virtual void mainLoop() override;
+
+protected:
+  std::function<void(void)> readbackFunction;
+
+private:
+//  std::shared_ptr<ctk::StepperMotor> _motor;
+//  std::unique_ptr<ReadbackValues> _readbackValues;
+  ExecutionTimer<> execTimer;
+  ExecutionTimer<> receiveTimer;
+};
+
+class BasicHWReadbackHandler : public ReadbackHandler {
+
+public:
+
+  BasicHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+
+  std::shared_ptr<ctk::StepperMotor> _motor;
+  HWReadbackValues hwReadbackValues;
+
+  virtual void prepare();
+  //virtual void mainLoop();
+
+protected:
+  void readback();
 };
 
 
+class ExtHWReadbackHandler : public BasicHWReadbackHandler {
+public:
+  ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
+  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  HWReadbackValuesExt hwReadbackValues;
+
+  virtual void prepare();
+
+protected:
+  void readback();
+};
 
 /**
  * @class HWReadback

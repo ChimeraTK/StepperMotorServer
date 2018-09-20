@@ -34,6 +34,5 @@ MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const
                                  driverParam.moduleName,
                                  driverParam.motorDriverId,
                                  driverParam.motorDriverCardConfigFileName,
-                                 _motorUnitsConverter}},*/
-    {}
+                                 _motorUnitsConverter}},*/    {}
 

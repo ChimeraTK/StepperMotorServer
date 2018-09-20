@@ -7,44 +7,41 @@
 
 #include "MotorDriverReadback.h"
 
-void HWReadbackValues::readback(){
+//void HWReadbackValues::readback(){
+//
+//  // Read from HW
+//  isCalibrated = _motor->isCalibrated() ? 1 : 0;
+//  ctk::StepperMotorError error = _motor->getError();
+//  motorErrorId = static_cast<int32_t>(error);
+//  actualPositionInSteps = _motor->getCurrentPositionInSteps();
+//  decoderPosition = _motor->getDecoderPosition();
+//
+//  // Update values that have a static relation to HW readback
+//  actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
+//
+//  // FIXME Debug RBVs
+//  enabledRBV = _motor->getEnabled();
+//  targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
+//
+//}
+//
+//void HWReadbackValuesExt::readback(){
+//
+//  HWReadbackValues::readback();
+//  isNegativeReferenceActive = _motor->isNegativeReferenceActive();
+//  isPositiveReferenceActive = _motor->isPositiveReferenceActive();
+//}
 
-  // Read from HW
-  isCalibrated = _motor->isCalibrated() ? 1 : 0;
-  ctk::StepperMotorError error = _motor->getError();
-  motorErrorId = static_cast<int32_t>(error);
-  actualPositionInSteps = _motor->getCurrentPositionInSteps();
-  decoderPosition = _motor->getDecoderPosition();
 
-  // Update values that have a static relation to HW readback
-  actualPosition = _motor->recalculateStepsInUnits(actualPositionInSteps);
-
-  // FIXME Debug RBVs
-  enabledRBV = _motor->getEnabled();
-  targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
-
-}
-
-void HWReadbackValuesExt::readback(){
-
-  HWReadbackValues::readback();
-  isNegativeReferenceActive = _motor->isNegativeReferenceActive();
-  isPositiveReferenceActive = _motor->isPositiveReferenceActive();
-}
-
-
-ReadbackHandler::ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, bool useExtendedVarGroup,
+ReadbackHandler::ReadbackHandler(/*std::shared_ptr<ctk::StepperMotor> motor,*/
                                  ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ctk::ApplicationModule(owner, name, description, true), _motor(motor) {
+  : ctk::ApplicationModule(owner, name, description, true) /*,_motor(motor) */{
 
-  if(useExtendedVarGroup){
-    _readbackValues = std::move(std::unique_ptr<HWReadbackValuesExt>(new HWReadbackValuesExt(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
-  }
-  else{
-    _readbackValues = std::move(std::unique_ptr<HWReadbackValues>(new HWReadbackValues(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
-  }
+
+//    _readbackValues = std::move(std::unique_ptr<HWReadbackValuesExt>(new HWReadbackValuesExt(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
+//
+//    _readbackValues = std::move(std::unique_ptr<HWReadbackValues>(new HWReadbackValues(_motor, this, "hwReadbackValues", "Basic values read from the HW")));
 }
-
 
 void ReadbackHandler::mainLoop(){
 
@@ -64,7 +61,8 @@ void ReadbackHandler::mainLoop(){
 
     receiveTimer.initializeMeasurement();
 
-    _readbackValues->readback();
+    //_readbackValues->readback();
+    readbackFunction();
 
     receiveTimer.measureOnce();
     auto rt = std::chrono::duration_cast<std::chrono::microseconds>(receiveTimer.getMeasurementResult());
@@ -73,6 +71,57 @@ void ReadbackHandler::mainLoop(){
     writeAll();
   }
 }
+
+
+BasicHWReadbackHandler::BasicHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
+                                               ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+  : ReadbackHandler(owner, name, description), _motor(motor), hwReadbackValues{this, "hwReadbackValues", "Variables read from the HW of the MotorDriver"} {}
+
+void BasicHWReadbackHandler::prepare(){
+  readbackFunction = std::bind(&BasicHWReadbackHandler::readback, this);
+}
+
+void BasicHWReadbackHandler::readback(){
+  std::cout << "   ** BasicHWReadbackHandler::readback() called in " <<   this->_name << std::endl;
+    // Read from HW
+    hwReadbackValues.isCalibrated = _motor->isCalibrated() ? 1 : 0;
+    ctk::StepperMotorError error = _motor->getError();
+    hwReadbackValues.motorErrorId = static_cast<int32_t>(error);
+    hwReadbackValues.actualPositionInSteps = _motor->getCurrentPositionInSteps();
+    hwReadbackValues.decoderPosition = _motor->getDecoderPosition();
+
+    // Update values that have a static relation to HW readback
+    hwReadbackValues.actualPosition = _motor->recalculateStepsInUnits(hwReadbackValues.actualPositionInSteps);
+
+    // FIXME Debug RBVs
+    hwReadbackValues.enabledRBV = _motor->getEnabled();
+    hwReadbackValues.targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
+
+  }
+
+//  void HWReadbackValuesExt::readback(){
+//
+//    HWReadbackValues::readback();
+//    isNegativeReferenceActive = _motor->isNegativeReferenceActive();
+//    isPositiveReferenceActive = _motor->isPositiveReferenceActive();
+//}
+
+
+ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor,
+                                            ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+  : BasicHWReadbackHandler(motor, owner, name, description), _motor(motor), hwReadbackValues{this, "extHWReadbackValues", "Variables read from the HW specfic to reference switches"}{}
+
+void ExtHWReadbackHandler::prepare(){
+  readbackFunction = std::bind(&ExtHWReadbackHandler::readback, this);
+}
+
+void ExtHWReadbackHandler::readback(){
+  std::cout << "   ** ExtHWReadbackHandler::readback() called in " <<   this->_name << std::endl;
+  BasicHWReadbackHandler::readback();
+  hwReadbackValues.isNegativeReferenceActive = _motor->isNegativeReferenceActive();
+  hwReadbackValues.isPositiveReferenceActive = _motor->isPositiveReferenceActive();
+}
+
 
 SWReadback::SWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule(owner, name, description, true), _motor(motor){}

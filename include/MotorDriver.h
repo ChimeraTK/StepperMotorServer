@@ -77,7 +77,6 @@ struct MotorDriver : public ctk::ModuleGroup {
 
   std::shared_ptr<ControlInputHandler> ctrlInputHandler;
   std::unique_ptr<ReadbackHandler> hwReadbackHandler;
-  //ReadbackHandler hwReadbackHandler;
   std::unique_ptr<SWReadback> swReadback;
 
 }; /* MotorDriver */
@@ -91,17 +90,19 @@ struct BasicMotorDriver : MotorDriver {
         driverParam.moduleName,
         driverParam.motorDriverId,
         driverParam.motorDriverCardConfigFileName,
-        unitsConverter)} /*,
+        unitsConverter)}/*,
     ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", _motor} */
   {
 
 //    ctrlInputHandler = std::make_shared<ControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
     ctrlInputHandler = std::make_shared<BasicControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
-    hwReadbackHandler = std::move(std::unique_ptr<ReadbackHandler>{new ReadbackHandler(_motor, false, this, "hwReadback", "Signals read from the motor driver HW")});
+//    hwReadbackHandler = std::move(std::unique_ptr<ReadbackHandler>{new ReadbackHandler(_motor, false, this, "hwReadback", "Signals read from the motor driver HW")});
+    hwReadbackHandler = std::move(std::unique_ptr<BasicHWReadbackHandler>{new BasicHWReadbackHandler(_motor, this, "hwReadback", "Signals read from the motor driver HW")});
     swReadback = std::move(std::unique_ptr<SWReadback>{new SWReadback(_motor, this, "swReadback", "Signals read from the motor driver SW")});
   };
 
   std::shared_ptr<ctk::StepperMotor> _motor;
+  //BasicHWReadbackHandler hwReadbackHandler;
   //BasicControlInputHandler ctrlInputHandler;
 
 }; /* BasicMotorDriver */
@@ -122,7 +123,7 @@ struct LinearMotorDriver : MotorDriver {
     ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", _motor}*/ {
     ctrlInputHandler = std::make_shared<LinearMotorControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
     //ctrlInputHandler = std::make_shared<ControlInputHandler>(this, "controlInput", "Handles the control input to the motor driver.", _motor);
-    hwReadbackHandler = std::move(std::unique_ptr<ReadbackHandler>{new ReadbackHandler(_motor, true, this, "hwReadback", "Signals read from the motor driver HW")});
+    hwReadbackHandler = std::move(std::unique_ptr<ExtHWReadbackHandler>{new ExtHWReadbackHandler(_motor, this, "hwReadbackHandler", "Signals read from the motor driver HW")});
     swReadback = std::move(std::unique_ptr<SWReadback>{new SWReadback(_motor, this, "swReadback", "Signals read from the motor driver SW")});
   };
 
