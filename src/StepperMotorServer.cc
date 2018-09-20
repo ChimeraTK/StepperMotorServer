@@ -129,11 +129,11 @@ void StepperMotorServer::defineConnections(){
               <<std::endl;
 
     motorDriver[i]->ctrlInputHandler->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["controlInput"]);
-    motorDriver[i]->hwReadback->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
+    motorDriver[i]->hwReadbackHandler->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["hwReadback"]);
     motorDriver[i]->swReadback->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]["swReadback"]);
 //    motorDriver[i].findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
 
-    cyclicTrigger >> (*(motorDriver[i]->hwReadback))("trigger");
+    cyclicTrigger >> (*(motorDriver[i]->hwReadbackHandler))("trigger");
     cyclicTrigger >> (*(motorDriver[i]->swReadback))("trigger");
 
     if(useDummyMotors){

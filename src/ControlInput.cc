@@ -21,12 +21,12 @@ BasicControlInput::BasicControlInput(ctk::EntityOwner *owner,
 
 void BasicControlInput::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
-  funcMap[enableMotor.getId()]               = [this, motor]{/*std::cout << "Hit enabled " << enableMotor <<std::endl;*/ motor->setEnabled(enableMotor); };
+  funcMap[enableMotor.getId()]               = [this, motor]{ motor->setEnabled(enableMotor); };
   funcMap[positionSetpointInSteps.getId()]   = [this, motor]{ motor->setTargetPositionInSteps(positionSetpointInSteps); };
   funcMap[positionSetpoint.getId()]          = [this, motor]{ motor->setTargetPosition(positionSetpoint); };
-  funcMap[startMotor.getId()]                = [this, motor]{ motor->start();};
-  funcMap[stopMotor.getId()]                 = [this, motor]{ if(stopMotor){motor->stop();}};
-  funcMap[emergencyStopMotor.getId()]        = [this, motor]{ if(emergencyStopMotor){ motor->emergencyStop();}};
+  funcMap[startMotor.getId()]                = [this, motor]{ if(startMotor){motor->start();} };
+  funcMap[stopMotor.getId()]                 = [this, motor]{ if(stopMotor){motor->stop();} };
+  funcMap[emergencyStopMotor.getId()]        = [this, motor]{ if(emergencyStopMotor){ motor->emergencyStop();} };
   funcMap[enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(enableAutostart);};
   funcMap[moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(moveRelativeInSteps); };
   funcMap[moveRelative.getId()]              = [this, motor]{ motor->moveRelative(moveRelative); };
