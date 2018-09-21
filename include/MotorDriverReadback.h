@@ -18,16 +18,11 @@
 
 namespace ctk = ChimeraTK;
 
-struct ReadbackValues : public ctk::VariableGroup {
+
+
+struct HWReadbackValues : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
-  //virtual void readback() = 0;
-};
-
-struct HWReadbackValues : ReadbackValues {
-
-  HWReadbackValues(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    : ReadbackValues(owner, name, description, true) {};
 
   ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS"}};
   ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
@@ -42,37 +37,61 @@ struct HWReadbackValues : ReadbackValues {
   ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 };
 
-struct HWReadbackValuesExt : ReadbackValues {
+struct HWReadbackValuesExt : ctk::VariableGroup {
 
-  HWReadbackValuesExt(ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-    :ReadbackValues(owner, name, description, true) {};
+  using ctk::VariableGroup::VariableGroup;
 
   ctk::ScalarOutput<int> isPositiveReferenceActive{this, "isPositiveReferenceActive", "", "Status of positive end switch",{"CS"}};
   ctk::ScalarOutput<int> isNegativeReferenceActive{this, "isNegativeReferenceActive", "", "Status of negative end switch",{"CS"}};
+};
 
-  // TODO Move to sw readback
-  ctk::ScalarOutput<int> positiveEndReferenceInSteps{this, "positiveEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
-  ctk::ScalarOutput<int> negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+struct SWReadbackValues : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS"}};
+  ctk::ScalarOutput<std::string> motorState{this, "motorState", "", "State of the motor driver", {"CS"}};
+  ctk::ScalarOutput<int> swPositionLimitsEnabled{this, "swPositionLimitsEnabled", "", "Flags if SW end switches are enabled.", {"CS"}};
+  ctk::ScalarOutput<float> maxSWPositionLimit{this, "maxSWPositionLimit", "", "Currently set max. SW position limit", {"CS"}};
+  ctk::ScalarOutput<float> minSWPositionLimit{this, "minSWPositionLimit", "", "Currently set min. SW position limit", {"CS"}};
+  ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
+  ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
+
+  ctk::ScalarOutput<double> currentLimit{this, "currentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
+  ctk::ScalarOutput<double> maxCurrentLimit{this, "maxCurrentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
+  ctk::ScalarOutput<double> speedLimit{this, "speedLimit", "", "Speed limit set for the motor", {"CS"}};
+  ctk::ScalarOutput<double> maxSpeedCapability{this, "maxSpeedCapability", "", "Maximum velocity of the motor", {"CS"}};
+
+  ctk::ScalarOutput<int32_t> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"CS"}};
+  ctk::ScalarOutput<int32_t> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"CS"}};
+};
+
+struct SWReadbackValuesExt : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarOutput<int>   positiveEndReferenceInSteps{this, "positiveEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<int>   negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
   ctk::ScalarOutput<float> positiveEndReference{this, "positiveEndReference", "", "Position of the positive reference switch",{"CS"}};
   ctk::ScalarOutput<float> negativeEndReference{this, "negativeEndReference", "", "Position of the positive reference switch",{"CS"}};
 };
 
+
 /**
  * @class ReadbackHandler
- * @brief This module cyclically reads data from the motor driver card.
+ * @brief Base module for cyclically reading data from the motor driver card.
  */
 class ReadbackHandler : public ctk::ApplicationModule {
 
 public:
-  ReadbackHandler(/*std::shared_ptr<ctk::StepperMotor> motor,*/
-                  ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+
   using ctk::ApplicationModule::ApplicationModule;
 
   ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
 
   // Diagnostics
-  ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "", "Actual cycle time by which the HW is being read", {"CS"}};
-  ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "", "Actual time required to read all variables in this module from the HW.", {"CS"}};
+  ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "ms", "Actual cycle time by which the HW is being read", {"CS"}};
+  ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "ms", "Actual time required to read all variables in this module from the HW.", {"CS"}};
 
   virtual void mainLoop() override;
 
@@ -115,40 +134,39 @@ protected:
 };
 
 /**
- * @class HWReadback
+ * @class BasicSWReadbackHandler
  * @brief Variables read from the motor driver library (residing in SW)
  */
-struct SWReadback : ctk::ApplicationModule {
+class BasicSWReadbackHandler : public ReadbackHandler {
+public:
 
-  SWReadback(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+  BasicSWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
   std::shared_ptr<ctk::StepperMotor> _motor;
-  ExecutionTimer<> receiveTimer;
+  SWReadbackValues swReadbackValues;
 
-  ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
+  virtual void prepare() override;
 
-  ctk::ScalarOutput<int> isSystemIdle{this, "isSystemIdle", "", "Flags if system is idle and a movement or calibration can be started", {"CS"}};
-  ctk::ScalarOutput<std::string> motorState{this, "motorState", "", "State of the motor driver", {"CS"}};
-  ctk::ScalarOutput<int> swPositionLimitsEnabled{this, "swPositionLimitsEnabled", "", "Flags if SW end switches are enabled.", {"CS"}};
-  ctk::ScalarOutput<float> maxSWPositionLimit{this, "maxSWPositionLimit", "", "Currently set max. SW position limit", {"CS"}};
-  ctk::ScalarOutput<float> minSWPositionLimit{this, "minSWPositionLimit", "", "Currently set min. SW position limit", {"CS"}};
-  ctk::ScalarOutput<int> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "steps", "Currently set max. SW position limit", {"CS"}};
-  ctk::ScalarOutput<int> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "steps", "Currently set min. SW position limit", {"CS"}};
-
-  ctk::ScalarOutput<double> currentLimit{this, "currentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
-  ctk::ScalarOutput<double> maxCurrentLimit{this, "maxCurrentLimit", "A", "Current limit set for the motor", {"CS"}}; //TODO Implement
-  ctk::ScalarOutput<double> speedLimit{this, "speedLimit", "", "Speed limit set for the motor", {"CS"}};
-  ctk::ScalarOutput<double> maxSpeedCapability{this, "maxSpeedCapability", "", "Maximum velocity of the motor", {"CS"}};
-
-  ctk::ScalarOutput<int32_t> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"CS"}};
-  ctk::ScalarOutput<int32_t> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"CS"}};
-
-  //Diagnostics
-  ctk::ScalarOutput<float> actualReceiveTime{this, "actualReceiveTime", "", "Actual time required to get all variables in this module from the driver instance.", {"CS"}};
-
-  void mainLoop() override;
+protected:
+  void readback();
 };
 
+/**
+ * @class BasicSWReadbackHandler
+ * @brief Variables read from the motor driver library (residing in SW)
+ */
+class ExtSWReadbackHandler : public BasicSWReadbackHandler {
+public:
 
+  ExtSWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+
+  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  SWReadbackValuesExt swReadbackValues;
+
+  virtual void prepare() override;
+
+protected:
+  void readback();
+};
 
 #endif /* INCLUDE_MOTORDRIVERREADBACK_H_ */

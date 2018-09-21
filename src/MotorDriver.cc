@@ -25,7 +25,6 @@ int MotorUnitConverter::unitsToSteps(float units){
 // TODO Is there a better way to pass Module and Motor parameters?
 MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
                          const MotorDriverParameters &driverParam,
-                         bool isExtendedDriver,
                          std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter
                          )
   : ctk::ModuleGroup(owner, name, description),
