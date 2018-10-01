@@ -1,8 +1,9 @@
-/*
+/**
  * MotorDriverReadBack.h
  *
  *  Created on: Sep 17, 2018
  *      Author: ckampm
+ *
  */
 
 #ifndef INCLUDE_MOTORDRIVERREADBACK_H_
@@ -19,7 +20,13 @@
 namespace ctk = ChimeraTK;
 
 
-
+/**
+ *  @class HWReadbackValues
+ *  @brief A variable group of basic values that are read from the motor driver HW.
+ *
+ *  These are the basic variables read from the motor driver HW for a simple motor. In addition to variables read from HW,
+ *  it contains variables which have a static relation to those values, e.g. scaled position values.
+ */
 struct HWReadbackValues : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
@@ -37,6 +44,10 @@ struct HWReadbackValues : public ctk::VariableGroup {
   ctk::ScalarOutput<float> actualPosition{this, "actualPosition", "", "Actual position [scaled]", {"CS"}};
 };
 
+/**
+ *  @class HWReadbackValuesExt
+ *  @brief A variable group related to reference switches, read from the motor driver HW.
+ */
 struct HWReadbackValuesExt : ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
@@ -45,6 +56,12 @@ struct HWReadbackValuesExt : ctk::VariableGroup {
   ctk::ScalarOutput<int> isNegativeReferenceActive{this, "isNegativeReferenceActive", "", "Status of negative end switch",{"CS"}};
 };
 
+/**
+ *  @class SWReadbackValues
+ *  @brief A variable group of basic values that are read from the motor driver library (residing in SW).
+ *
+ *  These are the basic variables read from the motor driver HW for a simple motor.
+ */
 struct SWReadbackValues : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
@@ -66,6 +83,11 @@ struct SWReadbackValues : public ctk::VariableGroup {
   ctk::ScalarOutput<int32_t> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"CS"}};
 };
 
+
+/**
+ *  @class SWReadbackValuesExt
+ *  @brief A variable group related to reference switches, read from the motor driver library (residing in SW).
+ */
 struct SWReadbackValuesExt : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
@@ -78,8 +100,8 @@ struct SWReadbackValuesExt : public ctk::VariableGroup {
 
 
 /**
- * @class ReadbackHandler
- * @brief Base module for cyclically reading data from the motor driver card.
+ *  @class ReadbackHandler
+ *  @brief Base application module for cyclically reading data from the motor driver card HW.
  */
 class ReadbackHandler : public ctk::ApplicationModule {
 
@@ -103,6 +125,12 @@ private:
   ExecutionTimer<> receiveTimer;
 };
 
+/**
+ *  @class BasicHWReadbackHandler
+ *  @brief An application module to cyclically read data from the motor driver HW for a simple motor without reference switches.
+ *
+ *  This module supports a simple motor. It provides to functionality of the ChimeraTK::StepperMotor class of the MotorDriverCard library.
+ */
 class BasicHWReadbackHandler : public ReadbackHandler {
 
 public:
@@ -120,6 +148,13 @@ protected:
 };
 
 
+/**
+ *  @class ExtHWReadbackHandler
+ *  @brief An application module to cyclically read data from the motor driver HW for a motor with reference switches.
+ *
+ *  This module supports a linear motor with reference switches . It provides to functionality of the ChimeraTK::StepperMotorWithRefernce
+ *  class of the MotorDriverCard library.
+ */
 class ExtHWReadbackHandler : public BasicHWReadbackHandler {
 public:
   ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
@@ -133,9 +168,12 @@ protected:
   void readback();
 };
 
+
 /**
- * @class BasicSWReadbackHandler
- * @brief Variables read from the motor driver library (residing in SW)
+ *  @class BasicSWReadbackHandler
+ *  @brief An application module to cyclically read data (residing in SW) for a simple motor without reference switches.
+ *
+ *  This module supports a simple motor. It provides to functionality of the ChimeraTK::StepperMotor class of the MotorDriverCard library.
  */
 class BasicSWReadbackHandler : public ReadbackHandler {
 public:
@@ -151,9 +189,13 @@ protected:
   void readback();
 };
 
+
 /**
- * @class BasicSWReadbackHandler
- * @brief Variables read from the motor driver library (residing in SW)
+ *  @class ExtSWReadbackHandler
+ *  @brief An application module to cyclically read data (residing in SW) for a simple motor with reference switches.
+ *
+ *  This module supports a linear motor with reference switches . It provides to functionality of the ChimeraTK::StepperMotorWithRefernce
+ *  class of the MotorDriverCard library
  */
 class ExtSWReadbackHandler : public BasicSWReadbackHandler {
 public:

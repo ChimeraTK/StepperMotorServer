@@ -110,7 +110,6 @@ void BasicSWReadbackHandler::readback(){
   }
   catch(mtca4u::MotorDriverException &e){
     auto userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: ." + std::string(e.what());
-    //std::cout << userMessage << std::endl;
   }
 }
 

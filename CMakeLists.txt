@@ -186,3 +186,19 @@ else()
   install(TARGETS ${LIBRARY_OUTPUT_NAME} LIBRARY DESTINATION lib)
 endif()
 
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+
+  # The write_default_config target is defined in the ConfigCalculator subdirectory
+  # the 
+  add_custom_target(doc ${DOC_DEPENDENCY}
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/ DESTINATION share/doc/${PROJECT_NAME}-${${PROJECT_NAME}_SOVERSION} )
+else(DOXYGEN_FOUND)
+  message("Doxygen not found, documentation cannot be build.")
+endif(DOXYGEN_FOUND)
+
