@@ -54,6 +54,7 @@ void BasicControlInputHandler::mainLoop() {
 
     auto changedVarId = inputGroup.readAny();
 
+    // FIXME This is not thread-safe as the call to isSystemIdle and the funcMap are not atomic
     if(_motor->isSystemIdle()
         || changedVarId == _controlInput.stopMotor.getId() || changedVarId == _controlInput.emergencyStopMotor.getId()){
       //FIXME Keep this only as long as we rely on the dummy for tests

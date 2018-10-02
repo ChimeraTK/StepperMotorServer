@@ -56,24 +56,7 @@ private:
 };
 
 
-/**
- * @class MotorDriver
- * @details Module group for all modules accessing the motor driver library.
- *          It provides shared objects provided by the library
- */
-struct MotorDriver : public ctk::ModuleGroup {
-
-  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-              std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter);
-
-  virtual ~MotorDriver(){};
-
-  // Todo: We assume that the library is thread-safe. To be checked. Use mutex
-  std::shared_ptr<ctk::StepperMotorUnitsConverter> _motorUnitsConverter;
-};
-
-
-struct BasicMotorDriver : MotorDriver {
+struct BasicMotorDriver : public ctk::ModuleGroup {
   BasicMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
                     const MotorDriverParameters &driverParam,
                     std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter);
@@ -85,7 +68,7 @@ struct BasicMotorDriver : MotorDriver {
 };
 
 
-struct LinearMotorDriver : MotorDriver {
+struct LinearMotorDriver : public ctk::ModuleGroup {
 
   LinearMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
                     const MotorDriverParameters &driverParam,

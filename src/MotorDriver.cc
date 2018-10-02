@@ -22,18 +22,11 @@ int MotorUnitConverter::unitsToSteps(float units){
   return units/_userUnitToStepsRatio;
 }
 
-// TODO Is there a better way to pass Module and Motor parameters?
-MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                         std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter
-                         )
-  : ctk::ModuleGroup(owner, name, description),
-    _motorUnitsConverter(unitsConverter) {}
-
 
 BasicMotorDriver::BasicMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
                                    const MotorDriverParameters &driverParam,
                                    std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
-  : MotorDriver(owner, name,description, unitsConverter),
+  : ctk::ModuleGroup(owner, name, description),
   motor{std::make_shared<ctk::StepperMotor>(driverParam.motorDriverCardDeviceName,
                               driverParam.moduleName,
                               driverParam.motorDriverId,
@@ -47,7 +40,7 @@ BasicMotorDriver::BasicMotorDriver(ctk::EntityOwner *owner, const std::string &n
 LinearMotorDriver::LinearMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
                                      const MotorDriverParameters &driverParam,
                                      std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
-  : MotorDriver(owner, name,description, unitsConverter),
+  : ctk::ModuleGroup(owner, name, description),
     motor{std::make_shared<ctk::StepperMotorWithReference>(driverParam.motorDriverCardDeviceName,
                                                              driverParam.moduleName,
                                                              driverParam.motorDriverId,
