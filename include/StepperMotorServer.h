@@ -11,9 +11,6 @@
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ApplicationCore/ConfigReader.h>
 
-#include <ChimeraTK/Device.h>
-
-#include "MotorControl.h"
 #include "MotorDriver.h"
 #include "MotorDummy.h"
 #include "Trigger.h"
