@@ -25,17 +25,13 @@
 
 namespace ctk = ChimeraTK;
 
-//typedef std::map<ctk::TransferElementID, std::function<void(void)>> funcmapT;
+
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
-
-
 
 struct BasicControlInput : public ctk::VariableGroup {
 
   BasicControlInput(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
   virtual ~BasicControlInput(){};
-
-  funcmapT funcMap;
 
   ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"CS"}};
@@ -69,101 +65,77 @@ struct BasicControlInput : public ctk::VariableGroup {
   ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input", {"DUMMY"}};
   ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor", {"DUMMY"}};
 
-  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
+  //virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
 
 };
 
 
-struct LinearMotorControlInput : BasicControlInput {
+struct LinearMotorControlInput : public ctk::VariableGroup {
 
   LinearMotorControlInput(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-
   ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"CS"}};
-
-  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> _motor);
-
 };
 
-/**
- * @class ControlInputHandler
- * @details General component for handling commands to the motor driver
- */
-struct ControlInputHandler : public ctk::ApplicationModule {
-
-  ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-  virtual ~ControlInputHandler() {};
-
-  ctk::ReadAnyGroup inputGroup;
-  funcmapT _funcMap;
-};
 
 /**
- * @class ControlInputHandlerImpl
- * @details Contains the implementation of the ControlInputHandler as a template so it can be used
- *          with a specific motor and set of inputs.
+ *  @class ControlInputHandlerImpl
+ *  @details Contains the implementation of the ControlInputHandler as a template so it can be used
+ *           with a specific motor and set of inputs.
  */
-template<typename MotorType, typename ControlInputType>
-struct ControlInputHandlerImpl : public ControlInputHandler {
+class BasicControlInputHandler : public ctk::ApplicationModule {
+public:
 
-  ControlInputHandlerImpl(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<MotorType> motor)
-    : ControlInputHandler(owner, name, description),
+  BasicControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)
+    : ctk::ApplicationModule(owner, name, description),
       _motor(motor),
-      _inp{std::make_shared<ControlInputType>(this, "controlInput", "Control inputs")}{};
+      _controlInput{this, "controlInput", "Basic control inputs"}{};
 
+  virtual ~BasicControlInputHandler() {};
+
+  virtual void prepare() override{
+      createFunctionMap(_motor);
+  };
+
+  virtual void mainLoop() override;
+
+protected:
+  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
+  funcmapT funcMap;
+
+private:
   ctk::ReadAnyGroup inputGroup;
-  funcmapT _funcMap;
+  std::shared_ptr<ctk::StepperMotor> _motor;
+  BasicControlInput _controlInput;
 
-  std::shared_ptr<MotorType> _motor;
-  std::shared_ptr<ControlInputType> _inp;
+}; /* class BasicControlInputHandler */
 
-  void prepare() override{
-      _inp->createFunctionMap(_motor);
-  };
-
-  void mainLoop() override{
-    inputGroup = this->readAnyGroup();
-
-    // Initialize the motor
-    _motor->setActualPositionInSteps(0);
-
-    while(true){
-
-      auto changedVarId = inputGroup.readAny();
-
-      if(_motor->isSystemIdle()
-          || changedVarId == _inp->stopMotor.getId() || changedVarId == _inp->emergencyStopMotor.getId()){
-        //FIXME Keep this as long as we rely on the dummy for tests
-        try{
-          _inp->funcMap.at(changedVarId)();
-        }
-        catch(mtca4u::MotorDriverException &e){
-          _inp->userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: " + std::string(e.what());
-        }
-        _inp->userMessage = "";
-      }
-      else{
-        _inp->userMessage = "WARNING: MotorDriver::ControlInput: Illegal write attempt while motor is not in IDLE state.";
-      }
-
-      _inp->dummyMotorStop = _inp->stopMotor || _inp->emergencyStopMotor;
-      _inp->dummyMotorTrigger++;
-
-      writeAll();
-    }
-  };
-}; /* struct ControlInputHandlerImpl */
-
-/**
- * @class BasicControlInputHandler
- * @brief Specialization of the ControlInputHandler for basic StepperMotor instances.
- */
-using BasicControlInputHandler       = ControlInputHandlerImpl<ctk::StepperMotor, BasicControlInput>;
 
 /**
  * @class LinearMotorControlInputHandler
  * @brief Specialization of the ControlInputHandler for StepperMotorWithReference instances (i.e., linear motors with end switches).
  */
-using LinearMotorControlInputHandler = ControlInputHandlerImpl<ctk::StepperMotorWithReference, LinearMotorControlInput>;
+class LinearMotorControlInputHandler : public BasicControlInputHandler{
+public:
+  LinearMotorControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                                                                 std::shared_ptr<ctk::StepperMotorWithReference> motor)
+    : BasicControlInputHandler(owner, name, description, motor),
+      _motor{motor},
+      _controlInput{this, "linearMotorControlInput", "Control inputs for a linear stepper motor with reference switches"}{};
+
+  virtual ~LinearMotorControlInputHandler(){};
+
+  virtual void prepare() override{
+    BasicControlInputHandler::createFunctionMap(_motor);
+    createFunctionMap(_motor);
+  };
+
+protected:
+  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> _motor);
+
+private:
+  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  LinearMotorControlInput _controlInput;
+};
 
 #endif /* INCLUDE_CONTROLINPUT_H_ */

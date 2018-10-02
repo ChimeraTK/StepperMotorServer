@@ -109,7 +109,7 @@ public:
 
   using ctk::ApplicationModule::ApplicationModule;
 
-  ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW"};
+  ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW", {"TRIGGER"}};
 
   // Diagnostics
   ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "ms", "Actual cycle time by which the HW is being read", {"CS"}};
@@ -141,7 +141,6 @@ public:
   HWReadbackValues hwReadbackValues;
 
   virtual void prepare();
-  //virtual void mainLoop();
 
 protected:
   void readback();

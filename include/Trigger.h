@@ -19,7 +19,7 @@ struct Trigger : public ctk::ApplicationModule {
 
     ctk::ReadAnyGroup inputGroup;
 
-    ctk::ScalarOutput<int> trigger{this, "trigger", "", ""};
+    ctk::ScalarOutput<int> trigger{this, "trigger", "", "", {"TRIGGER"}};
     ctk::ScalarOutput<int> countdown{this, "countdown", "", ""};
     ctk::ScalarPushInput<int> forceUpdate{this, "forceUpdate", "", "Force a single trigger"};
     ctk::ScalarPushInput<int> automaticUpdate{this, "automaticUpdate", "", "Enable cyclic triggering"};

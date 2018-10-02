@@ -24,14 +24,35 @@ int MotorUnitConverter::unitsToSteps(float units){
 
 // TODO Is there a better way to pass Module and Motor parameters?
 MotorDriver::MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                         const MotorDriverParameters &driverParam,
                          std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter
                          )
   : ctk::ModuleGroup(owner, name, description),
-    _motorUnitsConverter(unitsConverter)/*,
-    _motor{new ctk::StepperMotor{driverParam.motorDriverCardDeviceName,
-                                 driverParam.moduleName,
-                                 driverParam.motorDriverId,
-                                 driverParam.motorDriverCardConfigFileName,
-                                 _motorUnitsConverter}},*/    {}
+    _motorUnitsConverter(unitsConverter) {}
 
+
+BasicMotorDriver::BasicMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                                   const MotorDriverParameters &driverParam,
+                                   std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
+  : MotorDriver(owner, name,description, unitsConverter),
+  motor{std::make_shared<ctk::StepperMotor>(driverParam.motorDriverCardDeviceName,
+                              driverParam.moduleName,
+                              driverParam.motorDriverId,
+                              driverParam.motorDriverCardConfigFileName,
+                              unitsConverter)},
+  ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
+  hwReadbackHandler{motor, this, "hwReadback", "Signals read from the motor driver HW"},
+  swReadbackHandler{motor, this, "swReadback", "Signals read from the motor driver SW"} {}
+
+
+LinearMotorDriver::LinearMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+                                     const MotorDriverParameters &driverParam,
+                                     std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
+  : MotorDriver(owner, name,description, unitsConverter),
+    motor{std::make_shared<ctk::StepperMotorWithReference>(driverParam.motorDriverCardDeviceName,
+                                                             driverParam.moduleName,
+                                                             driverParam.motorDriverId,
+                                                             driverParam.motorDriverCardConfigFileName,
+                                                             unitsConverter)},
+    ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
+    hwReadbackHandler{motor, this, "hwReadback", "Signals read from the motor driver HW"},
+    swReadbackHandler{motor, this, "swReadback", "Signals read from the motor driver SW"} {}

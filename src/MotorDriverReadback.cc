@@ -93,8 +93,8 @@ void BasicSWReadbackHandler::prepare(){
 void BasicSWReadbackHandler::readback(){
 
   try{
-    swReadbackValues.isSystemIdle = _motor->isSystemIdle();
-    swReadbackValues.motorState   = _motor->getState();
+    swReadbackValues.isSystemIdle              = _motor->isSystemIdle();
+    swReadbackValues.motorState                = _motor->getState();
     swReadbackValues.swPositionLimitsEnabled   = _motor->getSoftwareLimitsEnabled();
     swReadbackValues.maxSWPositionLimit        = _motor->getMaxPositionLimit();
     swReadbackValues.minSWPositionLimit        = _motor->getMinPositionLimit();
