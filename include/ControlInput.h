@@ -28,6 +28,26 @@ namespace ctk = ChimeraTK;
 
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
 
+template <typename UserType>
+class EdgeDetector {
+  UserType _oldValue;
+
+public:
+  EdgeDetector(UserType oldValue = 0)
+    : _oldValue{oldValue}{};
+
+  bool isPositiveEdge(UserType signal){
+    if(signal && !_oldValue){
+      _oldValue = signal;
+      return true;
+    }
+    else{
+      return false;
+    }
+  };
+};
+
+
 struct BasicControlInput : public ctk::VariableGroup {
 
   BasicControlInput(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
@@ -102,6 +122,12 @@ public:
 protected:
   virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
   funcmapT funcMap;
+
+  // Callbacks
+  void enableCallback();
+  void startCallback();
+  void setTargetPositionCallback();
+  void setTargetPositionInStepsCallback();
 
 private:
   ctk::ReadAnyGroup inputGroup;

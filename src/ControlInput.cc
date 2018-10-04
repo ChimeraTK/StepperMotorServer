@@ -23,10 +23,10 @@ LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
 
 void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
-  funcMap[_controlInput.enableMotor.getId()]               = [this, motor]{ motor->setEnabled(_controlInput.enableMotor); };
-  funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this, motor]{ motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps); };
-  funcMap[_controlInput.positionSetpoint.getId()]          = [this, motor]{ motor->setTargetPosition(_controlInput.positionSetpoint); };
-  funcMap[_controlInput.startMotor.getId()]                = [this, motor]{ if(_controlInput.startMotor){motor->start();} };
+  funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
+  funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();}; //[this, motor]{ motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps); };
+  funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();}; //[this, motor]{ motor->setTargetPosition(_controlInput.positionSetpoint); };
+  funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};//[this, motor]{ if(_controlInput.startMotor){motor->start();} };
   funcMap[_controlInput.stopMotor.getId()]                 = [this, motor]{ if(_controlInput.stopMotor){motor->stop();} };
   funcMap[_controlInput.emergencyStopMotor.getId()]        = [this, motor]{ if(_controlInput.emergencyStopMotor){ motor->emergencyStop();} };
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
@@ -74,6 +74,40 @@ void BasicControlInputHandler::mainLoop() {
     _controlInput.dummyMotorTrigger++;
 
     writeAll();
+  }
+}
+
+void BasicControlInputHandler::enableCallback(){
+  _motor->setEnabled(_controlInput.enableMotor);
+}
+
+void BasicControlInputHandler::startCallback(){
+
+  if(_controlInput.startMotor){
+    if(_motor->isSystemIdle()){
+      _motor->start();
+    }
+    else{
+      _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called startMotor while motor is not in IDLE state.";
+    }
+  }
+}
+
+void BasicControlInputHandler::setTargetPositionCallback(){
+  if(_motor->isSystemIdle()){
+    _motor->setTargetPosition(_controlInput.positionSetpoint);
+  }
+  else{
+    _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Requested change of target position while motor is not in IDLE state.";
+  }
+}
+
+void BasicControlInputHandler::setTargetPositionInStepsCallback(){
+  if(_motor->isSystemIdle()){
+    _motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps);
+  }
+  else{
+    _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Requested change of target position while motor is not in IDLE state.";
   }
 }
 
