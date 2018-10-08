@@ -106,7 +106,8 @@ void BasicSWReadbackHandler::readback(){
     swReadbackValues.speedLimit         = _motor->getUserSpeedLimit();
     swReadbackValues.maxSpeedCapability = _motor->getMaxSpeedCapability();  /* TODO This is const in the library. Move to module which is run once at startup? */
 
-    swReadbackValues.isFullStepping = _motor->isFullStepping();
+    swReadbackValues.isFullStepping   = _motor->isFullStepping();
+    swReadbackValues.autostartEnabled = _motor->getAutostart();
   }
   catch(mtca4u::MotorDriverException &e){
     auto userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: ." + std::string(e.what());
