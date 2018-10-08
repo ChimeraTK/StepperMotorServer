@@ -129,5 +129,8 @@ void ExtSWReadbackHandler::readback(){
   swReadbackValues.negativeEndReference        = _motor->getNegativeEndReference();
   swReadbackValues.positiveEndReferenceInSteps = _motor->getPositiveEndReferenceInSteps();
   swReadbackValues.negativeEndReferenceInSteps = _motor->getNegativeEndReferenceInSteps();
+
+  swReadbackValues.positiveEndReferenceTolerance = _motor->getTolerancePositiveEndSwitch();
+  swReadbackValues.negativeEndReferenceTolerance = _motor->getToleranceNegativeEndSwitch();
 }
 

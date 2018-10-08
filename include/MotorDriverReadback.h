@@ -96,6 +96,8 @@ struct SWReadbackValuesExt : public ctk::VariableGroup {
   ctk::ScalarOutput<int>   negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
   ctk::ScalarOutput<float> positiveEndReference{this, "positiveEndReference", "", "Position of the positive reference switch",{"CS"}};
   ctk::ScalarOutput<float> negativeEndReference{this, "negativeEndReference", "", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<float> positiveEndReferenceTolerance{this, "positiveEndReferenceTolerance", "", "Tolerance of the calibrated positive end switch position.", {"CS"}};
+  ctk::ScalarOutput<float> negativeEndReferenceTolerance{this, "negativeEndReferenceTolerance", "", "Tolerance of the calibrated negative end switch position.", {"CS"}};
 };
 
 

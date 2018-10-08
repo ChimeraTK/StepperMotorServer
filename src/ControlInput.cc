@@ -32,6 +32,8 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
   funcMap[_controlInput.moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(_controlInput.moveRelativeInSteps); };
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
+  funcMap[_controlInput.axisTranslationInSteps.getId()]    = [this, motor]{ motor->translateAxisInSteps(_controlInput.axisTranslationInSteps); };
+  funcMap[_controlInput.axisTranslation.getId()]           = [this, motor]{ motor->translateAxis(_controlInput.axisTranslation); };
   funcMap[_controlInput.enableSWPositionLimits.getId()]    = [this, motor]{ motor->setSoftwareLimitsEnabled(_controlInput.enableSWPositionLimits); };
   funcMap[_controlInput.maxSWPositionLimit.getId()]        = [this, motor]{ motor->setMaxPositionLimit(_controlInput.maxSWPositionLimit); };
   funcMap[_controlInput.minSWPositionLimit.getId()]        = [this, motor]{ motor->setMinPositionLimit(_controlInput.minSWPositionLimit); };
@@ -39,7 +41,7 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
   funcMap[_controlInput.minSWPositionLimitInSteps.getId()] = [this, motor]{ motor->setMinPositionLimitInSteps(_controlInput.minSWPositionLimitInSteps); };
   funcMap[_controlInput.currentLimit.getId()]              = [this, motor]{ motor->setUserCurrentLimit(_controlInput.currentLimit); };
   funcMap[_controlInput.speedLimit.getId()]                = [this, motor]{ motor->setUserSpeedLimit(_controlInput.speedLimit); };
-  funcMap[_controlInput.enableFullStepping.getId()]        = [this, motor]{ motor->enableFullStepping(); };
+  funcMap[_controlInput.enableFullStepping.getId()]        = [this, motor]{ motor->enableFullStepping(_controlInput.enableFullStepping); };
 }
 
 
@@ -52,22 +54,17 @@ void BasicControlInputHandler::mainLoop() {
 
   while(true){
 
+    _controlInput.userMessage = "";
+
     auto changedVarId = inputGroup.readAny();
 
-    // FIXME This is not thread-safe as the call to isSystemIdle and the funcMap are not atomic
-    if(_motor->isSystemIdle()
-        || changedVarId == _controlInput.stopMotor.getId() || changedVarId == _controlInput.emergencyStopMotor.getId()){
-      //FIXME Keep this only as long as we rely on the dummy for tests
-      try{
-        funcMap.at(changedVarId)();
-      }
-      catch(mtca4u::MotorDriverException &e){
-        _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: " + std::string(e.what());
-      }
-      _controlInput.userMessage = "";
+  // FIXME This is not thread-safe as the call to isSystemIdle and the funcMap are not atomic
+    //FIXME Keep this only as long as we rely on the dummy for tests
+    try{
+      funcMap.at(changedVarId)();
     }
-    else{
-      _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Illegal write attempt while motor is not in IDLE state.";
+    catch(mtca4u::MotorDriverException &e){
+      _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: " + std::string(e.what());
     }
 
     _controlInput.dummyMotorStop = _controlInput.stopMotor || _controlInput.emergencyStopMotor;
@@ -112,7 +109,39 @@ void BasicControlInputHandler::setTargetPositionInStepsCallback(){
 }
 
 
-void LinearMotorControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> _motor){
 
-  funcMap[_controlInput.calibrateMotor.getId()] = [this, _motor]{_motor->calibrate();};
+// Implementation of LinearMotorControlInputHandler functions
+
+void LinearMotorControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> motor){
+
+  funcMap[_controlInput.calibrateMotor.getId()]            = [this]{calibrateCallback();};
+
+  funcMap[BasicControlInputHandler::_controlInput.axisTranslationInSteps.getId()]
+    = [this, motor]{ motor->translateAxisInSteps(BasicControlInputHandler::_controlInput.axisTranslationInSteps); };
+  funcMap[BasicControlInputHandler::_controlInput.axisTranslation.getId()]
+    = [this, motor]{ motor->translateAxis(BasicControlInputHandler::_controlInput.axisTranslation); };
+
+  funcMap[_controlInput.determineTolerance.getId()] = [this]{determineToleranceCallback();};
+}
+
+void LinearMotorControlInputHandler::calibrateCallback(){
+  if(_controlInput.calibrateMotor){
+    if(_motor->isSystemIdle()){
+      _motor->calibrate();
+    }
+    else{
+      BasicControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called calibrateMotor while motor is not in IDLE state.";
+    }
+  }
+}
+
+void LinearMotorControlInputHandler::determineToleranceCallback(){
+  if(_controlInput.determineTolerance){
+    if(_motor->isSystemIdle()){
+      _motor->determineTolerance();
+    }
+    else{
+      BasicControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called determineTolerance while motor is not in IDLE state.";
+    }
+  }
 }
