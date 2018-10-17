@@ -24,6 +24,7 @@ LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
 void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
   funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
+  funcMap[_controlInput.disableMotor.getId()]               = [this]{disableCallback();};
   funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();}; //[this, motor]{ motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps); };
   funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();}; //[this, motor]{ motor->setTargetPosition(_controlInput.positionSetpoint); };
   funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};//[this, motor]{ if(_controlInput.startMotor){motor->start();} };
@@ -75,7 +76,11 @@ void BasicControlInputHandler::mainLoop() {
 }
 
 void BasicControlInputHandler::enableCallback(){
-  _motor->setEnabled(_controlInput.enableMotor);
+  _motor->setEnabled(true);
+}
+
+void BasicControlInputHandler::disableCallback(){
+  _motor->setEnabled(false);
 }
 
 void BasicControlInputHandler::startCallback(){

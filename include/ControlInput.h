@@ -54,6 +54,7 @@ struct BasicControlInput : public ctk::VariableGroup {
   virtual ~BasicControlInput(){};
 
   ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
+  ctk::ScalarPushInput<int32_t> disableMotor{this, "disable", "", "Disable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "steps", "Motor position setpoint", {"CS"}};
@@ -128,6 +129,7 @@ protected:
 
   // Callbacks
   void enableCallback();
+  void disableCallback();
   void startCallback();
   void setTargetPositionCallback();
   void setTargetPositionInStepsCallback();
