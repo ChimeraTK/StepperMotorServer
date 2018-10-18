@@ -1,92 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="165,5,980,700"><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
-<DOOCSLabel name="Label36" bounds="898,240,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label35" bounds="898,210,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSLabel name="Label34" bounds="147,490,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label33" bounds="147,470,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSLabel name="Label32" bounds="147,440,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label31" bounds="147,420,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSLabel name="Label30" bounds="310,570,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label29" bounds="310,540,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSDial name="Dial12" bounds="147,570,131,20"><adr>///controlInput.referencePosition</adr><precision>2</precision></DOOCSDial>
-<DOOCSDial name="Dial11" bounds="147,540,131,20"><adr>///controlInput.referencePositionInSteps</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label28" bounds="49,540,82,20"><text>Reference</text></DOOCSLabel>
-<DOOCSColouredIndicator name="ColouredIndicator9" bounds="522,50,33,20"><adr>///hwReadback.motorError</adr><colorMap>GrayRed</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
-<DOOCSToggleButton name="ToggleButton5" bounds="49,90,212,20"><adr>///controlInput.disable</adr><textON>Disable</textON><textOFF>Disable</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSColouredIndicator name="ColouredIndicator8" bounds="180,10,33,20"><adr>///hwReadback.enabledRBV</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label37" bounds="49,70,82,20"><text>State</text></DOOCSLabel>
+<DOOCSLabel name="Label25" bounds="588,610,98,20"><text>Max current</text></DOOCSLabel>
+<DOOCSLabel name="Label10" bounds="311,70,65,20"><text>Code</text></DOOCSLabel>
+<DOOCSLabel name="Label36" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label35" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSLabel name="Label34" bounds="196,490,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label33" bounds="196,470,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSLabel name="Label32" bounds="196,440,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label31" bounds="196,420,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSLabel name="Label30" bounds="277,570,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label29" bounds="277,540,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSDial name="Dial12" bounds="114,570,131,20"><adr>///controlInput.referencePosition</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial11" bounds="114,540,131,20"><adr>///controlInput.referencePositionInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label28" bounds="16,540,82,20"><text>Reference</text></DOOCSLabel>
+<DOOCSColouredIndicator name="ColouredIndicator9" bounds="376,40,33,20"><adr>///hwReadback.motorError</adr><colorMap>GrayRed</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSToggleButton name="ToggleButton5" bounds="49,120,212,20"><adr>///controlInput.disable</adr><textON>Disable</textON><textOFF>Disable</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSColouredIndicator name="ColouredIndicator8" bounds="147,10,33,20"><adr>///hwReadback.enabledRBV</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label27" bounds="49,10,131,20"><text>Enabled</text></DOOCSLabel>
-<DOOCSLabel name="Label26" bounds="898,290,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label26" bounds="898,330,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSValue name="Value23" bounds="98,490,114,20"><adr>///swReadback.positiveEndReference</adr></DOOCSValue>
 <DOOCSValue name="Value22" bounds="98,440,98,20"><adr>///swReadback.negativeEndReference</adr></DOOCSValue>
-<DOOCSToggleButton name="ToggleButton4" bounds="49,250,212,20"><adr>///controlInput.determineTolerance</adr><textON>Determine Tolerance</textON><textOFF>Determine Tolerance</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSValue name="Value21" bounds="474,470,98,20"><adr>///swReadback.positiveEndReferenceTolerance</adr></DOOCSValue>
-<DOOCSValue name="Value20" bounds="474,420,98,20"><adr>///swReadback.negativeEndReferenceTolerance</adr></DOOCSValue>
-<DOOCSLabel name="Label24" bounds="310,640,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label23" bounds="310,610,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSDial name="Dial10" bounds="147,640,131,20"><adr>///controlInput.axisTranslation</adr><precision>2</precision></DOOCSDial>
-<DOOCSDial name="Dial9" bounds="147,610,131,20"><adr>///controlInput.axisTranslationInSteps</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label22" bounds="49,610,82,20"><text>Translation</text></DOOCSLabel>
-<DOOCSCheckBox name="CheckBox2" bounds="572,120,147,20"><adr>///controlInput.enableFullStepping</adr><text>Enable full-step mode</text></DOOCSCheckBox>
+<DOOCSToggleButton name="ToggleButton4" bounds="49,280,212,20"><adr>///controlInput.determineTolerance</adr><textON>Determine Tolerance</textON><textOFF>Determine Tolerance</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSValue name="Value21" bounds="523,470,98,20"><adr>///swReadback.positiveEndReferenceTolerance</adr></DOOCSValue>
+<DOOCSValue name="Value20" bounds="523,420,98,20"><adr>///swReadback.negativeEndReferenceTolerance</adr></DOOCSValue>
+<DOOCSLabel name="Label24" bounds="277,640,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label23" bounds="277,610,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSDial name="Dial10" bounds="114,640,131,20"><adr>///controlInput.axisTranslation</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial9" bounds="114,610,131,20"><adr>///controlInput.axisTranslationInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label22" bounds="16,610,82,20"><text>Translation</text></DOOCSLabel>
+<DOOCSCheckBox name="CheckBox2" bounds="572,160,147,20"><adr>///controlInput.enableFullStepping</adr><text>Enable full-step mode</text></DOOCSCheckBox>
 <DOOCSLabel name="Label21" bounds="899,180,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label20" bounds="899,150,49,20"><text>steps</text></DOOCSLabel>
-<DOOCSDial name="Dial8" bounds="523,180,131,20"><adr>///controlInput.positionSetpoint</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial8" bounds="523,220,131,20"><adr>///controlInput.positionSetpoint</adr><precision>2</precision></DOOCSDial>
 <DOOCSValue name="Value19" bounds="833,290,131,20"><adr>///hwReadback.decoderPosition</adr><dataOp>$adr/1000000.</dataOp></DOOCSValue>
-<DOOCSValue name="Value3" bounds="784,660,131,20"><adr>///swReadback.maxSpeedCapability</adr></DOOCSValue>
-<DOOCSValue name="Value18" bounds="637,530,131,20"><adr>///swReadback.maxCurrentLimit</adr></DOOCSValue>
-<DOOCSColouredIndicator name="ColouredIndicator7" bounds="523,120,33,20"><adr>///swReadback.isFullStepping</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
-<DOOCSLabel name="Label19" bounds="425,120,81,20"><text>Full stepping</text></DOOCSLabel>
-<DOOCSValue name="Value17" bounds="784,630,131,20"><adr>///swReadback.speedLimit</adr></DOOCSValue>
-<DOOCSDial name="Dial7" bounds="637,630,131,20"><adr>///controlInput.speedLimit</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label18" bounds="539,630,98,20"><text>Speed Limit</text></DOOCSLabel>
-<DOOCSDial name="Dial6" bounds="523,210,131,20"><adr>///controlInput.moveRelativeInSteps</adr><precision>2</precision></DOOCSDial>
-<DOOCSDial name="Dial5" bounds="523,240,131,20"><adr>///controlInput.moveRelative</adr><precision>2</precision></DOOCSDial>
-<DOOCSDial name="Dial4" bounds="637,560,131,20"><adr>///controlInput.currentLimit</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label17" bounds="425,210,98,20"><text>Move rel.</text></DOOCSLabel>
-<DOOCSValue name="Value16" bounds="784,560,131,20"><adr>///swReadback.currentLimit</adr></DOOCSValue>
-<DOOCSLabel name="Label16" bounds="539,560,98,20"><text>Current Limit</text></DOOCSLabel>
-<DOOCSValue name="Value15" bounds="816,60,147,20"><adr>///swReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label15" bounds="653,40,147,20"><text>HW readback time [ms]</text></DOOCSLabel>
-<DOOCSValue name="Value14" bounds="816,40,131,20"><adr>///hwReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label14" bounds="653,60,229,20"><text>SW readback time [ms]</text></DOOCSLabel>
-<DOOCSLabel name="Label13" bounds="784,270,98,20"><text>Decoder pos</text></DOOCSLabel>
+<DOOCSValue name="Value3" bounds="833,580,131,20"><adr>///swReadback.maxSpeedCapability</adr></DOOCSValue>
+<DOOCSValue name="Value18" bounds="686,610,131,20"><adr>///swReadback.maxCurrentLimit</adr></DOOCSValue>
+<DOOCSColouredIndicator name="ColouredIndicator7" bounds="523,160,33,20"><adr>///swReadback.isFullStepping</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label19" bounds="425,160,81,20"><text>Full stepping</text></DOOCSLabel>
+<DOOCSValue name="Value17" bounds="833,550,131,20"><adr>///swReadback.speedLimit</adr></DOOCSValue>
+<DOOCSDial name="Dial7" bounds="686,550,131,20"><adr>///controlInput.speedLimit</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label18" bounds="588,550,98,20"><text>Speed Limit</text></DOOCSLabel>
+<DOOCSDial name="Dial6" bounds="523,250,131,20"><adr>///controlInput.moveRelativeInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial5" bounds="523,280,131,20"><adr>///controlInput.moveRelative</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial4" bounds="686,640,131,20"><adr>///controlInput.currentLimit</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label17" bounds="425,250,98,20"><text>Move rel.</text></DOOCSLabel>
+<DOOCSValue name="Value16" bounds="833,640,131,20"><adr>///swReadback.currentLimit</adr></DOOCSValue>
+<DOOCSLabel name="Label16" bounds="588,640,98,20"><text>Current Limit</text></DOOCSLabel>
+<DOOCSValue name="Value15" bounds="865,90,99,20"><adr>///swReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
+<DOOCSLabel name="Label15" bounds="702,70,147,20"><text>HW readback time [ms]</text></DOOCSLabel>
+<DOOCSValue name="Value14" bounds="865,70,99,20"><adr>///hwReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
+<DOOCSLabel name="Label14" bounds="702,90,229,20"><text>SW readback time [ms]</text></DOOCSLabel>
+<DOOCSLabel name="Label13" bounds="784,310,98,20"><text>Decoder pos</text></DOOCSLabel>
 <DOOCSValue name="Value13" bounds="98,470,114,20"><adr>///swReadback.positiveEndReferenceInSteps</adr></DOOCSValue>
 <DOOCSValue name="Value12" bounds="98,420,98,20"><adr>///swReadback.negativeEndReferenceInSteps</adr></DOOCSValue>
 <DOOCSLabel name="Label12" bounds="16,360,163,20"><text>HW Endswitches</text></DOOCSLabel>
 <DOOCSColouredIndicator name="ColouredIndicator6" bounds="49,470,33,20"><adr>///hwReadback.isPositiveReferenceActive</adr><colorMap>GrayYellow</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSColouredIndicator name="ColouredIndicator5" bounds="49,420,33,20"><adr>///hwReadback.isNegativeReferenceActive</adr><colorMap>GrayYellow</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
-<DOOCSColouredIndicator name="ColouredIndicator4" bounds="49,120,32,20"><adr>///swReadback.autostartEnabled</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
-<DOOCSToggleButton name="ToggleButton2" bounds="49,150,212,20"><adr>///controlInput.startMotor</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSCheckBox name="CheckBox1" bounds="81,120,82,20"><adr>///controlInput.enableAutostart</adr><text>Autostart</text></DOOCSCheckBox>
-<DOOCSValue name="Value11" bounds="490,70,457,20"><adr>///controlInput.userMessage</adr></DOOCSValue>
-<DOOCSLabel name="Label11" bounds="424,70,163,20"><text>User Message</text></DOOCSLabel>
-<DOOCSValue name="Value10" bounds="784,180,131,20"><adr>///hwReadback.actualPosition</adr></DOOCSValue>
-<DOOCSValue name="Value9" bounds="360,470,82,20"><adr>///swReadback.maxSWPositionLimitInSteps</adr></DOOCSValue>
-<DOOCSValue name="Value8" bounds="360,420,98,20"><adr>///swReadback.minSWPositionLimitInSteps</adr></DOOCSValue>
-<DOOCSColouredIndicator name="ColouredIndicator3" bounds="327,360,33,20"><adr>///swReadback.swPositionLimitsEnabled</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSColouredIndicator name="ColouredIndicator4" bounds="49,150,32,20"><adr>///swReadback.autostartEnabled</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSToggleButton name="ToggleButton2" bounds="49,180,212,20"><adr>///controlInput.startMotor</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSCheckBox name="CheckBox1" bounds="81,150,197,20"><adr>///controlInput.enableAutostart</adr><text>Autostart</text></DOOCSCheckBox>
+<DOOCSValue name="Value11" bounds="523,120,457,20"><adr>///controlInput.userMessage</adr></DOOCSValue>
+<DOOCSLabel name="Label11" bounds="425,120,163,20"><text>User Message</text></DOOCSLabel>
+<DOOCSValue name="Value10" bounds="784,220,131,20"><adr>///hwReadback.actualPosition</adr></DOOCSValue>
+<DOOCSValue name="Value9" bounds="409,470,82,20"><adr>///swReadback.maxSWPositionLimitInSteps</adr></DOOCSValue>
+<DOOCSValue name="Value8" bounds="409,420,98,20"><adr>///swReadback.minSWPositionLimitInSteps</adr></DOOCSValue>
+<DOOCSColouredIndicator name="ColouredIndicator3" bounds="392,360,33,20"><adr>///swReadback.swPositionLimitsEnabled</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label9" bounds="16,470,33,20"><text>max.</text></DOOCSLabel>
-<DOOCSDial name="Dial3" bounds="213,470,131,20"><adr>///controlInput.maxSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
-<DOOCSDial name="Dial2" bounds="213,420,131,20"><adr>///controlInput.minSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial3" bounds="262,470,131,20"><adr>///controlInput.maxSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial2" bounds="262,420,131,20"><adr>///controlInput.minSWPositionLimitInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label4" bounds="16,420,33,20"><text>min.</text></DOOCSLabel>
-<DOOCSLabel name="Label3" bounds="213,360,163,20"><text>SW Endswitches</text></DOOCSLabel>
-<DOOCSToggleButton name="ToggleButton1" bounds="213,390,131,20"><adr>///controlInput.enableSWPositionLimits</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
-<DOOCSLabel name="Label2" bounds="424,50,65,20"><text>Error</text></DOOCSLabel>
-<DOOCSValue name="Value2" bounds="539,50,408,20"><adr>///hwReadback.motorError</adr></DOOCSValue>
-<DOOCSValue name="Value1" bounds="670,150,163,20"><adr>///hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
-<DOOCSToggleButton name="ToggleButton3" bounds="49,200,212,20"><adr>///controlInput.emergencyStopMotor</adr><textON>Emergency Stop</textON><textOFF>Emergency Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSColouredIndicator name="ColouredIndicator2" bounds="522,20,33,20"><adr>///swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
-<DOOCSLabel name="Label8" bounds="424,20,131,20"><text>isIdle</text></DOOCSLabel>
-<DOOCSValue name="Value7" bounds="539,20,278,20"><adr>///swReadback.motorState</adr></DOOCSValue>
-<DOOCSToggleButton name="Button_MotorStop" bounds="49,170,212,20"><adr>///controlInput.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSLabel name="Label5" bounds="784,120,81,20"><text>Act position</text></DOOCSLabel>
-<DOOCSValue name="Value6" bounds="784,150,131,20"><adr>///hwReadback.actualPositionInSteps</adr></DOOCSValue>
-<DOOCSColouredIndicator name="ColouredIndicator1" bounds="180,40,33,20"><adr>///hwReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label3" bounds="262,360,163,20"><text>SW Endswitches</text></DOOCSLabel>
+<DOOCSToggleButton name="ToggleButton1" bounds="262,390,131,20"><adr>///controlInput.enableSWPositionLimits</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
+<DOOCSLabel name="Label2" bounds="278,40,65,20"><text>Error</text></DOOCSLabel>
+<DOOCSValue name="Value2" bounds="376,70,65,20"><adr>///hwReadback.motorError</adr></DOOCSValue>
+<DOOCSValue name="Value1" bounds="670,190,163,20"><adr>///hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
+<DOOCSToggleButton name="ToggleButton3" bounds="49,230,212,20"><adr>///controlInput.emergencyStopMotor</adr><textON>Emergency Stop</textON><textOFF>Emergency Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSColouredIndicator name="ColouredIndicator2" bounds="377,10,33,20"><adr>///swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSLabel name="Label8" bounds="279,10,65,20"><text>isIdle</text></DOOCSLabel>
+<DOOCSValue name="Value7" bounds="147,70,278,20"><adr>///swReadback.motorState</adr></DOOCSValue>
+<DOOCSToggleButton name="Button_MotorStop" bounds="49,200,212,20"><adr>///controlInput.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSLabel name="Label5" bounds="784,160,81,20"><text>Act position</text></DOOCSLabel>
+<DOOCSValue name="Value6" bounds="784,190,131,20"><adr>///hwReadback.actualPositionInSteps</adr></DOOCSValue>
+<DOOCSColouredIndicator name="ColouredIndicator1" bounds="147,40,33,20"><adr>///hwReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label7" bounds="49,40,131,20"><text>isCalibrated</text></DOOCSLabel>
-<DOOCSLabel name="Label6" bounds="653,20,163,20"><text>Cycle time [s]</text></DOOCSLabel>
-<DOOCSValue name="Value5" bounds="816,20,131,20"><adr>///hwReadback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision><dataOp>$adr/1000</dataOp></DOOCSValue>
-<DOOCSToggleButton name="Button_MotorStart" bounds="49,230,212,20"><adr>///controlInput.calibrateMotor</adr><textON>Calibrate</textON><textOFF>Calibrate</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSToggleButton name="EnableButton" bounds="49,70,212,20"><adr>///controlInput.enable</adr><textON>Enable</textON><textOFF>Enable</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSDial name="Dial1" bounds="523,150,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
-<DOOCSLabel name="Label1" bounds="425,150,82,20"><text>Setpoint</text></DOOCSLabel>
+<DOOCSLabel name="Label6" bounds="702,50,163,20"><text>Cycle time [s]</text></DOOCSLabel>
+<DOOCSValue name="Value5" bounds="865,50,82,20"><adr>///hwReadback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision><dataOp>$adr/1000</dataOp></DOOCSValue>
+<DOOCSToggleButton name="Button_MotorStart" bounds="49,260,212,20"><adr>///controlInput.calibrateMotor</adr><textON>Calibrate</textON><textOFF>Calibrate</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSToggleButton name="EnableButton" bounds="49,100,212,20"><adr>///controlInput.enable</adr><textON>Enable</textON><textOFF>Enable</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
+<DOOCSDial name="Dial1" bounds="523,190,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label1" bounds="425,190,82,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABHCAYAAAATBvm1AAADR0lEQVR42u1cS4saQRjcH+0pt1wDuYgHBxFFRHy/UPGF7zdCxP+Qcy6SZNlAJ9XQg250ndEe7HGqoZjZPQx2V3/V9fV8PS+j0UgQj8cLGm72+/3d+PeoE+h4ZpBwkYxCoSC63a5ot9uiVquJSqUi6vX6VTJUeyQZfp0UWiPDa2BSpNNpOTF0T4pGoyH6/b4YDAby+ZFIRPR6PVEul8V4PHb0jO12aw4ZlCmPIgOzELMFMhWPx0WxWJTS9ZFU+VmmSqWSsCxLRgX6jH5iDHCPaMFYqGhJJBLy+j5ijIoMr4HJkEqlxGw288XapYUML1omkxGhUMjYgcDaYGRkYNAweLpxLxkYKAwCEA6H7XsAg4eBw/1TrRlBjAxjyTA1MgLrpgiDyHhvDz99saSLWa/XYjqdis1mI6/L5dLETv1nbfH7gc9fLdkHYLFYiPl8LvuBxRj9W61Wdj/RN/TTCDKO7SE6YsJAN5tNuVAjE4fVbbVaEtVqVf7/krVVZFzrx263c/xbkJvAaUGCO52ONA/RaFRuI1GmnlGm/O6mPmqH32/i8OtN/Hz9I68/Dq/y/8gx6KZuSM4gB0oaIE/D4fCuydT+9t0mw03i5jbJw+9W0nouH2KewTyDMhWYBfwemXIDtzIFiQK4HUKZokw9tUzFYjHpopBswZFgJ3cymTxEptyCbooyRZliBm64TN3kpvg+gws4ySAZtyOXy0lXBGcHh4f38Pg7n8/bW+okg5FBXNsiuWkBJxgZJINkkAyCZJAM13VOQT3bcUKGOqOgjpCpJAbb1KhTUlu/TpIZVdXt5FnHdU5+K+OnTJEMb3dO1c4uyfCAjFt3dkkGZcpfVehBedtmDBlwPiiXRCX2uUruc5tgl16ym1piSZki9JNxbhZe2xYmGBlcwLmAa17AcRQL2xdcwClTjAwu4IwMgmSQDMJrMuCA3NpXND/VOhlBRjabtUsV8XYOdlcdUHFCxiX7Crg5QMLICBBMiu6nlin1jUW8c0dkq8/q4fsjOqJbt7x5RoZTmWKeQpkiGQStrf/JwIKHDwvjCsuJ+2QyefJhK1pbyhStrR9lCiWmx2WkqsT02N7S2tLaUqZIRkAPU5IMRgahlQw2c9pfSYkmbukwSkQAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABHCAYAAAATBvm1AAADbElEQVR42u1cSYsaQRidH+0pt1wDuYgHRUQZRNw3VNxw3xEi/oecc5EkwwRq8gpKely729busl/Bo3sGpqbtV9/7lvqsl8FgIAj38YKBm+12axn///QT7Mxhdm6n5/cizpKRy+VEu90WzWZTVCoVUSqVRLVaPXphxmH2n2K+ZDIp57xEhnH4mgxCMzIeKVO+JgNSUqvVpEzFYjGRz+eldBmlyq5MYZ7X11cxmUxMyxQtw+fAYux2u6LX60n/FgqFRKfTEcViUQyHQ1NzrNdrkvFUlgH20+m0lBSnmD+3+lqtlpQ/rDon574VhUJBRCIRaRWQazwj5Bv3sBY8u7KWeDwur4cWQ8t4Jsu4x0ilUiIQCGj1cqAOrlsGXhpentPQjQxaBsnQxzIgGZADIBgM7u8ByAdQr9eZZxB3IuOwHPHlW0RmzMvlUozHY7FareR1Pp/zRT6CDGPFFGRo9KGO6lp4fuDr94hcUMBsNhPT6VQuKkRBWGyLxWK/6LDQsOicei5IKfK2RqNxlFNpKVPwB/ALKMGrDwaUy2X5+1MLyUjGtUW12WwsJYUIceEPkbjiBYfDYbn1wGiK0ZT38oxLY/f3Xez+vIvfb//k9dfuTf4eyd29nwuWfKm8pJ1lICuGHChpgDz1+/2bnr/54+eeDCsZs9O1M2bgzDP8KVO+dOC3yJQVUKYoU5QpytQJRKNRGUUh2UJUhcLhaDRyRaYekoFTpmgZlCm/ZeBuypStDJywj1vCXZLB0PY5kMlkZFSEyM7Y+5XNZvcldZJByyDowGkZ7u5n+4IM1eirvkKmHBJKDthzVmm8Vcd02C5pZf5T+9m0DOK5yLBbRiEZd4DdMgrJILzb3vnoaiocvVeqqa6QgSgHrS/oqjsVxZgtgp3bRLEyQIJXWmgoU5QpZ1bctbSfoGXQgdOB3+DA0VaPUgUdOGWKMkUHTssgSAbJIO5Bhq7detqRgSONVKsJdt8Q4qoGYye79a41ALsNPLPVBefEaXG+kyls/Rq3d9XWL47pU8dcXCLj3IJTZDy0o5AypYnPMCtTzEMoU2x8Jugz9CcDoSwOE8YVEQbuE4nEp4NJdA9t8Z1AVZlG2K4OhcHPxpMW3Kj8UqYoU96GNkmf7qGtOt9dSZM6l914rqE2SR9Bn0EyCJLhbzI4vDM+AM74I6CTj5b+AAAAAElFTkSuQmCC</thumbnail>
 </jdddPanel>
