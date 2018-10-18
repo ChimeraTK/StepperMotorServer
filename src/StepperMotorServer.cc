@@ -25,6 +25,9 @@
 
 static StepperMotorServer server;
 
+static std::string basicLinearMotorType{"LinearMotor"};
+static std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
+
 /** Hardware initialization
  *  This is called from within defineConnections() because there we have the device name available
  *  and this has to be done per FMC carrier board, not per motor (represented by the ApplicationModules).
@@ -77,6 +80,7 @@ void StepperMotorServer::defineConnections(){
 
   // Get and validate motor configuration
   auto nMotors = config.get<uint32_t>("nMotors");
+  std::vector<std::string> motorType                  = config.get<std::vector<std::string>>("motorType");
   std::vector<std::string> motorDriverCardDeviceNames = config.get<std::vector<std::string>>("motorDriverDeviceName");
   std::vector<std::string> motorDriverCardModuleNames = config.get<std::vector<std::string>>("motorDriverModuleName");
   std::vector<uint32_t> motorDriverCardIds            = config.get<std::vector<uint32_t>>("motorDriverId");
@@ -91,8 +95,8 @@ void StepperMotorServer::defineConnections(){
      motorDriverCardConfigFiles.size() != nMotors)
   {
     std::cout << "!!! Terminating the server!" << std::endl
-             << "A mismatch of dimensions in the MotorDriver configuration provided by" << serverConfigFile
-             << "has been detected" << std::endl;
+              << "A mismatch of dimensions in the MotorDriver configuration provided by" << serverConfigFile
+              << "has been detected" << std::endl;
     exit(1);
   }
 
@@ -117,17 +121,22 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver according to the motor type
-    if(i == 0){
-
+    if(motorType[i] == basicLinearMotorType){
       motorDriver.push_back(std::unique_ptr<BasicMotorDriver>(new BasicMotorDriver(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter)));
     }
-    else{
+    else if (motorType[i] == linearMotorWithReferenceType){
       motorDriver.push_back(std::unique_ptr<LinearMotorDriver>(new LinearMotorDriver(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter)));
+    }
+    else{
+      std::cout << "!!! Terminating the server!" << std::endl
+                << "Unknown motor type \"" << motorType[i]
+                << " requested in MotorDriver configuration provided by" << serverConfigFile << "." << std::endl;
+      exit(1);
     }
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
-              <<std::endl;
+              << std::endl;
 
     motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
     motorDriver[i]->flatten().findTag("TRIGGER").connectTo(trigger);

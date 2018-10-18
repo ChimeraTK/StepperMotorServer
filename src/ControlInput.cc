@@ -33,6 +33,8 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
   funcMap[_controlInput.moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(_controlInput.moveRelativeInSteps); };
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
+  funcMap[_controlInput.referencePositionInSteps.getId()]  = [this, motor]{ motor->setActualPositionInSteps(_controlInput.referencePositionInSteps); };
+  funcMap[_controlInput.referencePosition.getId()]         = [this, motor]{ motor->setActualPosition(_controlInput.referencePosition); };
   funcMap[_controlInput.axisTranslationInSteps.getId()]    = [this, motor]{ motor->translateAxisInSteps(_controlInput.axisTranslationInSteps); };
   funcMap[_controlInput.axisTranslation.getId()]           = [this, motor]{ motor->translateAxis(_controlInput.axisTranslation); };
   funcMap[_controlInput.enableSWPositionLimits.getId()]    = [this, motor]{ motor->setSoftwareLimitsEnabled(_controlInput.enableSWPositionLimits); };
@@ -49,9 +51,6 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
 void BasicControlInputHandler::mainLoop() {
 
   inputGroup = this->readAnyGroup();
-
-  // Initialize the motor
-  _motor->setActualPositionInSteps(0);
 
   while(true){
 

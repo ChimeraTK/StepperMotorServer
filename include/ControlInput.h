@@ -28,25 +28,6 @@ namespace ctk = ChimeraTK;
 
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
 
-template <typename UserType>
-class EdgeDetector {
-  UserType _oldValue;
-
-public:
-  EdgeDetector(UserType oldValue = 0)
-    : _oldValue{oldValue}{};
-
-  bool isPositiveEdge(UserType signal){
-    if(signal && !_oldValue){
-      _oldValue = signal;
-      return true;
-    }
-    else{
-      return false;
-    }
-  };
-};
-
 
 struct BasicControlInput : public ctk::VariableGroup {
 
@@ -67,6 +48,9 @@ struct BasicControlInput : public ctk::VariableGroup {
                                                     "Initiates a movement relative to the current position. Receives the position change in steps.", {"CS"}};
   ctk::ScalarPushInput<float>   moveRelative{this, "moveRelative", "",
                                              "Initiates a movement relative to the current position. Receives the position change in the user-defined unit.", {"CS"}};
+
+  ctk::ScalarPushInput<float>   referencePosition{this, "referencePosition", "", "Writing to this value sets the actual motor position to a given reference", {"CS"}};
+  ctk::ScalarPushInput<int32_t> referencePositionInSteps{this, "referencePositionInSteps", "", "Writing to this value sets the actual motor position to a given reference", {"CS"}};
 
   ctk::ScalarPushInput<int32_t> axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point.", {"CS"}};
   ctk::ScalarPushInput<float> axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point.", {"CS"}};

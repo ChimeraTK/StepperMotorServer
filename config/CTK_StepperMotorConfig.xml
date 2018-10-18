@@ -1,8 +1,15 @@
 <configuration>
-  <variable name="motorDriverType" type="string" value="MD22"/>
   <variable name="cycleTime" type="int32" value="1000"/>
   <variable name="cycleTimeEnable" type="int32" value="1"/>
   <variable name="nMotors" type="uint32" value="2"/>
+  <variable name="motorDriverType" type="string">
+    <value i="0" v="MD22"/>
+    <value i="1" v="MD22"/>
+  </variable>
+  <variable name="motorType" type="string">
+    <value i="0" v="LinearMotor"/>
+    <value i="1" v="LinearMotorWithReferenceSwitch"/>
+  </variable>
   <variable name="motorDriverDeviceName" type="string">
     <value i="0" v="MOTOR_DUMMY1"/>
     <value i="1" v="MOTOR_DUMMY2"/>
