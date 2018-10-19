@@ -85,6 +85,7 @@ void StepperMotorServer::defineConnections(){
   std::vector<std::string> motorDriverCardModuleNames = config.get<std::vector<std::string>>("motorDriverModuleName");
   std::vector<uint32_t> motorDriverCardIds            = config.get<std::vector<uint32_t>>("motorDriverId");
   std::vector<std::string> motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
+  std::vector<double> encoderUnitToStepsRatios        = config.get<std::vector<double>>("encoderUnitToStepsRatio");
 
   std::vector<float> userUnitToStepsRatios       = config.get<std::vector<float>>("userUnitToStepsRatio");
   std::vector<std::string> userPositionUnits     = config.get<std::vector<std::string>>("userPositionUnit");
@@ -112,7 +113,7 @@ void StepperMotorServer::defineConnections(){
     mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
 
     // Motor data
-    MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i]};
+    MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i], encoderUnitToStepsRatios[i]};
     std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter = std::make_shared<MotorUnitConverter>(userUnitToStepsRatios[i], userPositionUnits[i]);
 
     // Configure motor driver HW

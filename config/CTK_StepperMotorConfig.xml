@@ -30,6 +30,10 @@
     <value i="0" v="2.0"/>
     <value i="1" v="0.5"/>
   </variable>
+  <variable name="encoderUnitToStepsRatio" type="double">
+    <value i="0" v="1000000.0"/>
+    <value i="1" v="1000000.0"/>
+  </variable>
   <variable name="userPositionUnit" type="string">
     <value i="0" v="0.5 steps"/>
     <value i="1" v="2.0 steps"/>

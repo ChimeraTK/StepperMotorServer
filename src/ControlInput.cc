@@ -35,6 +35,7 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
   funcMap[_controlInput.referencePositionInSteps.getId()]  = [this, motor]{ motor->setActualPositionInSteps(_controlInput.referencePositionInSteps); };
   funcMap[_controlInput.referencePosition.getId()]         = [this, motor]{ motor->setActualPosition(_controlInput.referencePosition); };
+  funcMap[_controlInput.encoderReferencePosition.getId()]  = [this, motor]{ motor->setActualEncoderPosition(_controlInput.encoderReferencePosition); };
   funcMap[_controlInput.axisTranslationInSteps.getId()]    = [this, motor]{ motor->translateAxisInSteps(_controlInput.axisTranslationInSteps); };
   funcMap[_controlInput.axisTranslation.getId()]           = [this, motor]{ motor->translateAxis(_controlInput.axisTranslation); };
   funcMap[_controlInput.enableSWPositionLimits.getId()]    = [this, motor]{ motor->setSoftwareLimitsEnabled(_controlInput.enableSWPositionLimits); };

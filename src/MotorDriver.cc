@@ -31,7 +31,8 @@ BasicMotorDriver::BasicMotorDriver(ctk::EntityOwner *owner, const std::string &n
                               driverParam.moduleName,
                               driverParam.motorDriverId,
                               driverParam.motorDriverCardConfigFileName,
-                              unitsConverter)},
+                              unitsConverter,
+                              driverParam.encoderUnitToStepsRatio)},
   ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
   hwReadbackHandler{motor, this, "hwReadback", "Signals read from the motor driver HW"},
   swReadbackHandler{motor, this, "swReadback", "Signals read from the motor driver SW"} {}
@@ -42,10 +43,11 @@ LinearMotorDriver::LinearMotorDriver(ctk::EntityOwner *owner, const std::string 
                                      std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter)
   : ctk::ModuleGroup(owner, name, description),
     motor{std::make_shared<ctk::StepperMotorWithReference>(driverParam.motorDriverCardDeviceName,
-                                                             driverParam.moduleName,
-                                                             driverParam.motorDriverId,
-                                                             driverParam.motorDriverCardConfigFileName,
-                                                             unitsConverter)},
+                                                           driverParam.moduleName,
+                                                           driverParam.motorDriverId,
+                                                           driverParam.motorDriverCardConfigFileName,
+                                                           unitsConverter,
+                                                           driverParam.encoderUnitToStepsRatio)},
     ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
     hwReadbackHandler{motor, this, "hwReadback", "Signals read from the motor driver HW"},
     swReadbackHandler{motor, this, "swReadback", "Signals read from the motor driver SW"} {}

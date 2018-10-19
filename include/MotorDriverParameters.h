@@ -2,7 +2,7 @@
  * MotorDriverParameters.h
  *
  *  Created on: Aug 14, 2018
- *      Author: kampmeyer
+ *      Author: ckampm
  */
 
 #ifndef INCLUDE_MOTORDRIVERPARAMETERS_H_
@@ -14,6 +14,7 @@ struct MotorDriverParameters {
   std::string const & moduleName;
   unsigned int motorDriverId;
   std::string motorDriverCardConfigFileName;
+  double encoderUnitToStepsRatio;
 };
 
 
