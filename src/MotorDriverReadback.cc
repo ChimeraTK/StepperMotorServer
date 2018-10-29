@@ -52,7 +52,7 @@ void BasicHWReadbackHandler::readback(){
     ctk::StepperMotorError error = _motor->getError();
     hwReadbackValues.motorErrorId = static_cast<int32_t>(error);
     hwReadbackValues.actualPositionInSteps = _motor->getCurrentPositionInSteps();
-    hwReadbackValues.decoderPosition = _motor->getEncoderPosition();
+    hwReadbackValues.encoderPosition= _motor->getEncoderPosition();
 
     // Update values that have a static relation to HW readback
     hwReadbackValues.actualPosition = _motor->recalculateStepsInUnits(hwReadbackValues.actualPositionInSteps);

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="165,5,980,980"><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
-<DOOCSDial name="Dial13" bounds="114,720,131,20"><adr>///controlInput.encoderReferencePosition</adr><precision>2</precision></DOOCSDial>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="24,5,980,980"><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<DOOCSLabel name="Label35" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label26" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSDial name="Dial13" bounds="114,720,131,20"><adr>///controlInput.encoderReferencePosition</adr><precision>9</precision></DOOCSDial>
 <DOOCSLabel name="Label40" bounds="16,610,33,20"><text>max.</text></DOOCSLabel>
 <DOOCSLabel name="Label39" bounds="17,580,33,20"><text>min.</text></DOOCSLabel>
-<DOOCSLabel name="Label38" bounds="16,550,163,20"><text>HW Endswitch Tolerance</text></DOOCSLabel>
+<DOOCSLabel name="Label38" bounds="16,550,229,20"><text>HW Endswitch Tolerance</text></DOOCSLabel>
 <DOOCSLabel name="Label37" bounds="49,70,82,20"><text>State</text></DOOCSLabel>
-<DOOCSLabel name="Label25" bounds="604,600,98,20"><text>Max current</text></DOOCSLabel>
-<DOOCSLabel name="Label10" bounds="785,70,65,20"><text>Error code</text></DOOCSLabel>
-<DOOCSLabel name="Label36" bounds="898,310,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label35" bounds="898,280,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSLabel name="Label25" bounds="588,600,98,20"><text>Max current [A]</text></DOOCSLabel>
+<DOOCSLabel name="Label10" bounds="785,70,81,20"><text>Error code</text></DOOCSLabel>
+<DOOCSLabel name="Label36" bounds="898,330,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label34" bounds="196,510,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label33" bounds="196,490,49,20"><text>steps</text></DOOCSLabel>
 <DOOCSLabel name="Label32" bounds="196,460,49,20"><text>mm</text></DOOCSLabel>
@@ -18,11 +19,10 @@
 <DOOCSDial name="Dial12" bounds="114,690,131,20"><adr>///controlInput.referencePosition</adr><precision>2</precision></DOOCSDial>
 <DOOCSDial name="Dial11" bounds="114,660,131,20"><adr>///controlInput.referencePositionInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label28" bounds="16,660,82,20"><text>Reference</text></DOOCSLabel>
-<DOOCSColouredIndicator name="ColouredIndicator9" bounds="882,40,33,20"><adr>///hwReadback.motorError</adr><colorMap>GrayRed</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSColouredIndicator name="ColouredIndicator9" bounds="899,40,33,20"><adr>///hwReadback.motorError</adr><colorMap>GrayRed</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSToggleButton name="ToggleButton5" bounds="49,170,212,20"><adr>///controlInput.disable</adr><textON>Disable</textON><textOFF>Disable</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSColouredIndicator name="ColouredIndicator8" bounds="147,10,33,20"><adr>///hwReadback.enabledRBV</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label27" bounds="49,10,131,20"><text>Enabled</text></DOOCSLabel>
-<DOOCSLabel name="Label26" bounds="898,360,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSValue name="Value23" bounds="98,510,114,20"><adr>///swReadback.positiveEndReference</adr></DOOCSValue>
 <DOOCSValue name="Value22" bounds="98,460,98,20"><adr>///swReadback.negativeEndReference</adr></DOOCSValue>
 <DOOCSToggleButton name="ToggleButton4" bounds="49,330,212,20"><adr>///controlInput.determineTolerance</adr><textON>Determine Tolerance</textON><textOFF>Determine Tolerance</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
@@ -34,12 +34,12 @@
 <DOOCSDial name="Dial9" bounds="114,760,131,20"><adr>///controlInput.axisTranslationInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label22" bounds="16,760,82,20"><text>Translation</text></DOOCSLabel>
 <DOOCSCheckBox name="CheckBox2" bounds="572,160,196,20"><adr>///controlInput.enableFullStepping</adr><text>Enable full-step mode</text></DOOCSCheckBox>
-<DOOCSLabel name="Label21" bounds="899,210,49,20"><text>mm</text></DOOCSLabel>
-<DOOCSLabel name="Label20" bounds="899,180,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSLabel name="Label21" bounds="898,220,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label20" bounds="898,190,49,20"><text>steps</text></DOOCSLabel>
 <DOOCSDial name="Dial8" bounds="523,220,131,20"><adr>///controlInput.positionSetpoint</adr><precision>2</precision></DOOCSDial>
-<DOOCSValue name="Value19" bounds="784,330,131,20"><adr>///hwReadback.decoderPosition</adr></DOOCSValue>
+<DOOCSValue name="Value19" bounds="784,330,131,20"><adr>///hwReadback.decoderPosition</adr><representation>Float</representation><precision>6</precision></DOOCSValue>
 <DOOCSValue name="Value3" bounds="849,570,82,20"><adr>///swReadback.maxSpeedCapability</adr><representation>Float</representation></DOOCSValue>
-<DOOCSValue name="Value18" bounds="702,600,131,20"><adr>///swReadback.maxCurrentLimit</adr></DOOCSValue>
+<DOOCSValue name="Value18" bounds="849,600,81,20"><adr>///swReadback.maxCurrentLimit</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator7" bounds="523,160,33,20"><adr>///swReadback.isFullStepping</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label19" bounds="425,160,81,20"><text>Full stepping</text></DOOCSLabel>
 <DOOCSValue name="Value17" bounds="849,540,82,20"><adr>///swReadback.speedLimit</adr><representation>Float</representation></DOOCSValue>
@@ -50,12 +50,12 @@
 <DOOCSDial name="Dial4" bounds="702,630,131,20"><adr>///controlInput.currentLimit</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label17" bounds="425,250,98,20"><text>Move rel.</text></DOOCSLabel>
 <DOOCSValue name="Value16" bounds="849,630,82,20"><adr>///swReadback.currentLimit</adr></DOOCSValue>
-<DOOCSLabel name="Label16" bounds="604,630,98,20"><text>Current Limit</text></DOOCSLabel>
+<DOOCSLabel name="Label16" bounds="588,630,98,20"><text>Current Limit [A]</text></DOOCSLabel>
 <DOOCSValue name="Value15" bounds="849,730,99,20"><adr>///swReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label15" bounds="653,710,147,20"><text>HW readback time [ms]</text></DOOCSLabel>
+<DOOCSLabel name="Label15" bounds="653,710,180,20"><text>HW readback time [ms]</text></DOOCSLabel>
 <DOOCSValue name="Value14" bounds="849,710,99,20"><adr>///hwReadback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label14" bounds="653,730,229,20"><text>SW readback time [ms]</text></DOOCSLabel>
-<DOOCSLabel name="Label13" bounds="784,310,98,20"><text>Decoder pos</text></DOOCSLabel>
+<DOOCSLabel name="Label14" bounds="653,730,180,20"><text>SW readback time [ms]</text></DOOCSLabel>
+<DOOCSLabel name="Label13" bounds="784,310,98,20"><text>Decoder position</text></DOOCSLabel>
 <DOOCSValue name="Value13" bounds="98,490,114,20"><adr>///swReadback.positiveEndReferenceInSteps</adr></DOOCSValue>
 <DOOCSValue name="Value12" bounds="98,440,98,20"><adr>///swReadback.negativeEndReferenceInSteps</adr></DOOCSValue>
 <DOOCSLabel name="Label12" bounds="16,380,163,20"><text>HW Endswitches</text></DOOCSLabel>
@@ -77,14 +77,14 @@
 <DOOCSLabel name="Label3" bounds="262,380,163,20"><text>SW Endswitches</text></DOOCSLabel>
 <DOOCSToggleButton name="ToggleButton1" bounds="262,410,131,20"><adr>///controlInput.enableSWPositionLimits</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
 <DOOCSLabel name="Label2" bounds="784,40,65,20"><text>Error</text></DOOCSLabel>
-<DOOCSValue name="Value2" bounds="882,70,65,20"><adr>///hwReadback.motorError</adr></DOOCSValue>
+<DOOCSValue name="Value2" bounds="899,70,65,20"><adr>///hwReadback.motorError</adr></DOOCSValue>
 <DOOCSValue name="Value1" bounds="670,190,163,20"><adr>///hwReadback.targetPositionInStepsRBV</adr></DOOCSValue>
 <DOOCSToggleButton name="ToggleButton3" bounds="49,280,212,20"><adr>///controlInput.emergencyStopMotor</adr><textON>Emergency Stop</textON><textOFF>Emergency Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSColouredIndicator name="ColouredIndicator2" bounds="883,10,33,20"><adr>///swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSColouredIndicator name="ColouredIndicator2" bounds="900,10,33,20"><adr>///swReadback.isSystemIdle</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label8" bounds="785,10,65,20"><text>isIdle</text></DOOCSLabel>
 <DOOCSValue name="Value7" bounds="147,70,278,20"><adr>///swReadback.motorState</adr></DOOCSValue>
 <DOOCSToggleButton name="Button_MotorStop" bounds="49,250,212,20"><adr>///controlInput.stopMotor</adr><textON>Stop</textON><textOFF>Stop</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
-<DOOCSLabel name="Label5" bounds="784,160,81,20"><text>Act position</text></DOOCSLabel>
+<DOOCSLabel name="Label5" bounds="784,160,131,20"><text>Act position</text></DOOCSLabel>
 <DOOCSValue name="Value6" bounds="784,190,131,20"><adr>///hwReadback.actualPositionInSteps</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator1" bounds="147,40,33,20"><adr>///hwReadback.isCalibrated</adr><colorMap>RedGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
 <DOOCSLabel name="Label7" bounds="49,40,131,20"><text>isCalibrated</text></DOOCSLabel>
@@ -95,5 +95,5 @@
 <DOOCSDial name="Dial1" bounds="523,190,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="425,190,82,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAADxUlEQVR42u2dTU8aURiF/dGuuuu2STfEBYQYiSFE5EMlYBCMoqIgManxP3TdjWlrbHLbc5NrRgvDzADDDPPc5IRhjCPe4zn3fd/74dZgMDBg/dhS08XT01No/PvWd4jyjCwgaD/NJKNWq5ler2e63a45OTkxR0dHptVq/fdDvC2LHa2+KZfLtn/8yHAtEhlgLQrCphJvU5Jfu922NrW7u2vq9bq1Lq9VZd2m1B/7+/tmOBzOJQObypJNgZjIaDab5uDgwErR7wEPDw+Z7kBnVbL1s7Mza+P9fj9SH6EMbAqEIkNJjOQm5HK5t2tBEZag66zbFMqADAAZWSdjFa1SqZjt7W06PSwZ6jR13rIRFxnTakGfvhQsPn8tmPv7e4u7uztze3trbm5uzNXVlS1rjMdj+6qvj0YjM5lMUMYsdDodG8mpbK2E6/T01OL4+Njen1ULcmQIfs9/fHwM/FkajYa5uLiwv5sSPkWX+XzeTj2gDAbw5MGvPf9+Nc+/Xs3Plz/29cfzi71fKBRW/rmkHKfmjyUTXzI++q7k7bxUHisv1at8Nc6OVs1Mv4izBtnT5eXlQjbb/fb9jYwwSeyyE15fMry+O89rATaVKpuSRflVwTcyz1jEpsIgFpsimiID33ib2jhlFItFG0Up2VJUpVL/9fX1WmyKARybwqawqYRHU7Fl4ACbggzyjGioVqvWbhTZeddMHR4evpXUM5+Bo4wMKiO2qi0g6YMMyIhvkXToATyNu342Thla7aBM1G2udKGainFajeEyx2nZY9Ap07DPD7rrB5sC6SUjan4CGStA1PwEMkByyFhFFBNmnkEDfVLmGdZChqIcLQrTetNpUUzQ9H9W3T5MEwlRF5dhUyBeMoL+dc7LNAHKYABnAF9gANeGE5UqGMCxKWyKARxlAMhIbsCRSTI0r+KdO3HzKjqqSLtp1xVwhJ5c0n2tCdI9HZWn925FOGrCpiADLH9N1cyq7SoXawGUARlJhLaiubKPgg93Foneezf4x+0IM2tT2BTKIOnLGhnuWHFnTe5sWm/Ct/akD6TMptK6kzR1ZOi4bbcNSuWOaaWOZewknbfrEzLoDGwKrIiMoDaVxJlARVjn5+fWlmXROzs71kJVbtfJnrHXpgA2lQi4uRypQjmI5nL0PzF0LbVIOU4te3t79tVPMbEoI63HBxFNpWwqNnXKAIwZ2SNDGbdbZCAZ6rpUKr0rqZOBM2ZABjZFBg4ZdAZkAMiADAAZkAEgAzIAZEAGgAzIAJABGXQGZADIgAwQiAxactpfqZYoR7E2IGAAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAADvUlEQVR42u2dS08iQRSF/dGsZjfbSdgYFhBDNIYYBRQ0agANPngbkiH8h1nPxsyMcZJyTiVlcISmu9Gmm/4qOemmDZW2jvfUfVSVW7e3twasH1tquplOp4Hx76tvEKaPNGHZeC0ko1KpmFarZRqNhjk9PTW1Ws2cnZ2963y2pXGANTalUsmOjx8yXAtEBliL5SBTsZcpmd/5+bmVqWKxaKrVqpWuWalKu0xpPPb390232/VNBjKVBpkCEZFxcnJiDg8PrSl6dTAej1M9gE6qJOvNZtPK+NXVVaixwjKQKRCIDAUxMjdhe3v79V6QhyXoPu0yhWVABoCMtJPxGe3g4MBkMhkGPSgZGjQN3kcjKjLm5YC+fCtYfM0WzGg0suj3+6bX65lOp2Pu7u5sWmM4HNqrfj4YDMzDwwOWsQgXFxfWk1PaWgHX5eWlRb1et88X5YAcGYJX/5PJxPe7HB8fm3a7bX83BXzyLvP5vC09YBlM4PGDV3v882wefz+bX09/7fXn45N9XigU4kvG/7or83ZaKo2VluoqXY3yhZUzkxw4aZA83dzcrCSzje8/XskIEsQGDXj13k5a5+WvPMmY1d1lWguQqc2XqaTHGavIVBAElSlJlFdJAm+KCByZ2gjL2NnZsV6Ugi15JEr139/fr0WmgiK0NwWQKWRq0ybwuMpUKG8KIFOQQZwRHkdHR9Yrkmc3u2aqXC6HSqljGVjGZiCSdAggawsZkAEZ7I5aRoZWOygSdZsrnaumZJxWY7gE16Il735KpkH7X7bbB8sAyScjbHwCGZ+AsPEJZID4rpuKus6giT4udYa1kCEvR4vCtN50nhfjN/xfVF4M0kRC2MVlyBSIlgy/f53LEmIAy2ACZwJfYQLXhhOlKpjAkSlkigkcywCQEV+HI5VkqK4yWztxdRUdVaTdtOtyOAIXl/Rca4L0TEfl6bNbEY41IVOQAT52TZVn1nbVjgGWARlJgrahuZSPHA93Dok+53I5e6BLbGTKvSgyhWUQ9KWJDHekuJMmdy5tNpt9J1FrDfpAwmQqqTtJE0eGjtt226CU7piX6viInaTLNqdDBoOBTIFPIsOvTMWxEigv6/r62sqyJFoBoCRU6fYwgSDeFJaxGTLlajmyCsUhquXof2LoXtYiy3HWsru7a69eFhOJZcT1XA68qQ0rxSbOMgBzRvrIUMTtFhnIDHW/t7f3JqVOBM6cARnIFBE4ZDAYkAEgAzIAZEAGgAzIAJABGQAyIANABmQwGJABIAMygC8yaPFpL2rOJfJ5F9fUAAAAAElFTkSuQmCC</thumbnail>
 </jdddPanel>

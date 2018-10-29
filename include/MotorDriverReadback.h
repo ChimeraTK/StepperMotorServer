@@ -34,7 +34,7 @@ struct HWReadbackValues : public ctk::VariableGroup {
   ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"CS"}};
   ctk::ScalarOutput<int32_t> motorErrorId{this, "motorError", "", "Error ID of the motor driver", {"CS"}};
   ctk::ScalarOutput<int> actualPositionInSteps{this, "actualPositionInSteps", "", "Actual position [steps]", {"CS"}};
-  ctk::ScalarOutput<unsigned> decoderPosition{this, "decoderPosition", "nm", "Position measurement of the decoder", {"CS"}};
+  ctk::ScalarOutput<double> encoderPosition{this, "encoderPosition", "nm", "Position measurement of the encoder", {"CS"}};
 
   // FIXME Debug RBVs
   ctk::ScalarOutput<int> enabledRBV{this, "enabledRBV", "", "Readback value of motor current enable", {"CS"}};
