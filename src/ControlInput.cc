@@ -25,9 +25,9 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
 
   funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
   funcMap[_controlInput.disableMotor.getId()]               = [this]{disableCallback();};
-  funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();}; //[this, motor]{ motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps); };
-  funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();}; //[this, motor]{ motor->setTargetPosition(_controlInput.positionSetpoint); };
-  funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};//[this, motor]{ if(_controlInput.startMotor){motor->start();} };
+  funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();};
+  funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();};
+  funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};
   funcMap[_controlInput.stopMotor.getId()]                 = [this, motor]{ if(_controlInput.stopMotor){motor->stop();} };
   funcMap[_controlInput.emergencyStopMotor.getId()]        = [this, motor]{ if(_controlInput.emergencyStopMotor){ motor->emergencyStop();} };
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
