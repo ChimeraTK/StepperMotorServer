@@ -37,7 +37,7 @@
 <DOOCSLabel name="Label21" bounds="898,220,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label20" bounds="898,190,49,20"><text>steps</text></DOOCSLabel>
 <DOOCSDial name="Dial8" bounds="523,220,131,20"><adr>///controlInput.positionSetpoint</adr><precision>2</precision></DOOCSDial>
-<DOOCSValue name="Value19" bounds="784,330,131,20"><adr>///hwReadback.decoderPosition</adr><representation>Float</representation><precision>6</precision></DOOCSValue>
+<DOOCSValue name="Value19" bounds="784,330,131,20"><adr>///hwReadback.encoderPosition</adr><representation>Float</representation><precision>6</precision></DOOCSValue>
 <DOOCSValue name="Value3" bounds="849,570,82,20"><adr>///swReadback.maxSpeedCapability</adr><representation>Float</representation></DOOCSValue>
 <DOOCSValue name="Value18" bounds="849,600,81,20"><adr>///swReadback.maxCurrentLimit</adr></DOOCSValue>
 <DOOCSColouredIndicator name="ColouredIndicator7" bounds="523,160,33,20"><adr>///swReadback.isFullStepping</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
