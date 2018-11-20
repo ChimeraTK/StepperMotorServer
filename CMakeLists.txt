@@ -24,6 +24,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 --coverage")
 # linker flags
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic -Wl,--no-as-needed")
 
+
 include(cmake/add_dependency.cmake)
 add_dependency(ChimeraTK-ApplicationCore 00.13 REQUIRED)
 # TODO Move to new version after update of library?

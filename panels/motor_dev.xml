@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="24,5,980,980"><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="171,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
 <DOOCSLabel name="Label35" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label26" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
 <DOOCSDial name="Dial13" bounds="114,720,131,20"><adr>///controlInput.encoderReferencePosition</adr><precision>9</precision></DOOCSDial>

@@ -38,6 +38,7 @@ struct BasicControlInput : public ctk::VariableGroup {
   ctk::ScalarPushInput<int32_t> disableMotor{this, "disable", "", "Disable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor", {"CS"}};
+  ctk::ScalarPushInput<int32_t> resetError{this, "resetError", "", "Reset error state", {"CS"}};
   ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "steps", "Motor position setpoint", {"CS"}};
   ctk::ScalarPushInput<float>   positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [user-defined unit]", {"CS"}};
 

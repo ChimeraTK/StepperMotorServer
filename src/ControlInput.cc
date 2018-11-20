@@ -30,6 +30,7 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
   funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};
   funcMap[_controlInput.stopMotor.getId()]                 = [this, motor]{ if(_controlInput.stopMotor){motor->stop();} };
   funcMap[_controlInput.emergencyStopMotor.getId()]        = [this, motor]{ if(_controlInput.emergencyStopMotor){ motor->emergencyStop();} };
+  funcMap[_controlInput.resetError.getId()]                = [this, motor]{ motor->resetError(); };
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
   funcMap[_controlInput.moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(_controlInput.moveRelativeInSteps); };
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
