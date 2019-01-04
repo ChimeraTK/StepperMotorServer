@@ -114,7 +114,13 @@ void StepperMotorServer::defineConnections(){
 
     // Motor data
     MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i], encoderUnitToStepsRatios[i]};
-    std::shared_ptr<ctk::StepperMotorUnitsConverter> unitsConverter = std::make_shared<MotorUnitConverter>(userUnitToStepsRatios[i], userPositionUnits[i]);
+
+    std::unique_ptr<ctk::StepperMotorUtility::StepperMotorUnitsConverter> unitsConverter
+      = std::make_unique<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]/*, userPositionUnits[i]*/);
+
+    std::unique_ptr<ctk:StepperMotorUtility::EncoderUnitsConverter> encoderUnitsConverter
+      = std::make_unique<ctk:StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
+
 
     // Configure motor driver HW
     if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && !useDummyMotors){
@@ -123,10 +129,14 @@ void StepperMotorServer::defineConnections(){
 
     // Create a motor driver according to the motor type
     if(motorType[i] == basicLinearMotorType){
-      motorDriver.push_back(std::unique_ptr<BasicMotorDriver>(new BasicMotorDriver(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter)));
+      motorDriver.push_back(std::make_unique<BasicMotorDriver>(
+          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
+          std::move(unitsConverter), std::move(encoderUnitsConverter)));
     }
     else if (motorType[i] == linearMotorWithReferenceType){
-      motorDriver.push_back(std::unique_ptr<LinearMotorDriver>(new LinearMotorDriver(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams, unitsConverter)));
+      motorDriver.push_back(std::make_unique<LinearMotorDriver>(
+          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
+          std::move(unitsConverter), std::move(encoderUnitsConverter)));
     }
     else{
       std::cout << "!!! Terminating the server!" << std::endl

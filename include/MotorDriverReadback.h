@@ -141,6 +141,7 @@ public:
 
   std::shared_ptr<ctk::StepperMotor> _motor;
   HWReadbackValues hwReadbackValues;
+  SWReadbackValues swReadbackValues;
 
   virtual void prepare();
 
@@ -162,6 +163,7 @@ public:
 
   std::shared_ptr<ctk::StepperMotorWithReference> _motor;
   HWReadbackValuesExt hwReadbackValues;
+  SWReadbackValuesExt swReadbackValues;
 
   virtual void prepare();
 
@@ -170,46 +172,46 @@ protected:
 };
 
 
-/**
- *  @class BasicSWReadbackHandler
- *  @brief An application module to cyclically read data (residing in SW) for a simple motor without reference switches.
- *
- *  This module supports a simple motor. It provides to functionality of the ChimeraTK::StepperMotor class of the MotorDriverCard library.
- */
-class BasicSWReadbackHandler : public ReadbackHandler {
-public:
-
-  BasicSWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-
-  std::shared_ptr<ctk::StepperMotor> _motor;
-  SWReadbackValues swReadbackValues;
-
-  virtual void prepare() override;
-
-protected:
-  void readback();
-};
-
-
-/**
- *  @class ExtSWReadbackHandler
- *  @brief An application module to cyclically read data (residing in SW) for a simple motor with reference switches.
- *
- *  This module supports a linear motor with reference switches . It provides to functionality of the ChimeraTK::StepperMotorWithRefernce
- *  class of the MotorDriverCard library
- */
-class ExtSWReadbackHandler : public BasicSWReadbackHandler {
-public:
-
-  ExtSWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-
-  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
-  SWReadbackValuesExt swReadbackValues;
-
-  virtual void prepare() override;
-
-protected:
-  void readback();
-};
+///**
+// *  @class BasicSWReadbackHandler
+// *  @brief An application module to cyclically read data (residing in SW) for a simple motor without reference switches.
+// *
+// *  This module supports a simple motor. It provides to functionality of the ChimeraTK::StepperMotor class of the MotorDriverCard library.
+// */
+//class BasicSWReadbackHandler : public ReadbackHandler {
+//public:
+//
+//  BasicSWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+//
+//  std::shared_ptr<ctk::StepperMotor> _motor;
+//  SWReadbackValues swReadbackValues;
+//
+//  virtual void prepare() override;
+//
+//protected:
+//  void readback();
+//};
+//
+//
+///**
+// *  @class ExtSWReadbackHandler
+// *  @brief An application module to cyclically read data (residing in SW) for a simple motor with reference switches.
+// *
+// *  This module supports a linear motor with reference switches . It provides to functionality of the ChimeraTK::StepperMotorWithRefernce
+// *  class of the MotorDriverCard library
+// */
+//class ExtSWReadbackHandler : public BasicSWReadbackHandler {
+//public:
+//
+//  ExtSWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+//
+//  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+//  SWReadbackValuesExt swReadbackValues;
+//
+//  virtual void prepare() override;
+//
+//protected:
+//  void readback();
+//};
 
 #endif /* INCLUDE_MOTORDRIVERREADBACK_H_ */
