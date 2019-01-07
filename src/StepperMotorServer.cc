@@ -119,7 +119,7 @@ void StepperMotorServer::defineConnections(){
     MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i], encoderUnitToStepsRatios[i]};
 
     std::unique_ptr<ctk::StepperMotorUtility::StepperMotorUnitsConverter> unitsConverter
-      = std::make_unique<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]/*, userPositionUnits[i]*/);
+      = std::make_unique<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
 
     std::unique_ptr<ctk::StepperMotorUtility::EncoderUnitsConverter> encoderUnitsConverter
       = std::make_unique<ctk::StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
@@ -154,6 +154,8 @@ void StepperMotorServer::defineConnections(){
 
     motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
     motorDriver[i]->flatten().findTag("TRIGGER").connectTo(trigger);
+
+    motorDriver[i]->operator []("hwReadback")("actualCycleTime") >> cs["Motor" + std::to_string(i+1)]("AnotherEnable");
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), driverParams);
