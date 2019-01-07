@@ -65,8 +65,8 @@ void StepperMotorServer::defineConnections(){
   config("cycleTimeEnable") >> trigger.automaticUpdate;
   trigger.countdown >> cs["Timer"]("countdown");
 
-  auto &cyclicTrigger = trigger.trigger;
-  ctk::VariableNetworkNode triggerC = cyclicTrigger;
+  //auto &cyclicTrigger = trigger.trigger;
+  //ctk::VariableNetworkNode triggerC = cyclicTrigger;
 
 
   // Publish configuration
@@ -152,8 +152,7 @@ void StepperMotorServer::defineConnections(){
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               << std::endl;
 
-//    motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
-    motorDriver[i]->connectTo(cs["Motor"+std::to_string(i+1)]);
+    motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
     motorDriver[i]->flatten().findTag("TRIGGER").connectTo(trigger);
 
     if(useDummyMotors){
