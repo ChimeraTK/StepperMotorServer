@@ -10,6 +10,7 @@
 #include "version.h"
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
+#include "mtca4u/MotorDriverCard/StepperMotor.h"
 #include "ChimeraTK/DMapFilesParser.h"
 
 #include <boost/shared_ptr.hpp>
@@ -20,6 +21,8 @@
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
+
+
 
 
 
@@ -118,8 +121,8 @@ void StepperMotorServer::defineConnections(){
     std::unique_ptr<ctk::StepperMotorUtility::StepperMotorUnitsConverter> unitsConverter
       = std::make_unique<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]/*, userPositionUnits[i]*/);
 
-    std::unique_ptr<ctk:StepperMotorUtility::EncoderUnitsConverter> encoderUnitsConverter
-      = std::make_unique<ctk:StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
+    std::unique_ptr<ctk::StepperMotorUtility::EncoderUnitsConverter> encoderUnitsConverter
+      = std::make_unique<ctk::StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
 
 
     // Configure motor driver HW
