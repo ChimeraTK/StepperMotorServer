@@ -136,7 +136,8 @@ void StepperMotorServer::defineConnections(){
           this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
           std::move(unitsConverter), std::move(encoderUnitsConverter)));
     }
-    else if (motorType[i] == linearMotorWithReferenceType){
+
+    else if (config.get<std::vector<std::string>>("motorType")[i] == linearMotorWithReferenceType){
       motorDriver.push_back(std::make_unique<LinearMotorDriver>(
           this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
           std::move(unitsConverter), std::move(encoderUnitsConverter)));
