@@ -14,10 +14,6 @@
 #include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
 #include <mtca4u/MotorDriverCard/MotorDriverException.h>
 
-
-//FIXME Include the dummy in this module or reimplement the library's dummy, so we dont need this
-#include "MotorDriverParameters.h"
-
 #include <map>
 #include <functional>
 #include <memory>
@@ -135,7 +131,7 @@ private:
 class LinearMotorControlInputHandler : public BasicControlInputHandler{
 public:
   LinearMotorControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                                                                 std::shared_ptr<ctk::StepperMotorWithReference> motor)
+                                                                 std::shared_ptr<ctk::StepperMotor> motor)
     : BasicControlInputHandler(owner, name, description, motor),
       _motor{motor},
       _controlInput{this, "linearMotorControlInput", "Control inputs for a linear stepper motor with reference switches"}{};
@@ -148,14 +144,14 @@ public:
   };
 
 protected:
-  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> _motor);
+  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
 
   //Callbacks
   void calibrateCallback();
   void determineToleranceCallback();
 
 private:
-  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  std::shared_ptr<ctk::StepperMotor> _motor;
   LinearMotorControlInput _controlInput;
 };
 

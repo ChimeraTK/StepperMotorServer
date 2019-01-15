@@ -24,13 +24,13 @@ LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
 void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
   funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
-  funcMap[_controlInput.disableMotor.getId()]               = [this]{disableCallback();};
+  funcMap[_controlInput.disableMotor.getId()]              = [this]{disableCallback();};
   funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();};
   funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();};
   funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};
   funcMap[_controlInput.stopMotor.getId()]                 = [this, motor]{ if(_controlInput.stopMotor){motor->stop();} };
   funcMap[_controlInput.emergencyStopMotor.getId()]        = [this, motor]{ if(_controlInput.emergencyStopMotor){ motor->emergencyStop();} };
-  funcMap[_controlInput.resetError.getId()]                = [this, motor]{ motor->resetError(); };
+  funcMap[_controlInput.resetError.getId()]                = [      motor]{ motor->resetError(); };
   funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
   funcMap[_controlInput.moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(_controlInput.moveRelativeInSteps); };
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
@@ -118,7 +118,7 @@ void BasicControlInputHandler::setTargetPositionInStepsCallback(){
 
 // Implementation of LinearMotorControlInputHandler functions
 
-void LinearMotorControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotorWithReference> motor){
+void LinearMotorControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
   funcMap[_controlInput.calibrateMotor.getId()]            = [this]{calibrateCallback();};
 

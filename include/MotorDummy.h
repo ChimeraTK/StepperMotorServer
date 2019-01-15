@@ -14,14 +14,12 @@
 
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "mtca4u/MotorDriverCard/MotorControlerDummy.h"
+#include "mtca4u/MotorDriverCard/StepperMotor.h"
 
 #include <boost/shared_ptr.hpp>
 #include <thread>
 
 namespace ctk = ChimeraTK;
-
-//FIXME This is duplicated from MotorDriver
-#include "MotorDriverParameters.h"
 
 
 /** MotorDummy - A dummy application module to employ the MotorControlerDummy functionality of the MotorDriverCard library
@@ -31,10 +29,10 @@ namespace ctk = ChimeraTK;
  */
 struct MotorDummy : public ctk::ApplicationModule {
 
-  MotorDummy(ctk::EntityOwner *owner, const std::string &name, const std::string &description,const MotorDriverParameters &dp)
+  MotorDummy(ctk::EntityOwner *owner, const std::string &name, const std::string &description,const ctk::StepperMotorParameters &dp)
     : ctk::ApplicationModule(owner, name, description, true),
       _motorControlerDummy(boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(
-          mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(dp.motorDriverCardDeviceName, dp.moduleName, dp.motorDriverCardConfigFileName)->getMotorControler(dp.motorDriverId)))
+          mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)->getMotorControler(dp.driverId)))
       {};
 
     //MotorDriverParameters _dp;

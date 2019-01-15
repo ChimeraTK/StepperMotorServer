@@ -86,7 +86,7 @@ void BasicHWReadbackHandler::readback(){
 }
 
 
-ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor,
+ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
                                             ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : BasicHWReadbackHandler(motor, owner, name, description),
     _motor(motor),

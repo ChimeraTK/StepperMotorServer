@@ -46,6 +46,9 @@ static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias)
   }
 };
 
+
+
+
 /** Define interconnection of modules */
 void StepperMotorServer::defineConnections(){
 
@@ -82,16 +85,16 @@ void StepperMotorServer::defineConnections(){
 //  }
 
   // Get and validate motor configuration
-  auto nMotors = config.get<uint32_t>("nMotors");
-  std::vector<std::string> motorType                  = config.get<std::vector<std::string>>("motorType");
-  std::vector<std::string> motorDriverCardDeviceNames = config.get<std::vector<std::string>>("motorDriverDeviceName");
-  std::vector<std::string> motorDriverCardModuleNames = config.get<std::vector<std::string>>("motorDriverModuleName");
-  std::vector<uint32_t> motorDriverCardIds            = config.get<std::vector<uint32_t>>("motorDriverId");
-  std::vector<std::string> motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
-  std::vector<double> encoderUnitToStepsRatios        = config.get<std::vector<double>>("encoderUnitToStepsRatio");
+  auto nMotors                    = config.get<uint32_t>("nMotors");
+  auto motorType                  = config.get<std::vector<std::string>>("motorType");
+  auto motorDriverCardDeviceNames = config.get<std::vector<std::string>>("motorDriverDeviceName");
+  auto motorDriverCardModuleNames = config.get<std::vector<std::string>>("motorDriverModuleName");
+  auto motorDriverCardIds         = config.get<std::vector<uint32_t>>("motorDriverId");
+  auto motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
+  auto encoderUnitToStepsRatios   = config.get<std::vector<double>>("encoderUnitToStepsRatio");
 
-  std::vector<float> userUnitToStepsRatios       = config.get<std::vector<float>>("userUnitToStepsRatio");
-  std::vector<std::string> userPositionUnits     = config.get<std::vector<std::string>>("userPositionUnit");
+  auto userUnitToStepsRatios = config.get<std::vector<float>>("userUnitToStepsRatio");
+  auto userPositionUnits     = config.get<std::vector<std::string>>("userPositionUnit");
 
   if(motorDriverCardDeviceNames.size() != nMotors ||
      motorDriverCardModuleNames.size() != nMotors ||
@@ -108,6 +111,7 @@ void StepperMotorServer::defineConnections(){
   std::unordered_set<std::string> initializedMotorDriverHW;
   for(size_t i = 0; i<nMotors; ++i){
 
+    // Use a dummy motor, if requested
     bool useDummyMotors = false;
     if(ctk::DMapFilesParser(".").getdMapFileElem(motorDriverCardDeviceNames[i]).uri == "/dummy/MotorDriverCard"){
       useDummyMotors = true;
@@ -115,14 +119,17 @@ void StepperMotorServer::defineConnections(){
     }
     mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
 
-    // Motor data
-    MotorDriverParameters driverParams{motorDriverCardDeviceNames[i], motorDriverCardModuleNames[i], motorDriverCardIds[i], motorDriverCardConfigFiles[i], encoderUnitToStepsRatios[i]};
 
-    std::unique_ptr<ctk::StepperMotorUtility::StepperMotorUnitsConverter> unitsConverter
-      = std::make_unique<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
-
-    std::unique_ptr<ctk::StepperMotorUtility::EncoderUnitsConverter> encoderUnitsConverter
-      = std::make_unique<ctk::StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
+    // Motor configuration
+    ctk::StepperMotorParameters motorParameters;
+    motorParameters.deviceName     = motorDriverCardDeviceNames[i];
+    motorParameters.moduleName     = motorDriverCardModuleNames[i];
+    motorParameters.driverId       = motorDriverCardIds[i];
+    motorParameters.configFileName = motorDriverCardConfigFiles[i];
+    motorParameters.motorUnitsConverter
+        = std::make_shared<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
+    motorParameters.encoderUnitsConverter
+        = std::make_shared<ctk::StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
 
 
     // Configure motor driver HW
@@ -131,20 +138,18 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver according to the motor type
-    if(motorType[i] == basicLinearMotorType){
+    if(config.get<std::vector<std::string>>("motorType")[i] == basicLinearMotorType){
       motorDriver.push_back(std::make_unique<BasicMotorDriver>(
-          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
-          std::move(unitsConverter), std::move(encoderUnitsConverter)));
+          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters));
     }
 
     else if (config.get<std::vector<std::string>>("motorType")[i] == linearMotorWithReferenceType){
       motorDriver.push_back(std::make_unique<LinearMotorDriver>(
-          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), driverParams,
-          std::move(unitsConverter), std::move(encoderUnitsConverter)));
+          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters));
     }
     else{
       std::cout << "!!! Terminating the server!" << std::endl
-                << "Unknown motor type \"" << motorType[i]
+                << "Unknown motor type \"" << config.get<std::vector<std::string>>("motorType")[i]
                 << " requested in MotorDriver configuration provided by" << serverConfigFile << "." << std::endl;
       exit(1);
     }
@@ -156,10 +161,10 @@ void StepperMotorServer::defineConnections(){
     motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
     motorDriver[i]->flatten().findTag("TRIGGER").connectTo(trigger);
 
-    motorDriver[i]->operator []("hwReadback")("actualCycleTime") >> cs["Motor" + std::to_string(i+1)]("AnotherEnable");
+    //motorDriver[i]->operator []("hwReadback")("actualCycleTime") >> cs["Motor" + std::to_string(i+1)]("AnotherEnable");
 
     if(useDummyMotors){
-      motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), driverParams);
+      motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), motorParameters);
       motorDriver[i]->flatten().findTag("DUMMY").connectTo(motorDummy[i]);
     }
   }

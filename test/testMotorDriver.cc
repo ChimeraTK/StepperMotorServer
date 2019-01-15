@@ -29,23 +29,6 @@ BOOST_AUTO_TEST_SUITE( MotorDriverTestSuite )
 
 BOOST_AUTO_TEST_CASE( testOpenMotor ) {
 
-  ctk::setDMapFilePath("./dummies.dmap");
-
-  mtca4u::MotorDriverCardFactory::instance().setDummyMode();
-
-  ctk::StepperMotor *motor = new ctk::StepperMotor(stepperMotorDeviceName, stepperMotorModuleName, 1U, stepperMotorDeviceConfigFile);
-
-  bool isCalibrated = motor->isCalibrated();
-  BOOST_CHECK(isCalibrated == false);
-
-  motor->setEnabled(true);
-  float setPos = 42.1234f;
-  motor->setActualPosition(setPos);
-  std::cout << "Position setpoint: " << setPos << std::endl;
-  float actualPosition = motor->getCurrentPosition();
-
-  std::cout << "Position is " << actualPosition << std::endl;
-
 }
 
 /*********************************************************************************************************************/

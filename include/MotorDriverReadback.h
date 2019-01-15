@@ -159,9 +159,9 @@ protected:
  */
 class ExtHWReadbackHandler : public BasicHWReadbackHandler {
 public:
-  ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotorWithReference> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+  ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-  std::shared_ptr<ctk::StepperMotorWithReference> _motor;
+  std::shared_ptr<ctk::StepperMotor> _motor;
   HWReadbackValuesExt hwReadbackValues;
   SWReadbackValuesExt swReadbackValues;
 
