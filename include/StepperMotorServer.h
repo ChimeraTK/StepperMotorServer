@@ -23,7 +23,7 @@ namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : ctk::Application{
   StepperMotorServer() : Application("CTK_StepperMotorServer") {}
-  ~StepperMotorServer() {}
+  //~StepperMotorServer() { shutdown(); }
 
   ctk::ConfigReader config{this, "Configuration", serverConfigFile};
 
