@@ -25,7 +25,11 @@ void ReadbackHandler::mainLoop(){
 
     receiveTimer.initializeMeasurement();
 
-    readbackFunction();
+    //readbackFunction();
+    readback();
+    if(_motor->hasHWReferenceSwitches()){
+      readEndSwitchData();
+    }
 
     receiveTimer.measureOnce();
     auto rt = std::chrono::duration_cast<std::chrono::microseconds>(receiveTimer.getMeasurementResult());
@@ -36,18 +40,28 @@ void ReadbackHandler::mainLoop(){
 }
 
 
-BasicHWReadbackHandler::BasicHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
+ReadbackHandler::ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
                                                ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : ReadbackHandler(owner, name, description),
-    _motor(motor),
+  : ctk::ApplicationModule::ApplicationModule(owner, name, description),
     hwReadbackValues{this, "hwReadbackValues", "Variables read from the HW of the MotorDriver", true},
-    swReadbackValues{this, "swReadbackValues", "Variables read from the SW of the MotorDriver", true} {}
-
-void BasicHWReadbackHandler::prepare(){
-  readbackFunction = std::bind(&BasicHWReadbackHandler::readback, this);
+    swReadbackValues{this, "swReadbackValues", "Variables read from the SW of the MotorDriver", true},
+    extHWReadbackValues{},
+    positiveEndSwitch{},
+    negativeEndSwitch{},
+    _motor{motor}
+{
+  if(_motor->hasHWReferenceSwitches()){
+    extHWReadbackValues = HWReadbackValuesExt{this, "extHWReadbackValues", "Variables read from the HW specific to reference switches", true};
+    positiveEndSwitch   = ReferenceSwitch{this, "positiveEndSwitch", "Data of the positive end switch", /*true}*/};
+    negativeEndSwitch   = ReferenceSwitch{this, "negativeEndSwitch", "Data of the negative end switch", /*true*/};
+  }
 }
 
-void BasicHWReadbackHandler::readback(){
+//void BasicHWReadbackHandler::prepare(){
+//  readbackFunction = std::bind(&BasicHWReadbackHandler::readback, this);
+//}
+
+void ReadbackHandler::readback(){
     // Read from HW
     hwReadbackValues.isCalibrated = _motor->isCalibrated() ? 1 : 0;
     ctk::StepperMotorError error = _motor->getError();
@@ -86,29 +100,29 @@ void BasicHWReadbackHandler::readback(){
 }
 
 
-ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
-                                            ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-  : BasicHWReadbackHandler(motor, owner, name, description),
-    _motor(motor),
-    hwReadbackValues{this, "extHWReadbackValues", "Variables read from the HW specific to reference switches", true},
-    swReadbackValues{this, "extSWReadbackValues", "Variables read from the SW of the MotorDriver specific to reference switches", true} {}
+//ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
+//                                            ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+//  : BasicHWReadbackHandler(motor, owner, name, description),
+//    _motor(motor),
+//    hwReadbackValues{this, "extHWReadbackValues", "Variables read from the HW specific to reference switches", true},
+//    swReadbackValues{this, "extSWReadbackValues", "Variables read from the SW of the MotorDriver specific to reference switches", true} {}
 
-void ExtHWReadbackHandler::prepare(){
-  readbackFunction = std::bind(&ExtHWReadbackHandler::readback, this);
-}
+//void ReadbackHandler::prepare(){
+//  readbackFunction = std::bind(&ExtHWReadbackHandler::readback, this);
+//}
 
-void ExtHWReadbackHandler::readback(){
-  BasicHWReadbackHandler::readback();
-  hwReadbackValues.isNegativeReferenceActive = _motor->isNegativeReferenceActive();
-  hwReadbackValues.isPositiveReferenceActive = _motor->isPositiveReferenceActive();
+void ReadbackHandler::readEndSwitchData(){
 
-  swReadbackValues.positiveEndReference        = _motor->getPositiveEndReference();
-  swReadbackValues.negativeEndReference        = _motor->getNegativeEndReference();
-  swReadbackValues.positiveEndReferenceInSteps = _motor->getPositiveEndReferenceInSteps();
-  swReadbackValues.negativeEndReferenceInSteps = _motor->getNegativeEndReferenceInSteps();
+  extHWReadbackValues.isNegativeReferenceActive = _motor->isNegativeReferenceActive();
+  extHWReadbackValues.isPositiveReferenceActive = _motor->isPositiveReferenceActive();
 
-  swReadbackValues.positiveEndReferenceTolerance = _motor->getTolerancePositiveEndSwitch();
-  swReadbackValues.negativeEndReferenceTolerance = _motor->getToleranceNegativeEndSwitch();
+  positiveEndSwitch.position                 = _motor->getPositiveEndReference();
+  negativeEndSwitch.position                 = _motor->getNegativeEndReference();
+  positiveEndSwitch.positionInSteps          = _motor->getPositiveEndReferenceInSteps();
+  negativeEndSwitch.positionInSteps          = _motor->getNegativeEndReferenceInSteps();
+
+  positiveEndSwitch.tolerance = _motor->getTolerancePositiveEndSwitch();
+  negativeEndSwitch.tolerance = _motor->getToleranceNegativeEndSwitch();
 }
 
 

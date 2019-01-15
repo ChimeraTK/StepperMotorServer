@@ -35,7 +35,7 @@ struct BasicMotorDriver : public ctk::ModuleGroup {
 
   std::shared_ptr<ctk::StepperMotor> motor;
   ControlInputHandler ctrlInputHandler;
-  BasicHWReadbackHandler readbackHandler;
+  ReadbackHandler readbackHandler;
 };
 
 
@@ -46,7 +46,7 @@ struct LinearMotorDriver : public ctk::ModuleGroup {
 
   std::shared_ptr<ctk::StepperMotor> motor;
   ControlInputHandler ctrlInputHandler;
-  ExtHWReadbackHandler readbackHandler;
+  ReadbackHandler readbackHandler;
 };
 
 #endif /* INCLUDE_MOTORDRIVER_H_ */

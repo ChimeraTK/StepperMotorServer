@@ -84,20 +84,29 @@ struct SWReadbackValues : public ctk::VariableGroup {
 };
 
 
-/**
- *  @class SWReadbackValuesExt
- *  @brief A variable group related to reference switches, read from the motor driver library (residing in SW).
- */
-struct SWReadbackValuesExt : public ctk::VariableGroup {
+///**
+// *  @class SWReadbackValuesExt
+// *  @brief A variable group related to reference switches, read from the motor driver library (residing in SW).
+// */
+//struct SWReadbackValuesExt : public ctk::VariableGroup {
+
+//  using ctk::VariableGroup::VariableGroup;
+
+//  ctk::ScalarOutput<int>   positiveEndReferenceInSteps{this, "positiveEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+//  ctk::ScalarOutput<int>   negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+//  ctk::ScalarOutput<float> positiveEndReference{this, "positiveEndReference", "", "Position of the positive reference switch",{"CS"}};
+//  ctk::ScalarOutput<float> negativeEndReference{this, "negativeEndReference", "", "Position of the positive reference switch",{"CS"}};
+//  ctk::ScalarOutput<float> positiveEndReferenceTolerance{this, "positiveEndReferenceTolerance", "", "Tolerance of the calibrated positive end switch position.", {"CS"}};
+//  ctk::ScalarOutput<float> negativeEndReferenceTolerance{this, "negativeEndReferenceTolerance", "", "Tolerance of the calibrated negative end switch position.", {"CS"}};
+//};
+
+struct ReferenceSwitch : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-  ctk::ScalarOutput<int>   positiveEndReferenceInSteps{this, "positiveEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
-  ctk::ScalarOutput<int>   negativeEndReferenceInSteps{this, "negativeEndReferenceInSteps", "steps", "Position of the positive reference switch",{"CS"}};
-  ctk::ScalarOutput<float> positiveEndReference{this, "positiveEndReference", "", "Position of the positive reference switch",{"CS"}};
-  ctk::ScalarOutput<float> negativeEndReference{this, "negativeEndReference", "", "Position of the positive reference switch",{"CS"}};
-  ctk::ScalarOutput<float> positiveEndReferenceTolerance{this, "positiveEndReferenceTolerance", "", "Tolerance of the calibrated positive end switch position.", {"CS"}};
-  ctk::ScalarOutput<float> negativeEndReferenceTolerance{this, "negativeEndReferenceTolerance", "", "Tolerance of the calibrated negative end switch position.", {"CS"}};
+  ctk::ScalarOutput<int>   positionInSteps{this, "positionInSteps", "steps", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<float> position{this, "position", "", "Position of the positive reference switch",{"CS"}};
+  ctk::ScalarOutput<float> tolerance{this, "tolerance", "", "Tolerance of the calibrated positive end switch position.", {"CS"}};
 };
 
 
@@ -109,7 +118,7 @@ class ReadbackHandler : public ctk::ApplicationModule {
 
 public:
 
-  using ctk::ApplicationModule::ApplicationModule;
+  ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
   ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW", {"TRIGGER"}};
 
@@ -119,10 +128,19 @@ public:
 
   virtual void mainLoop() override;
 
+  HWReadbackValues hwReadbackValues;
+  SWReadbackValues swReadbackValues;
+  HWReadbackValuesExt extHWReadbackValues;
+  ReferenceSwitch positiveEndSwitch;
+  ReferenceSwitch negativeEndSwitch;
+
 protected:
   std::function<void(void)> readbackFunction;
 
 private:
+  void readback();
+  void readEndSwitchData();
+  std::shared_ptr<ctk::StepperMotor> _motor;
   ExecutionTimer<> execTimer;
   ExecutionTimer<> receiveTimer;
 };
@@ -133,21 +151,20 @@ private:
  *
  *  This module supports a simple motor. It provides to functionality of the ChimeraTK::StepperMotor class of the MotorDriverCard library.
  */
-class BasicHWReadbackHandler : public ReadbackHandler {
+//class BasicHWReadbackHandler : public ReadbackHandler {
 
-public:
+//public:
 
-  BasicHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-  std::shared_ptr<ctk::StepperMotor> _motor;
-  HWReadbackValues hwReadbackValues;
-  SWReadbackValues swReadbackValues;
+//  std::shared_ptr<ctk::StepperMotor> _motor;
+//  HWReadbackValues hwReadbackValues;
+//  SWReadbackValues swReadbackValues;
 
-  virtual void prepare();
+//  virtual void prepare();
 
-protected:
-  void readback();
-};
+//protected:
+//  void readback();
+//};
 
 
 /**
@@ -157,19 +174,19 @@ protected:
  *  This module supports a linear motor with reference switches . It provides to functionality of the ChimeraTK::StepperMotorWithRefernce
  *  class of the MotorDriverCard library.
  */
-class ExtHWReadbackHandler : public BasicHWReadbackHandler {
-public:
-  ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+//class ExtHWReadbackHandler : public BasicHWReadbackHandler {
+//public:
+//  ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-  std::shared_ptr<ctk::StepperMotor> _motor;
-  HWReadbackValuesExt hwReadbackValues;
-  SWReadbackValuesExt swReadbackValues;
+//  std::shared_ptr<ctk::StepperMotor> _motor;
+//  HWReadbackValuesExt hwReadbackValues;
+//  SWReadbackValuesExt swReadbackValues;
 
-  virtual void prepare();
+//  virtual void prepare();
 
-protected:
-  void readback();
-};
+//protected:
+//  void readback();
+//};
 
 
 ///**
