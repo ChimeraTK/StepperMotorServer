@@ -12,16 +12,16 @@
 
 
 BasicMotorDriver::BasicMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                                   ctk::StepperMotorParameters &motorParameters)
+                                   const ctk::StepperMotorParameters &motorParameters)
   : ctk::ModuleGroup(owner, name, description),
-  motor{ctk::StepperMotorFactory::instance().create(ctk::StepperMotorType::BASIC, std::move(motorParameters))},
+  motor{ctk::StepperMotorFactory::instance().create(ctk::StepperMotorType::BASIC, motorParameters)},
   ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
   readbackHandler{motor, this, "hwReadback", "Signals read from the motor driver"}{}
 
 
 LinearMotorDriver::LinearMotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                                     ctk::StepperMotorParameters &motorParameters)
+                                     const ctk::StepperMotorParameters &motorParameters)
   : ctk::ModuleGroup(owner, name, description),
-    motor{ctk::StepperMotorFactory::instance().create(ctk::StepperMotorType::LINEAR, std::move(motorParameters))},
+    motor{ctk::StepperMotorFactory::instance().create(ctk::StepperMotorType::LINEAR, motorParameters)},
     ctrlInputHandler{this, "controlInput", "Handles the control input to the motor driver.", motor},
     readbackHandler{motor, this, "hwReadback", "Signals read from the motor driver"}{}

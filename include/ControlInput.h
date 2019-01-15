@@ -25,10 +25,9 @@ namespace ctk = ChimeraTK;
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
 
 
-struct BasicControlInput : public ctk::VariableGroup {
+struct ControlInput : public ctk::VariableGroup {
 
-  BasicControlInput(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
-  virtual ~BasicControlInput(){};
+  using ctk::VariableGroup::VariableGroup;
 
   ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> disableMotor{this, "disable", "", "Disable the motor", {"CS"}};
@@ -52,7 +51,7 @@ struct BasicControlInput : public ctk::VariableGroup {
   ctk::ScalarPushInput<int32_t> encoderReferencePosition{this, "encoderReferencePosition", "", "Writing to this value sets the actual encoder position to a given reference", {"CS"}};
 
   ctk::ScalarPushInput<int32_t> axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point.", {"CS"}};
-  ctk::ScalarPushInput<float> axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point.", {"CS"}};
+  ctk::ScalarPushInput<float>   axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point.", {"CS"}};
 
   ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "enableSWPositionLimits", "", "Enable SW limits", {"CS"}};
   ctk::ScalarPushInput<float>   maxSWPositionLimit{this, "maxSWPositionLimit", "", "Positive SW position limit", {"CS"}};
@@ -68,16 +67,16 @@ struct BasicControlInput : public ctk::VariableGroup {
   // Message output for feedback to the user
   ctk::ScalarOutput<std::string> userMessage{this, "userMessage", "", "Message for user notification from ControlInput module", {"CS"}};
 
-  //FIXME Move dummy to this module
+  // Values triggering the dummy if needed
   ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input", {"DUMMY"}};
   ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor", {"DUMMY"}};
 
 };
 
 
-struct LinearMotorControlInput : public ctk::VariableGroup {
+struct CalibrationCommands: public ctk::VariableGroup {
 
-  LinearMotorControlInput(ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+  using ctk::VariableGroup::VariableGroup;
 
   ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"CS"}};
   ctk::ScalarPushInput<int32_t> determineTolerance{this, "determineTolerance", "", "Determines tolerance of the end switch positions", {"CS"}};
@@ -89,70 +88,70 @@ struct LinearMotorControlInput : public ctk::VariableGroup {
  *  @details Contains the implementation of the ControlInputHandler as a template so it can be used
  *           with a specific motor and set of inputs.
  */
-class BasicControlInputHandler : public ctk::ApplicationModule {
+class ControlInputHandler : public ctk::ApplicationModule {
 public:
 
-  BasicControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)
-    : ctk::ApplicationModule(owner, name, description),
-      _controlInput{this, "controlInput", "Basic control inputs"},
-      _motor(motor){};
+  ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor);
 
-  virtual ~BasicControlInputHandler() {};
+  virtual ~ControlInputHandler() {}
 
-  virtual void prepare() override{
-      createFunctionMap(_motor);
-  };
+  virtual void prepare() override;
 
   virtual void mainLoop() override;
 
-protected:
+private:
   virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
+  virtual void appendCalibrationToMap();
   funcmapT funcMap;
-  BasicControlInput _controlInput;
+  ControlInput _controlInput;
+  CalibrationCommands _calibrationCommands;
 
-  // Callbacks
+  // Callbacks for the BasicStepperMotor
   void enableCallback();
   void disableCallback();
   void startCallback();
   void setTargetPositionCallback();
   void setTargetPositionInStepsCallback();
 
-private:
+  //Callbacks for the LinearStepperMotor
+  void calibrateCallback();
+  void determineToleranceCallback();
+
   ctk::ReadAnyGroup inputGroup;
   std::shared_ptr<ctk::StepperMotor> _motor;
 
-}; /* class BasicControlInputHandler */
+}; /* class ControlInputHandler */
 
 
 /**
  * @class LinearMotorControlInputHandler
  * @brief Specialization of the ControlInputHandler for StepperMotorWithReference instances (i.e., linear motors with end switches).
  */
-class LinearMotorControlInputHandler : public BasicControlInputHandler{
-public:
-  LinearMotorControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                                                                 std::shared_ptr<ctk::StepperMotor> motor)
-    : BasicControlInputHandler(owner, name, description, motor),
-      _motor{motor},
-      _controlInput{this, "linearMotorControlInput", "Control inputs for a linear stepper motor with reference switches"}{};
+//class LinearMotorControlInputHandler : public BasicControlInputHandler{
+//public:
+//  LinearMotorControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
+//                                                                 std::shared_ptr<ctk::StepperMotor> motor)
+//    : BasicControlInputHandler(owner, name, description, motor),
+//      _motor{motor},
+//      _controlInput{this, "linearMotorControlInput", "Control inputs for a linear stepper motor with reference switches"}{};
 
-  virtual ~LinearMotorControlInputHandler(){};
+//  virtual ~LinearMotorControlInputHandler(){};
 
-  virtual void prepare() override{
-    BasicControlInputHandler::createFunctionMap(_motor);
-    createFunctionMap(_motor);
-  };
+//  virtual void prepare() override{
+//    BasicControlInputHandler::createFunctionMap(_motor);
+//    createFunctionMap(_motor);
+//  };
 
-protected:
-  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
+//protected:
+//  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
 
-  //Callbacks
-  void calibrateCallback();
-  void determineToleranceCallback();
+//  //Callbacks
+//  void calibrateCallback();
+//  void determineToleranceCallback();
 
-private:
-  std::shared_ptr<ctk::StepperMotor> _motor;
-  LinearMotorControlInput _controlInput;
-};
+//private:
+//  std::shared_ptr<ctk::StepperMotor> _motor;
+//  LinearMotorControlInput _controlInput;
+//};
 
 #endif /* INCLUDE_CONTROLINPUT_H_ */

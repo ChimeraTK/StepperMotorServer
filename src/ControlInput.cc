@@ -9,19 +9,32 @@
 
 
 /* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
-BasicControlInput::BasicControlInput(ctk::EntityOwner *owner,
-                                     const std::string &name,
-                                     const std::string &description)
-  : ctk::VariableGroup{owner, name, description, true} {};
+//ControlInput::ControlInput(ctk::EntityOwner *owner,
+//                                     const std::string &name,
+//                                     const std::string &description)
+//  : ctk::VariableGroup{owner, name, description, true} {};
 
-/* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
-LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
-                                     const std::string &name,
-                                     const std::string &description)
-  : ctk::VariableGroup{owner, name, description, true} {};
+///* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
+//LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
+//                                     const std::string &name,
+//                                     const std::string &description)
+//  : ctk::VariableGroup{owner, name, description, true} {};
 
 
-void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
+ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)
+    : ctk::ApplicationModule(owner, name, description),
+      _controlInput{this, "controlInput", "Control inputs", true},
+      _calibrationCommands{},
+      _motor(motor)
+{
+  // If motor has HW reference switches,
+  // calibration is supported
+  if(_motor->hasHWReferenceSwitches()){
+      _calibrationCommands = CalibrationCommands{this, "calibrationCommands", "Calibration commands", true};
+  }
+};
+
+void ControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
   funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
   funcMap[_controlInput.disableMotor.getId()]              = [this]{disableCallback();};
@@ -50,7 +63,15 @@ void BasicControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMot
 }
 
 
-void BasicControlInputHandler::mainLoop() {
+void ControlInputHandler::prepare(){
+    createFunctionMap(_motor);
+
+    if(_motor->hasHWReferenceSwitches()){
+      appendCalibrationToMap();
+    }
+}
+
+void ControlInputHandler::mainLoop() {
 
   inputGroup = this->readAnyGroup();
 
@@ -76,15 +97,15 @@ void BasicControlInputHandler::mainLoop() {
   }
 }
 
-void BasicControlInputHandler::enableCallback(){
+void ControlInputHandler::enableCallback(){
   _motor->setEnabled(true);
 }
 
-void BasicControlInputHandler::disableCallback(){
+void ControlInputHandler::disableCallback(){
   _motor->setEnabled(false);
 }
 
-void BasicControlInputHandler::startCallback(){
+void ControlInputHandler::startCallback(){
 
   if(_controlInput.startMotor){
     if(_motor->isSystemIdle()){
@@ -96,7 +117,7 @@ void BasicControlInputHandler::startCallback(){
   }
 }
 
-void BasicControlInputHandler::setTargetPositionCallback(){
+void ControlInputHandler::setTargetPositionCallback(){
   if(_motor->isSystemIdle()){
     _motor->setTargetPosition(_controlInput.positionSetpoint);
   }
@@ -105,7 +126,7 @@ void BasicControlInputHandler::setTargetPositionCallback(){
   }
 }
 
-void BasicControlInputHandler::setTargetPositionInStepsCallback(){
+void ControlInputHandler::setTargetPositionInStepsCallback(){
   if(_motor->isSystemIdle()){
     _motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps);
   }
@@ -115,39 +136,30 @@ void BasicControlInputHandler::setTargetPositionInStepsCallback(){
 }
 
 
+void ControlInputHandler::appendCalibrationToMap(){
 
-// Implementation of LinearMotorControlInputHandler functions
-
-void LinearMotorControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
-
-  funcMap[_controlInput.calibrateMotor.getId()]            = [this]{calibrateCallback();};
-
-  funcMap[BasicControlInputHandler::_controlInput.axisTranslationInSteps.getId()]
-    = [this, motor]{ motor->translateAxisInSteps(BasicControlInputHandler::_controlInput.axisTranslationInSteps); };
-  funcMap[BasicControlInputHandler::_controlInput.axisTranslation.getId()]
-    = [this, motor]{ motor->translateAxis(BasicControlInputHandler::_controlInput.axisTranslation); };
-
-  funcMap[_controlInput.determineTolerance.getId()] = [this]{determineToleranceCallback();};
+  funcMap[_calibrationCommands.calibrateMotor.getId()]     = [this]{calibrateCallback();};
+  funcMap[_calibrationCommands.determineTolerance.getId()] = [this]{determineToleranceCallback();};
 }
 
-void LinearMotorControlInputHandler::calibrateCallback(){
-  if(_controlInput.calibrateMotor){
+void ControlInputHandler::calibrateCallback(){
+  if(_calibrationCommands.calibrateMotor){
     if(_motor->isSystemIdle()){
       _motor->calibrate();
     }
     else{
-      BasicControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called calibrateMotor while motor is not in IDLE state.";
+      ControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called calibrateMotor while motor is not in IDLE state.";
     }
   }
 }
 
-void LinearMotorControlInputHandler::determineToleranceCallback(){
-  if(_controlInput.determineTolerance){
+void ControlInputHandler::determineToleranceCallback(){
+  if(_calibrationCommands.determineTolerance){
     if(_motor->isSystemIdle()){
       _motor->determineTolerance();
     }
     else{
-      BasicControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called determineTolerance while motor is not in IDLE state.";
+      ControlInputHandler::_controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Called determineTolerance while motor is not in IDLE state.";
     }
   }
 }
