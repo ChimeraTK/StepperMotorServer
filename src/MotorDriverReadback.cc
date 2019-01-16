@@ -85,23 +85,18 @@ void ReadbackHandler::readback(){
     position.actualValue = _motor->recalculateStepsInUnits(position.actualValueInSteps);
     position.targetValue = _motor->recalculateStepsInUnits(position.targetValueInSteps);
 
-    //try{
-      status.isIdle        = _motor->isSystemIdle();
-      status.state         = _motor->getState();
-      swLimits.isEnabled   = _motor->getSoftwareLimitsEnabled();
-      swLimits.maxPosition = _motor->getMaxPositionLimit();
-      swLimits.minPosition = _motor->getMinPositionLimit();
-      swLimits.maxPositionInSteps = _motor->getMaxPositionLimitInSteps();
-      swLimits.minPositionInSteps = _motor->getMinPositionLimitInSteps();
+    status.isIdle        = _motor->isSystemIdle();
+    status.state         = _motor->getState();
+    swLimits.isEnabled   = _motor->getSoftwareLimitsEnabled();
+    swLimits.maxPositionInSteps = _motor->getMaxPositionLimitInSteps();
+    swLimits.minPositionInSteps = _motor->getMinPositionLimitInSteps();
+    swLimits.maxPosition = _motor->recalculateStepsInUnits(swLimits.maxPositionInSteps);
+    swLimits.minPosition = _motor->recalculateStepsInUnits(swLimits.minPositionInSteps);
 
-      if(!_motorIsDummy){
-        currentLimit.userValue= _motor->getUserCurrentLimit(); // Include when this method gets implemented
-      }
-      speedLimit.userValue = _motor->getUserSpeedLimit();
-//    }
-//    catch(mtca4u::MotorDriverException &e){
-//      auto userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: ." + std::string(e.what());
-//    }
+    if(!_motorIsDummy){
+      currentLimit.userValue= _motor->getUserCurrentLimit(); // Include when this method gets implemented
+    }
+    speedLimit.userValue = _motor->getUserSpeedLimit();
 }
 
 /// Reading data specific for motor with end switches
@@ -110,10 +105,10 @@ void ReadbackHandler::readEndSwitchData(){
   negativeEndSwitch.isActive = _motor->isNegativeReferenceActive();
   positiveEndSwitch.isActive = _motor->isPositiveReferenceActive();
 
-  positiveEndSwitch.position                 = _motor->getPositiveEndReference();
-  negativeEndSwitch.position                 = _motor->getNegativeEndReference();
   positiveEndSwitch.positionInSteps          = _motor->getPositiveEndReferenceInSteps();
   negativeEndSwitch.positionInSteps          = _motor->getNegativeEndReferenceInSteps();
+  positiveEndSwitch.position                 = _motor->recalculateStepsInUnits(positiveEndSwitch.positionInSteps);
+  negativeEndSwitch.position                 = _motor->recalculateStepsInUnits(negativeEndSwitch.positionInSteps);
 
   positiveEndSwitch.tolerance = _motor->getTolerancePositiveEndSwitch();
   negativeEndSwitch.tolerance = _motor->getToleranceNegativeEndSwitch();
