@@ -9,6 +9,8 @@
 
 void ReadbackHandler::mainLoop(){
 
+  readConstData();
+
   while(true){
     //Wait for cyclic trigger
     trigger.read();
@@ -25,7 +27,6 @@ void ReadbackHandler::mainLoop(){
 
     receiveTimer.initializeMeasurement();
 
-    //readbackFunction();
     readback();
     if(_motor->hasHWReferenceSwitches()){
       readEndSwitchData();
@@ -40,81 +41,74 @@ void ReadbackHandler::mainLoop(){
 }
 
 
-ReadbackHandler::ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
-                                               ctk::EntityOwner *owner, const std::string &name, const std::string &description)
+ReadbackHandler::ReadbackHandler(
+      std::shared_ptr<ctk::StepperMotor> motor,
+      ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule::ApplicationModule(owner, name, description),
-    hwReadbackValues{this, "hwReadbackValues", "Variables read from the HW of the MotorDriver", true},
-    swReadbackValues{this, "swReadbackValues", "Variables read from the SW of the MotorDriver", true},
-    extHWReadbackValues{},
     positiveEndSwitch{},
     negativeEndSwitch{},
-    _motor{motor}
+    _motor{motor},
+    _motorIsDummy{motorIsDummy()}
 {
   if(_motor->hasHWReferenceSwitches()){
-    extHWReadbackValues = HWReadbackValuesExt{this, "extHWReadbackValues", "Variables read from the HW specific to reference switches", true};
-    positiveEndSwitch   = ReferenceSwitch{this, "positiveEndSwitch", "Data of the positive end switch", /*true}*/};
-    negativeEndSwitch   = ReferenceSwitch{this, "negativeEndSwitch", "Data of the negative end switch", /*true*/};
+      positiveEndSwitch
+        = ReferenceSwitch{this, "positiveEndSwitch", "Data of the positive end switch", false, {"MOTOR"}};
+      negativeEndSwitch
+        = ReferenceSwitch{this, "negativeEndSwitch", "Data of the negative end switch", false, {"MOTOR"}};
   }
 }
 
-//void BasicHWReadbackHandler::prepare(){
-//  readbackFunction = std::bind(&BasicHWReadbackHandler::readback, this);
-//}
 
-void ReadbackHandler::readback(){
-    // Read from HW
-    hwReadbackValues.isCalibrated = _motor->isCalibrated() ? 1 : 0;
-    ctk::StepperMotorError error = _motor->getError();
-    hwReadbackValues.motorErrorId = static_cast<int32_t>(error);
-    hwReadbackValues.actualPositionInSteps = _motor->getCurrentPositionInSteps();
-    hwReadbackValues.encoderPosition= _motor->getEncoderPosition();
-
-    // Update values that have a static relation to HW readback
-    hwReadbackValues.actualPosition = _motor->recalculateStepsInUnits(hwReadbackValues.actualPositionInSteps);
-
-    // FIXME Debug RBVs
-    hwReadbackValues.enabledRBV = _motor->getEnabled();
-    hwReadbackValues.targetPositionInStepsRBV = _motor->getTargetPositionInSteps();
-
-    try{
-      swReadbackValues.isSystemIdle              = _motor->isSystemIdle();
-      swReadbackValues.motorState                = _motor->getState();
-      swReadbackValues.swPositionLimitsEnabled   = _motor->getSoftwareLimitsEnabled();
-      swReadbackValues.maxSWPositionLimit        = _motor->getMaxPositionLimit();
-      swReadbackValues.minSWPositionLimit        = _motor->getMinPositionLimit();
-      swReadbackValues.maxSWPositionLimitInSteps = _motor->getMaxPositionLimitInSteps();
-      swReadbackValues.minSWPositionLimitInSteps = _motor->getMinPositionLimitInSteps();
-
-      swReadbackValues.currentLimit       = _motor->getUserCurrentLimit(); // Include when this method gets implemented
-      swReadbackValues.maxCurrentLimit    = _motor->getSafeCurrentLimit(); /* TODO This is const in the library. Move to module which is run once at startup? */
-      swReadbackValues.speedLimit         = _motor->getUserSpeedLimit();
-      swReadbackValues.maxSpeedCapability = _motor->getMaxSpeedCapability();  /* TODO This is const in the library. Move to module which is run once at startup? */
-
-      swReadbackValues.isFullStepping   = _motor->isFullStepping();
-      swReadbackValues.autostartEnabled = _motor->getAutostart();
-    }
-    catch(mtca4u::MotorDriverException &e){
-      auto userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: ." + std::string(e.what());
-    }
-
+void ReadbackHandler::readConstData(){
+  if(!_motorIsDummy){
+    currentLimit.maxValue = _motor->getSafeCurrentLimit();
+    speedLimit.maxValue = _motor->getMaxSpeedCapability();
+  }
 }
 
+void ReadbackHandler::readback(){
 
-//ExtHWReadbackHandler::ExtHWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor,
-//                                            ctk::EntityOwner *owner, const std::string &name, const std::string &description)
-//  : BasicHWReadbackHandler(motor, owner, name, description),
-//    _motor(motor),
-//    hwReadbackValues{this, "extHWReadbackValues", "Variables read from the HW specific to reference switches", true},
-//    swReadbackValues{this, "extSWReadbackValues", "Variables read from the SW of the MotorDriver specific to reference switches", true} {}
+    status.isEnabled = _motor->getEnabled();
 
-//void ReadbackHandler::prepare(){
-//  readbackFunction = std::bind(&ExtHWReadbackHandler::readback, this);
-//}
+    status.isCalibrated = _motor->isCalibrated() ? 1 : 0;
+    ctk::StepperMotorError error = _motor->getError();
+    status.errorId = static_cast<int32_t>(error);
 
+    status.isFullStepping   = _motor->isFullStepping();
+    status.autostartEnabled = _motor->getAutostart();
+
+    position.actualValueInSteps = _motor->getCurrentPositionInSteps();
+    position.encoderReadback    = _motor->getEncoderPosition();
+    position.targetValueInSteps = _motor->getTargetPositionInSteps();
+
+    // Update values that have a static relation to HW readback
+    position.actualValue = _motor->recalculateStepsInUnits(position.actualValueInSteps);
+    position.targetValue = _motor->recalculateStepsInUnits(position.targetValueInSteps);
+
+    //try{
+      status.isIdle        = _motor->isSystemIdle();
+      status.state         = _motor->getState();
+      swLimits.isEnabled   = _motor->getSoftwareLimitsEnabled();
+      swLimits.maxPosition = _motor->getMaxPositionLimit();
+      swLimits.minPosition = _motor->getMinPositionLimit();
+      swLimits.maxPositionInSteps = _motor->getMaxPositionLimitInSteps();
+      swLimits.minPositionInSteps = _motor->getMinPositionLimitInSteps();
+
+      if(!_motorIsDummy){
+        currentLimit.userValue= _motor->getUserCurrentLimit(); // Include when this method gets implemented
+      }
+      speedLimit.userValue = _motor->getUserSpeedLimit();
+//    }
+//    catch(mtca4u::MotorDriverException &e){
+//      auto userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: ." + std::string(e.what());
+//    }
+}
+
+/// Reading data specific for motor with end switches
 void ReadbackHandler::readEndSwitchData(){
 
-  extHWReadbackValues.isNegativeReferenceActive = _motor->isNegativeReferenceActive();
-  extHWReadbackValues.isPositiveReferenceActive = _motor->isPositiveReferenceActive();
+  negativeEndSwitch.isActive = _motor->isNegativeReferenceActive();
+  positiveEndSwitch.isActive = _motor->isPositiveReferenceActive();
 
   positiveEndSwitch.position                 = _motor->getPositiveEndReference();
   negativeEndSwitch.position                 = _motor->getNegativeEndReference();
@@ -125,6 +119,18 @@ void ReadbackHandler::readEndSwitchData(){
   negativeEndSwitch.tolerance = _motor->getToleranceNegativeEndSwitch();
 }
 
+
+bool ReadbackHandler::motorIsDummy(){
+
+  bool isDummy = false;
+  try {
+    // Throws if dummy is used
+    _motor->getSafeCurrentLimit();
+  } catch (ctk::MotorDriverException) {
+    isDummy = true;
+  }
+  return isDummy;
+}
 
 //BasicSWReadbackHandler::BasicSWReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description)
 //  : ReadbackHandler(owner, name, description),

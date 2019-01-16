@@ -31,7 +31,8 @@ static StepperMotorServer server;
 static std::string basicLinearMotorType{"LinearMotor"};
 static std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
 
-/** Hardware initialization
+/**
+ *  Hardware initialization
  *  This is called from within defineConnections() because there we have the device name available
  *  and this has to be done per FMC carrier board, not per motor (represented by the ApplicationModules).
  *  TODO Review this once additional driver HW gets supported
@@ -46,7 +47,12 @@ static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias)
   }
 };
 
+static void terminateServer(std::string msg){
 
+  std::cout << std::endl <<"!!! Terminating the server!" << std::endl
+            << msg << std::endl;
+  exit(1);
+};
 
 
 /** Define interconnection of modules */
@@ -67,10 +73,6 @@ void StepperMotorServer::defineConnections(){
   cs["Timer"]("updateOnce") >> trigger.forceUpdate;
   config("cycleTimeEnable") >> trigger.automaticUpdate;
   trigger.countdown >> cs["Timer"]("countdown");
-
-  //auto &cyclicTrigger = trigger.trigger;
-  //ctk::VariableNetworkNode triggerC = cyclicTrigger;
-
 
   // Publish configuration
   config.connectTo(cs["Configuration"]);
@@ -101,10 +103,9 @@ void StepperMotorServer::defineConnections(){
      motorDriverCardIds.size()         != nMotors ||
      motorDriverCardConfigFiles.size() != nMotors)
   {
-    std::cout << "!!! Terminating the server!" << std::endl
-              << "A mismatch of dimensions in the MotorDriver configuration provided by" << serverConfigFile
-              << "has been detected" << std::endl;
-    exit(1);
+    std::stringstream msg{"A mismatch of dimensions in the MotorDriver configuration provided by "};
+    msg << serverConfigFile;
+    terminateServer(msg.str());
   }
 
   // Set up modules for each motor
@@ -148,18 +149,21 @@ void StepperMotorServer::defineConnections(){
           this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters));
     }
     else{
-      std::cout << "!!! Terminating the server!" << std::endl
-                << "Unknown motor type \"" << config.get<std::vector<std::string>>("motorType")[i]
-                << " requested in MotorDriver configuration provided by" << serverConfigFile << "." << std::endl;
-      exit(1);
+      std::stringstream msg;
+      msg << "Unknown motor type \"" << motorType[i]
+          << " requested in MotorDriver configuration provided by: "
+          << std::endl << serverConfigFile << "." << std::endl;
+
+      terminateServer(msg.str());
     }
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               << std::endl;
 
-    motorDriver[i]->findTag("CS").connectTo(cs["Motor"+std::to_string(i+1)]);
-    motorDriver[i]->flatten().findTag("TRIGGER").connectTo(trigger);
+//    motorDriver[i]->findTag("MOTOR").connectTo(cs["Motor"+std::to_string(i+1)]);
+    motorDriver[i]->flatten().findTag("MOT_TRIG").connectTo(trigger);
+    motorDriver[i]->connectTo(cs["Motor"+std::to_string(i+1)]);
 
     //motorDriver[i]->operator []("hwReadback")("actualCycleTime") >> cs["Motor" + std::to_string(i+1)]("AnotherEnable");
 
