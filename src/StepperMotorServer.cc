@@ -139,14 +139,11 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver according to the motor type
-    if(config.get<std::vector<std::string>>("motorType")[i] == basicLinearMotorType){
-      motorDriver.push_back(std::make_unique<BasicMotorDriver>(
-          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters));
+    if(motorType[i] == basicLinearMotorType){
+      motorParameters.motorType = ctk::StepperMotorType::BASIC;
     }
-
-    else if (config.get<std::vector<std::string>>("motorType")[i] == linearMotorWithReferenceType){
-      motorDriver.push_back(std::make_unique<LinearMotorDriver>(
-          this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters));
+    else if (motorType[i] == linearMotorWithReferenceType){
+      motorParameters.motorType = ctk::StepperMotorType::LINEAR;
     }
     else{
       std::stringstream msg;
@@ -157,25 +154,26 @@ void StepperMotorServer::defineConnections(){
       terminateServer(msg.str());
     }
 
+    motorDriver.emplace_back(this, "Motor"+std::to_string(i+1), "Driver of motor "+std::to_string(i+1), motorParameters);
+
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               << std::endl;
 
 //    motorDriver[i]->findTag("MOTOR").connectTo(cs["Motor"+std::to_string(i+1)]);
-    motorDriver[i]->flatten().findTag("MOT_TRIG").connectTo(trigger);
-    motorDriver[i]->connectTo(cs["Motor"+std::to_string(i+1)]);
+    motorDriver[i].flatten().findTag("MOT_TRIG").connectTo(trigger);
+    motorDriver[i].connectTo(cs["Motor"+std::to_string(i+1)]);
 
-    //motorDriver[i]->operator []("hwReadback")("actualCycleTime") >> cs["Motor" + std::to_string(i+1)]("AnotherEnable");
 
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), motorParameters);
-      motorDriver[i]->flatten().findTag("DUMMY").connectTo(motorDummy[i]);
+      motorDriver[i].flatten().findTag("DUMMY").connectTo(motorDummy[i]);
     }
   }
 
   // Document module structure and connections
-  motorDriver[0]->dumpGraph("motorDriverModuleGraph0.dot");
-  motorDriver[1]->dumpGraph("motorDriverModuleGraph1.dot");
+  motorDriver[0].dumpGraph("motorDriverModuleGraph0.dot");
+  motorDriver[1].dumpGraph("motorDriverModuleGraph1.dot");
 
   dumpConnectionGraph();
 

@@ -35,8 +35,7 @@ struct MotorDummy : public ctk::ApplicationModule {
           mtca4u::MotorDriverCardFactory::instance().createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)->getMotorControler(dp.driverId)))
       {};
 
-    //MotorDriverParameters _dp;
-    boost::shared_ptr<mtca4u::MotorControlerDummy> _motorControlerDummy;
+  boost::shared_ptr<mtca4u::MotorControlerDummy> _motorControlerDummy;
 
 
   ctk::ScalarPushInput<int32_t> trigger{this, "dummyMotorTrigger", "", "Triggers movement of the dummy motor"};

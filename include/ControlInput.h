@@ -93,7 +93,7 @@ public:
 
   ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor);
 
-  virtual ~ControlInputHandler() {}
+  //virtual ~ControlInputHandler() {}
 
   virtual void prepare() override;
 

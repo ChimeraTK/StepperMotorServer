@@ -30,7 +30,7 @@ struct StepperMotorServer : ctk::Application{
   Trigger trigger{this, "trigger", ""};
   Timer<std::chrono::milliseconds> timer{this, "TIMER", ""};
 
-  std::vector<std::unique_ptr<ctk::ModuleGroup>> motorDriver;
+  std::vector<MotorDriver> motorDriver;
   std::vector<MotorDummy> motorDummy;
 
   ctk::ControlSystemModule cs;

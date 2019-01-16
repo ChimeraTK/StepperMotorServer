@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="171,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="201,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
 <DOOCSToggleButton name="resetErrorButton" bounds="686,70,81,20"><adr>///controlInput.resetError</adr><textON>Reset</textON><textOFF>Reset</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSLabel name="Label35" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label26" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
@@ -52,10 +52,8 @@
 <DOOCSLabel name="Label17" bounds="425,250,98,20"><text>Move rel.</text></DOOCSLabel>
 <DOOCSValue name="Value16" bounds="849,630,82,20"><adr>///readback.currentLimit.userValue</adr></DOOCSValue>
 <DOOCSLabel name="Label16" bounds="588,630,98,20"><text>Current Limit [A]</text></DOOCSLabel>
-<DOOCSValue name="Value15" bounds="849,730,99,20"><adr>///readback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label15" bounds="653,710,180,20"><text>HW readback time [ms]</text></DOOCSLabel>
+<DOOCSLabel name="Label15" bounds="653,710,180,20"><text>Readback time [ms]</text></DOOCSLabel>
 <DOOCSValue name="Value14" bounds="849,710,99,20"><adr>///readback.actualReceiveTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision></DOOCSValue>
-<DOOCSLabel name="Label14" bounds="653,730,180,20"><text>SW readback time [ms]</text></DOOCSLabel>
 <DOOCSLabel name="Label13" bounds="784,310,98,20"><text>Decoder position</text></DOOCSLabel>
 <DOOCSValue name="Value13" bounds="98,490,114,20"><adr>///readback.positiveEndSwitch.positionInSteps</adr></DOOCSValue>
 <DOOCSValue name="Value12" bounds="98,440,98,20"><adr>///readback.negativeEndSwitch.positionInSteps</adr></DOOCSValue>
@@ -96,5 +94,5 @@
 <DOOCSDial name="Dial1" bounds="523,190,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="425,190,82,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAADxUlEQVR42u2dyUsjQRjF/aM9zW2uA7lIDgkiioiYuIsJcUHjkhVhxP9hznORmREHauYVlERNurs62uuv4NGdlhRtPb9X31JVLnS7XQPSx4Kabh4eHrzx/6uvEKePMiFsvGaSsb29bU5PT02n0zGHh4dmf3/fHB0dvet8spVxgDU2GxsbdnyikOGaFxkgFctBpjIvUzK/4+NjK1MrKytmZ2fHStekVJVdpjQe6+vr5vb2NjIZyFQZZKqoCGubm5vJkrG3t2e2trasKQZ1cHd3VzgyNNhheCtVkvWTkxMr42dnZ7HGCstApoAXGQpiZG7C0tLSy70gD0vQfRFlCssAkAEZIDoZn9HkDi4uLjLovmRo0KL42r5IioxpOaAv3+oWXyt1MxqNLPr9vun1eubm5sZcXV3ZtMZwOLRX/XwwGJjxeIxlzEKr1bKenNLWCrja7bbFwcGBfT4rB+TIEIL6v7+/j/wuu7u75uLiwv5uCvjkXdZqNVt6wDKYwPOVW3r882wefz+bX09/7fXn45N9Xq/Xs0vGW92VeTstlcZKS3WVrib5wsqZSQ6cNEieLi8v55LZzvcfL2T4BLG+Aa/e20nrtPxVIBmTuhumtQCZKr5M5T3OmEemfOArU5KooJIE3hQRODJVCMtYXl62XpSCLXkkSvVfX1+nIlO+iO1NAWQKmSraBJ5VmYrlTQFkCjKIM+Kj0WhYr0ie3eSaqWazGSuljmVgGcVAIukQQNYWMiADMtgdFUaGVjsoEnWbK52rpmScVmO4BNesJe9RSqa+/Yft9sEyQP7JiBufQEZKO4KCdglBBsjeuqmk6wya6LNSZ0iFDHk5WhSm9abTvJio4f+s8qJPEwlxF5chUyBZMqL+dYYlxACWwQTOBD7HBK4NJ0pVMIEjU8gUEziWASAjuw5HKclQXWWyduLqKjqqSLtp03I4vItLeq41QXqmo/L02a0Ix5qQKcgAH7umKjBrO2/HAMuAjDxB29BcykeOhzuHRJ+r1ao90CUzMuVeFJnCMgj6ykSGO1LcSZM7l7ZSqbyTqFSDPpAzmcrrTtLckaHjtt02KKU7pqU6PmInadjmdMhgMJAp8ElkRJWpLFYC5WWdn59bWZZEKwCUhCrdHicQxJvCMoohU66WI6tQHKJajv4nhu5lLbIcZy2rq6v2GmQxiVhGVs/lwJsqWCk2d5YBmDPKR4YibrfIQGao+7W1tVcpdSJw5gzIQKaIwCGDwYAMABmQASADMgBkQAaADMgAkAEZADIgg8GADAAZkAEikUHLTvsH9RAlAuFCvtwAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAADvElEQVR42u2dyUsjQRjF/aM9zW2uA7lIDgkSlBBETVzREBfikk1FmOD/MOe5yMyIAzXzCkqiJt1dHe0tv4JHd1pStPX8Xn1LVbl0eXlpQPpYUtPNw8ODN/5/9RXi9LFICBuvmWQ0m01zenpqOp2OOTg4MHt7e+bw8PBd55NtEQdYY9NoNOz4RCHDNS8yQCqWg0xlXqaOjo6sRNVqNdNqtaxsIVPvpbxer5t+vx+ZDGRqEWSqqAhrGxsbyZKxu7trNjc3rSkGdXB/f184MjTYYXgrVfKqTk5OrJSfnZ3FGissA5kCXmQoiJG5CSsrKy/3grwsQfdFlCksA0AGZIDoZHxGkzu4vLzMoPuSoUGL4mv7IikypuWAvnyrWnwtVc3t7a3FcDg0g8HA9Ho9c3V1ZdMaNzc39qqfj0Yjc3d3h2XMwvHxsfXklLZWwNVuty329/ft81k5IEeGENT/eDyO/C47Ozum2+3a300Bn7zLSqViSw9YBhN4vnJLj3+ezePvZ/Pr6a+9/nx8ss+r1Wp2yXiruzJvp6XSWGmprtLVJF9YOTPJgZMGydPFxcVcMtv5/uOFDJ8g1jfg1Xs7aZ2WvwokY1J3w7QWIFPFl6m8xxnzyJQPfGVKEhVUksCbIgJHpgphGaurq9aLUrAlj0Sp/uvr61RkyhexvSmATCFTRZvAsypTsbwpgExBBnFGfGxtbVmvSJ7d5Jqp7e3tWCl1LAPLKAYSSYcAsraQARmQwe6oMDK02kGRqNtc6Vw1JeO0GsMluGYteY9SMvXtP2y3D5YB8k9G3PgEMlLaERS0SwgyQPbWTSVdZ9BEn5U6QypkyMvRojCtN53mxUQN/2eVF32aSIi7uAyZAsmSEfWvMywhBrAMJnAm8DkmcG04UaqCCRyZQqaYwLEMABnZdTgWkgzVVSZrJ66uoqOKtJs2LYfDu7ik51oTpGc6Lk+f3YpwrAmZggzwsWuqArO283YMsAzIyBO0Dc2lfOR4uHNI9LlcLtsDXTIjU+5FkSksg6Bvkchwx4o7aXLn0pZKpXcSlWrQB3ImU3ndSZo7MnTcttsGpXTHtFTHR+wkDducDhkMBjIFPomMqDKVxUqgvKzz83Mry5JoBYCSUKXb4wSCeFNYRjFkyjkvikFUx9H/w9C9LEVW4yxlbW3NXsOsJRHLyOq5HHhTADIgA9c2WTIUcbtFBpqkdL++vv4qpU4EjkxBBjJFBA4ZDAZkAMiADAAZkAEgAzIAZEAGgAzIAJABGQwGZADIgAwQiQxadto/UzMrvA3TEuEAAAAASUVORK5CYII=</thumbnail>
 </jdddPanel>
