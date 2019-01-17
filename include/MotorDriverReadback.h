@@ -108,7 +108,9 @@ public:
 
   ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
-  ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW", {"MOT_TRIG"}};
+  //ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW", {"MOT_TRIG"}};
+  ctk::ScalarPushInput<uint64_t> trigger{this, "tick", "", "Trigger to initiate reading from HW", {"MOT_TRIG"}};
+
 
   // Diagnostics
   ctk::ScalarOutput<float> actualCycleTime{this, "actualCycleTime", "ms", "Actual cycle time by which the HW is being read", {"MOT_DIAG"}};

@@ -68,11 +68,12 @@ void StepperMotorServer::defineConnections(){
 
 
   // Setup poll trigger
-  config("cycleTime") >> timer.timeout;
-  timer.tick >> trigger.tick;
-  cs["Timer"]("updateOnce") >> trigger.forceUpdate;
-  config("cycleTimeEnable") >> trigger.automaticUpdate;
-  trigger.countdown >> cs["Timer"]("countdown");
+//  config("cycleTime") >> timer.timeout;
+  config("cycleTimeMs") >> trig("period");
+  //timer.tick >> trigger.tick;
+  //cs["Timer"]("updateOnce") >> trigger.forceUpdate;
+  //config("cycleTimeEnable") >> trigger.automaticUpdate;
+  //trigger.countdown >> cs["Timer"]("countdown");
 
   // Publish configuration
   config.connectTo(cs["Configuration"]);
@@ -160,11 +161,6 @@ void StepperMotorServer::defineConnections(){
               << " on device " << motorDriverCardDeviceNames[i] << ". Configuration file: " << motorDriverCardConfigFiles[i]
               << std::endl;
 
-//    motorDriver[i]->findTag("MOTOR").connectTo(cs["Motor"+std::to_string(i+1)]);
-    motorDriver[i].flatten().findTag("MOT_TRIG").connectTo(trigger);
-    motorDriver[i].connectTo(cs["Motor"+std::to_string(i+1)]);
-
-
     if(useDummyMotors){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), motorParameters);
       motorDriver[i].flatten().findTag("DUMMY").connectTo(motorDummy[i]);
@@ -174,6 +170,10 @@ void StepperMotorServer::defineConnections(){
   // Document module structure and connections
   motorDriver[0].dumpGraph("motorDriverModuleGraph0.dot");
   motorDriver[1].dumpGraph("motorDriverModuleGraph1.dot");
+
+  findTag("MOT_TRIG").flatten().connectTo(trig);
+  findTag("MOTOR|MOT_DIAG").connectTo(cs);
+
 
   dumpConnectionGraph();
 
