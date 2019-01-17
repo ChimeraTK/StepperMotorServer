@@ -31,8 +31,8 @@
     <value i="1" v="0.0003125"/>
   </variable>
   <variable name="encoderUnitToStepsRatio" type="double">
-    <value i="0" v="1000000.0"/>
-    <value i="1" v="1000000.0"/>
+    <value i="0" v="0.000001"/>
+    <value i="1" v="0.000001"/>
   </variable>
   <variable name="userPositionUnit" type="string">
     <value i="0" v="1 mm"/>
