@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="201,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="206,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
 <DOOCSToggleButton name="resetErrorButton" bounds="686,70,81,20"><adr>///controlInput.resetError</adr><textON>Reset</textON><textOFF>Reset</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSLabel name="Label35" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label26" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
@@ -64,7 +64,7 @@
 <DOOCSToggleButton name="ToggleButton2" bounds="49,230,212,20"><adr>///controlInput.startMotor</adr><textON>Start</textON><textOFF>Start</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSCheckBox name="CheckBox1" bounds="81,200,197,20"><adr>///controlInput.enableAutostart</adr><text>Autostart</text></DOOCSCheckBox>
 <DOOCSValue name="Value11" bounds="147,100,457,20"><adr>///controlInput.userMessage</adr></DOOCSValue>
-<DOOCSLabel name="Label11" bounds="49,100,163,20"><text>User Message</text></DOOCSLabel>
+<DOOCSLabel name="Label11" bounds="49,100,735,20"><text>User Message</text></DOOCSLabel>
 <DOOCSValue name="Value10" bounds="784,220,131,20"><adr>///readback.position.actualValue</adr></DOOCSValue>
 <DOOCSValue name="Value9" bounds="408,490,82,20"><adr>///readback.swLimits.maxPositionInSteps</adr></DOOCSValue>
 <DOOCSValue name="Value8" bounds="408,440,98,20"><adr>///readback.swLimits.minPositionInSteps</adr></DOOCSValue>

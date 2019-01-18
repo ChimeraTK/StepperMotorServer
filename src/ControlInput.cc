@@ -81,13 +81,12 @@ void ControlInputHandler::mainLoop() {
 
     auto changedVarId = inputGroup.readAny();
 
-  // FIXME This is not thread-safe as the call to isSystemIdle and the funcMap are not atomic
     //FIXME Keep this only as long as we rely on the dummy for tests
     try{
       funcMap.at(changedVarId)();
     }
     catch(mtca4u::MotorDriverException &e){
-      _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Calling motor driver threw an exception: " + std::string(e.what());
+      _controlInput.userMessage = "Exception: " + std::string(e.what());
     }
 
     _controlInput.dummyMotorStop = _controlInput.stopMotor || _controlInput.emergencyStopMotor;
@@ -118,21 +117,11 @@ void ControlInputHandler::startCallback(){
 }
 
 void ControlInputHandler::setTargetPositionCallback(){
-  if(_motor->isSystemIdle()){
-    _motor->setTargetPosition(_controlInput.positionSetpoint);
-  }
-  else{
-    _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Requested change of target position while motor is not in IDLE state.";
-  }
+  _motor->setTargetPosition(_controlInput.positionSetpoint);
 }
 
 void ControlInputHandler::setTargetPositionInStepsCallback(){
-  if(_motor->isSystemIdle()){
-    _motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps);
-  }
-  else{
-    _controlInput.userMessage = "WARNING: MotorDriver::ControlInput: Requested change of target position while motor is not in IDLE state.";
-  }
+  _motor->setTargetPositionInSteps(_controlInput.positionSetpointInSteps);
 }
 
 
