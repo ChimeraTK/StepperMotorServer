@@ -174,6 +174,9 @@ void StepperMotorServer::defineConnections(){
   findTag("MOT_TRIG").flatten().connectTo(trig);
   findTag("MOTOR|MOT_DIAG").connectTo(cs);
 
+  testModule.findTag("MOTOR").connectTo(findTag("MOTOR"));
+  testModule.findTag("CS").connectTo(cs["testModule"]);
+
 
   dumpConnectionGraph();
 

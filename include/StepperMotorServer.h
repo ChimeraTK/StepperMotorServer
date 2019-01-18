@@ -14,7 +14,7 @@
 
 #include "MotorDriver.h"
 #include "MotorDummy.h"
-//#include "Trigger.h"
+#include "testModule.h"
 
 #include <memory>
 
@@ -24,7 +24,7 @@ namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : ctk::Application{
   StepperMotorServer() : Application("CTK_StepperMotorServer") {}
-  //~StepperMotorServer() override { shutdown(); }
+  ~StepperMotorServer() override { shutdown(); }
 
   ctk::ConfigReader config{this, "Configuration", serverConfigFile};
 
@@ -34,6 +34,8 @@ struct StepperMotorServer : ctk::Application{
 
   std::vector<MotorDriver> motorDriver;
   std::vector<MotorDummy> motorDummy;
+
+  TestModule testModule{this, "testModule", ""};
 
   ctk::ControlSystemModule cs;
   void defineConnections() override;
