@@ -106,7 +106,7 @@ private:
   ControlInput _controlInput;
   CalibrationCommands _calibrationCommands;
 
-  // Callbacks for the BasiMOTORtepperMotor
+  // Callbacks for the BasiStepperMotor
   void enableCallback();
   void disableCallback();
   void startCallback();

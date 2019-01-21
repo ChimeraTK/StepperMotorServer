@@ -121,7 +121,8 @@ bool ReadbackHandler::motorIsDummy(){
   try {
     // Throws if dummy is used
     _motor->getSafeCurrentLimit();
-  } catch (ctk::MotorDriverException) {
+  } catch (ctk::StepperMotorException &e) {
+    if(e.getID() == ctk::StepperMotorException::FEATURE_NOT_AVAILABLE)
     isDummy = true;
   }
   return isDummy;
