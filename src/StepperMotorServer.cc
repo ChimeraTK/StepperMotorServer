@@ -69,11 +69,11 @@ void StepperMotorServer::defineConnections(){
 
   // Setup poll trigger
 //  config("cycleTime") >> timer.timeout;
-  config("cycleTimeMs") >> trig("period");
+  config("cycleTimeMs") >> trigger("period");
   //timer.tick >> trigger.tick;
   //cs["Timer"]("updateOnce") >> trigger.forceUpdate;
   //config("cycleTimeEnable") >> trigger.automaticUpdate;
-  //trigger.countdown >> cs["Timer"]("countdown");
+  trigger.tick >> cs["Timer"]("countdown");
 
   // Publish configuration
   config.connectTo(cs["Configuration"]);
@@ -171,11 +171,13 @@ void StepperMotorServer::defineConnections(){
   motorDriver[0].dumpGraph("motorDriverModuleGraph0.dot");
   motorDriver[1].dumpGraph("motorDriverModuleGraph1.dot");
 
-  findTag("MOT_TRIG").flatten().connectTo(trig);
+//  testModule.findTag("MOTOR").connectTo(motorDriver[0].readbackHandler);
+  testModule.findTag("MOTOR").flatten().connectTo(motorDriver[0].findTag("MOTOR").flatten());
+
+  findTag("MOT_TRIG").flatten().connectTo(trigger);
   findTag("MOTOR|MOT_DIAG").connectTo(cs);
 
-  testModule.findTag("MOTOR").connectTo(findTag("MOTOR"));
-  testModule.findTag("CS").connectTo(cs["testModule"]);
+  testModule.findTag("CS").connectTo(cs);
 
 
   dumpConnectionGraph();

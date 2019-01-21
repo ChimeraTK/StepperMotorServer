@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="206,5,980,980"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<DOOCSValue name="Value4" bounds="669,220,163,20"><adr>///readback.position.targetValue</adr></DOOCSValue>
+<DOOCSIf name="ErrorMode" bounds="849,100,110,20"><adr>//readback.status.errorId</adr>
+<DOOCSSwitchCase name="X = 4" bounds="0,0,110,20"><highCase>4</highCase>
+<DOOCSRect name="Rect1" bounds="0,0,110,20"><fillColor>255,0,0</fillColor></DOOCSRect>
+<DOOCSLabel name="Label8" bounds="49,0,60,20"><text>MOVE INTERRUPTED</text><textColor>255,255,255</textColor></DOOCSLabel>
+</DOOCSSwitchCase>
+<DOOCSIfCase name="X = 0" bounds="0,0,110,20"><compareValue>0</compareValue>
+<DOOCSLabel name="Label8" bounds="25,0,60,20"><text>NO ERROR</text><textColor>255,255,255</textColor></DOOCSLabel>
+<DOOCSRect name="Rect1" bounds="0,0,110,20"><fillColor>255,0,0</fillColor></DOOCSRect>
+</DOOCSIfCase>
+<DOOCSIfCase name="else" bounds="0,0,110,20">
+<DOOCSLabel name="Label8" bounds="30,0,60,20"><text>ENABLED</text><bgColor>0,255,0</bgColor></DOOCSLabel>
+<DOOCSRect name="Rect1" bounds="0,0,110,20"><fillColor>0,255,0</fillColor></DOOCSRect>
+</DOOCSIfCase>
+</DOOCSIf>
 <DOOCSToggleButton name="resetErrorButton" bounds="686,70,81,20"><adr>///controlInput.resetError</adr><textON>Reset</textON><textOFF>Reset</textOFF><pushButton>true</pushButton></DOOCSToggleButton>
 <DOOCSLabel name="Label35" bounds="898,280,49,20"><text>mm</text></DOOCSLabel>
 <DOOCSLabel name="Label26" bounds="898,250,49,20"><text>steps</text></DOOCSLabel>
@@ -94,5 +109,5 @@
 <DOOCSDial name="Dial1" bounds="523,190,131,20"><adr>///controlInput.positionSetpointInSteps</adr><precision>2</precision></DOOCSDial>
 <DOOCSLabel name="Label1" bounds="425,190,82,20"><text>Setpoint</text></DOOCSLabel>
 </DOOCSLayeredPane>
-<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAADvElEQVR42u2dyUsjQRjF/aM9zW2uA7lIDgkSlBBETVzREBfikk1FmOD/MOe5yMyIAzXzCkqiJt1dHe0tv4JHd1pStPX8Xn1LVbl0eXlpQPpYUtPNw8ODN/5/9RXi9LFICBuvmWQ0m01zenpqOp2OOTg4MHt7e+bw8PBd55NtEQdYY9NoNOz4RCHDNS8yQCqWg0xlXqaOjo6sRNVqNdNqtaxsIVPvpbxer5t+vx+ZDGRqEWSqqAhrGxsbyZKxu7trNjc3rSkGdXB/f184MjTYYXgrVfKqTk5OrJSfnZ3FGissA5kCXmQoiJG5CSsrKy/3grwsQfdFlCksA0AGZIDoZHxGkzu4vLzMoPuSoUGL4mv7IikypuWAvnyrWnwtVc3t7a3FcDg0g8HA9Ho9c3V1ZdMaNzc39qqfj0Yjc3d3h2XMwvHxsfXklLZWwNVuty329/ft81k5IEeGENT/eDyO/C47Ozum2+3a300Bn7zLSqViSw9YBhN4vnJLj3+ezePvZ/Pr6a+9/nx8ss+r1Wp2yXiruzJvp6XSWGmprtLVJF9YOTPJgZMGydPFxcVcMtv5/uOFDJ8g1jfg1Xs7aZ2WvwokY1J3w7QWIFPFl6m8xxnzyJQPfGVKEhVUksCbIgJHpgphGaurq9aLUrAlj0Sp/uvr61RkyhexvSmATCFTRZvAsypTsbwpgExBBnFGfGxtbVmvSJ7d5Jqp7e3tWCl1LAPLKAYSSYcAsraQARmQwe6oMDK02kGRqNtc6Vw1JeO0GsMluGYteY9SMvXtP2y3D5YB8k9G3PgEMlLaERS0SwgyQPbWTSVdZ9BEn5U6QypkyMvRojCtN53mxUQN/2eVF32aSIi7uAyZAsmSEfWvMywhBrAMJnAm8DkmcG04UaqCCRyZQqaYwLEMABnZdTgWkgzVVSZrJ66uoqOKtJs2LYfDu7ik51oTpGc6Lk+f3YpwrAmZggzwsWuqArO283YMsAzIyBO0Dc2lfOR4uHNI9LlcLtsDXTIjU+5FkSksg6Bvkchwx4o7aXLn0pZKpXcSlWrQB3ImU3ndSZo7MnTcttsGpXTHtFTHR+wkDducDhkMBjIFPomMqDKVxUqgvKzz83Mry5JoBYCSUKXb4wSCeFNYRjFkyjkvikFUx9H/w9C9LEVW4yxlbW3NXsOsJRHLyOq5HHhTADIgA9c2WTIUcbtFBpqkdL++vv4qpU4EjkxBBjJFBA4ZDAZkAMiADAAZkAEgAzIAZEAGgAzIAJABGQwGZADIgAwQiQxadto/UzMrvA3TEuEAAAAASUVORK5CYII=</thumbnail>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAAD7ElEQVR42u2dy0tbQRjF3bvU/8V/zFV33RayERcGCYpo8K2xKtEEjY88DEJF6KKLFjdddxPaioVpzsBINI/7iN7ce/MbONybKxmuc/zOfI+ZcaJSqRgwekyo6eb+/j4w2l99gTB9jBO8xqsvGVtbW+b09NQUi0VTKBTM3t6eOTg46Oq8s43jAGtsVldX7fj4IcO1QGSAkVgOMhV7mTo8PLQSlcvlzPb2tpUtZKpbyldWVsz19bVvMpCpcZCptMKr5fP5aMnY3d016+vr1hQHdXB7e5s6MjTYXngtVfKqTk5OrJSXSqVQY4VlIFPpRmltzTy0J2g/+NwxkfclQ0GMzE2Ym5t7vhfkZQm6T6NMDYtyW96b7UH+Ojlp8X1qyuLH9HQXvs3MYBnIFICMRJPxHk3u4OzsLIMelAwNmh9fOyiiIqNXDujDp6zFx0zW3NzcWNRqNVOtVs3V1ZW5uLiwaY1Go2Gv+nm9XjfNZhPL6IejoyPrySltrYDr+PjYYn9/3z7vlwNyZAiD+r+7u/P9Ljs7O+bs7Mz+bgr45F0uLCzY0gOWwQSerNxS6++Taf15Mr8f/9nrr9ajfZ7NZuNLxmvdlXk7LZXGSkt1la5G+cLKmUkOnDRIns7Pz4eS2eKXn89kBAligwa8em8nrb3yVwPJ6NRdL60FyFT6ZSrpcUZcZUoSNagkgTdFBI5MpcIyFhcXrRelYEseiVL9l5eXbyZT71rnCOtNAWQKmUrbBB5XmQrlTQFkCjKIM8JjY2PDekXy7DrXTG1uboZKqWMZWEY6EEk6BJC1hQzIgAx2R3mRodUOikTd5krnqikZp9UYLsHVb8m7n5Jp0P69dvtgGSD5ZISNTyBjRDuCBu0SggwQv3VTUdcZNNHHpc4wEjLk5WhRmNab9vJi/Ib//cqLQZpICLtqA5kC0ZLh96/TKyEGsAwmcCbwISZwbThRqoIJHJlCppjAsQwAGfF1OMaSDNVVOmsnrq6io4q0m3ZUDkfg4pKea02Qnum4PH12K8KxJmQKMsDbrqkamLUdtmOAZUBGkqBtaC7lI8fDnUOiz/Pz8/ZAl9jIlHtRZArLIOgbJzLcseJOmty5tJlMpkuiRhr0gYTJVFJ3kiaODB237bZBKd3RK9XxFjtJvTanQwaDgUyBdyLDr0zFsRIoL6tcLltZlkQrAJSEKt0eJhDEm8Iy0iFTznlRDKI6jv4fhu5lKbIaZylLS0v26mUtkVhGXM/lwJsCkAEZuLbRkqGI2y0y0CSl++Xl5RcpdSJwZAoykCkicMhgMCADQAZkAMiADAAZkAEgAzIAZEAGgAzIYDAgA0AGZABfZNDi0/4DEOUJKbL67bQAAAAASUVORK5CYII=</thumbnail>
 </jdddPanel>
