@@ -78,6 +78,7 @@ void ControlInputHandler::mainLoop() {
   while(true){
 
     _controlInput.userMessage = "";
+    _controlInput.userWarning = 0;
 
     auto changedVarId = inputGroup.readAny();
 
@@ -87,6 +88,10 @@ void ControlInputHandler::mainLoop() {
     }
     catch(mtca4u::MotorDriverException &e){
       _controlInput.userMessage = "Exception: " + std::string(e.what());
+    }
+
+    if(std::string("").compare(_controlInput.userMessage)){
+      _controlInput.userWarning = 1;
     }
 
     _controlInput.dummyMotorStop = _controlInput.stopMotor || _controlInput.emergencyStopMotor;

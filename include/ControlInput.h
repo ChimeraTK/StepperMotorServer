@@ -65,6 +65,7 @@ struct ControlInput : public ctk::VariableGroup {
   ctk::ScalarPushInput<int32_t> enableFullStepping{this, "enableFullStepping", "", "Enables full-stepping mode of the motor driver, i.e., it will only stop on full steps", {"MOTOR"}};
 
   // Message output for feedback to the user
+  ctk::ScalarOutput<int32_t>        userWarning{this, "userWarning", "", "Warning flag, true when an invalid input has been issued.", {"MOTOR"}};
   ctk::ScalarOutput<std::string> userMessage{this, "userMessage", "", "Message for user notification from ControlInput module", {"MOTOR"}};
 
   // Values triggering the dummy if needed
