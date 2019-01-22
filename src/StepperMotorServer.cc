@@ -171,14 +171,8 @@ void StepperMotorServer::defineConnections(){
   motorDriver[0].dumpGraph("motorDriverModuleGraph0.dot");
   motorDriver[1].dumpGraph("motorDriverModuleGraph1.dot");
 
-//  testModule.findTag("MOTOR").connectTo(motorDriver[0].readbackHandler);
-  testModule.findTag("MOTOR").flatten().connectTo(motorDriver[0].findTag("MOTOR").flatten());
-
   findTag("MOT_TRIG").flatten().connectTo(trigger);
   findTag("MOTOR|MOT_DIAG").connectTo(cs);
-
-  testModule.findTag("CS").connectTo(cs);
-
 
   dumpConnectionGraph();
 

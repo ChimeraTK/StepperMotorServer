@@ -14,7 +14,6 @@
 
 #include "MotorDriver.h"
 #include "MotorDummy.h"
-#include "testModule.h"
 
 #include <memory>
 
@@ -34,8 +33,6 @@ struct StepperMotorServer : ctk::Application{
 
   std::vector<MotorDriver> motorDriver;
   std::vector<MotorDummy> motorDummy;
-
-  TestModule testModule{this, "testModule", ""};
 
   ctk::ControlSystemModule cs;
   void defineConnections() override;
