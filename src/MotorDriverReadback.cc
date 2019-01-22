@@ -70,8 +70,10 @@ void ReadbackHandler::readback(){
 
     status.isEnabled = _motor->getEnabled();
 
-    status.isCalibrated = _motor->isCalibrated() ? 1 : 0;
-    ctk::StepperMotorError error = _motor->getError();
+    auto calibMode = _motor->getCalibrationMode();
+    auto error = _motor->getError();
+
+    status.calibrationMode = static_cast<int>(calibMode);
     status.errorId = static_cast<int32_t>(error);
 
     status.isFullStepping   = _motor->isFullStepping();

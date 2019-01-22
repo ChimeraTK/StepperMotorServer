@@ -58,14 +58,14 @@ struct MotorStatus : public ctk::VariableGroup {
   using ctk::VariableGroup::VariableGroup;
 
   ctk::ScalarOutput<int> isEnabled{this, "isEnabled", "", "Motor current enable status", {"MOTOR"}};
-  ctk::ScalarOutput<int> isCalibrated{this, "isCalibrated", "", "Flag set to true if the motor is calibrated",{"MOTOR"}};
+  ctk::ScalarOutput<int> calibrationMode{this, "calibrationMode", "", "Current calibration mode", {"MOTOR"}};
   ctk::ScalarOutput<int> isIdle{this, "isIdle", "", "Flags if system is idle and a movement or calibration can be started", {"MOTOR"}};
 
   ctk::ScalarOutput<std::string> state{this, "state", "", "State of the motor driver", {"MOTOR"}};
-  ctk::ScalarOutput<int32_t> errorId{this, "errorId", "", "Error ID of the motor driver", {"MOTOR"}};
+  ctk::ScalarOutput<int> errorId{this, "errorId", "", "Error ID of the motor driver", {"MOTOR"}};
 
-  ctk::ScalarOutput<int32_t> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"MOTOR"}};
-  ctk::ScalarOutput<int32_t> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"MOTOR"}};
+  ctk::ScalarOutput<int> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"MOTOR"}};
+  ctk::ScalarOutput<int> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"MOTOR"}};
 };
 
 /**
