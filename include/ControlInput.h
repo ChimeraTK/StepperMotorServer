@@ -29,6 +29,15 @@ namespace ctk = ChimeraTK;
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
 
 
+/// Calibration related inputs, only available for motors with HW end reference switches
+struct CalibrationCommands: public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"MOTOR"}};
+  ctk::ScalarPushInput<int32_t> determineTolerance{this, "determineTolerance", "", "Determines tolerance of the end switch positions", {"MOTOR"}};
+};
+
 /// Motor control data
 struct MotorControl : public ctk::VariableGroup {
 
@@ -36,6 +45,11 @@ struct MotorControl : public ctk::VariableGroup {
 
   ctk::ScalarPushInput<int> enable{this, "enable", "", "Enable the motor"};
   ctk::ScalarPushInput<int> disable{this, "disable", "", "Disable the motor"};
+  ctk::ScalarPushInput<int> start{this, "start", "", "Start the motor"};
+  ctk::ScalarPushInput<int> calibrate{this, "calibDoNotUSE", "", "Calibration input dummy, do not use!"};
+
+  CalibrationCommands calibrationCtrl;
+
   ctk::ScalarPushInput<int> stop{this, "stop", "", "Stop the motor"};
   ctk::ScalarPushInput<int> emergencyStop{this, "emergencyStop", "", "Emergency stop motor"};
   ctk::ScalarPushInput<int> resetError{this, "resetError", "", "Reset error state"};
@@ -44,6 +58,36 @@ struct MotorControl : public ctk::VariableGroup {
   ctk::ScalarPushInput<int> enableAutostart{this, "enableAutostart", "", "Sets the autostart flag of the motor driver"};
 };
 
+///  Position setpoints
+struct PositionSetpoint : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarPushInput<int>   positionInSteps{this, "positionInSteps", "steps", "Motor position setpoint"};
+  ctk::ScalarPushInput<float> position{this, "position", "", "Motor position setpoint"};
+
+  ctk::ScalarPushInput<int> relativePositionInSteps{
+    this, "relativePositionInSteps", "", "Initiates a movement relative to the current position"};
+  ctk::ScalarPushInput<float> relativePosition{
+    this, "relativePosition", "", "Initiates a movement relative to the current position"};
+};
+
+
+/// Contains settings to define and shift the position reference
+struct ReferenceSettings : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarPushInput<float> position{this, "position", "", "Writing to this value sets the actual motor position to a given reference"};
+  ctk::ScalarPushInput<int> positionInSteps{this, "positionInSteps", "", "Writing to this value sets the actual motor position to a given reference"};
+
+  ctk::ScalarPushInput<int32_t> encoderPosition{this, "encoderReferencePosition", "", "Writing to this value sets the actual encoder position to a given reference"};
+
+  ctk::ScalarPushInput<int>   axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point."};
+  ctk::ScalarPushInput<float> axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point."};
+};
+
+/// Control of the software limits
 struct SoftwareLimitCtrl : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
@@ -55,53 +99,32 @@ struct SoftwareLimitCtrl : public ctk::VariableGroup {
   ctk::ScalarPushInput<int> minPositionInSteps{this, "minPositionInSteps", "", "Negative SW position limit"};
 };
 
-
-struct ControlInput : public ctk::VariableGroup {
+/// Notifications to the user
+struct Notification : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-
-  ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "steps", "Motor position setpoint", {"MOTOR"}};
-  ctk::ScalarPushInput<float>   positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [user-defined unit]", {"MOTOR"}};
-
-  ctk::ScalarPushInput<int32_t> startMotor{this, "startMotor", "", "Start the motor", {"MOTOR"}};
-
-  ctk::ScalarPushInput<int32_t> moveRelativeInSteps{this, "moveRelativeInSteps", "",
-                                                    "Initiates a movement relative to the current position. Receives the position change in steps.", {"MOTOR"}};
-  ctk::ScalarPushInput<float>   moveRelative{this, "moveRelative", "",
-                                             "Initiates a movement relative to the current position. Receives the position change in the user-defined unit.", {"MOTOR"}};
-
-  ctk::ScalarPushInput<float>   referencePosition{this, "referencePosition", "", "Writing to this value sets the actual motor position to a given reference", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> referencePositionInSteps{this, "referencePositionInSteps", "", "Writing to this value sets the actual motor position to a given reference", {"MOTOR"}};
-
-  ctk::ScalarPushInput<int32_t> encoderReferencePosition{this, "encoderReferencePosition", "", "Writing to this value sets the actual encoder position to a given reference", {"MOTOR"}};
-
-  ctk::ScalarPushInput<int32_t> axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point.", {"MOTOR"}};
-  ctk::ScalarPushInput<float>   axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point.", {"MOTOR"}};
-
-
-
-  ctk::ScalarPushInput<double> currentLimit{this, "currentLimit", "A", "User current limit for the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<double> speedLimit{this, "speedLimit", "", "User speed limit for the motor", {"MOTOR"}};
-
-
-  // Message output for feedback to the user
-  ctk::ScalarOutput<int32_t>        userWarning{this, "userWarning", "", "Warning flag, true when an invalid input has been issued.", {"MOTOR"}};
-  ctk::ScalarOutput<std::string> userMessage{this, "userMessage", "", "Message for user notification from ControlInput module", {"MOTOR"}};
-
-  // Values triggering the dummy if needed
-  ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input", {"DUMMY"}};
-  ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor", {"DUMMY"}};
-
+  ctk::ScalarOutput<int>         hasMessage{this, "hasMessage", "", "Warning flag, true when an invalid input has been issued."};
+  ctk::ScalarOutput<std::string> message{this, "essage", "", "Message for user notification from ControlInput module"};
 };
 
-
-struct CalibrationCommands: public ctk::VariableGroup {
+/// User-definable limits
+struct UserLimits : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-  ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> determineTolerance{this, "determineTolerance", "", "Determines tolerance of the end switch positions", {"MOTOR"}};
+  ctk::ScalarPushInput<double> current{this, "current", "A", "User current limit for the motor"};
+  ctk::ScalarPushInput<double> speed{this, "speed", "", "User speed limit for the motor"};
+};
+
+/// Signals triggering the dummy motor
+struct DummySignals : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarOutput<int32_t> dummyMotorTrigger{this, "dummyMotorTrigger", "", "Triggers the dummy motor module after writing to a control input"};
+  ctk::ScalarOutput<int32_t> dummyMotorStop{this, "dummyMotorStop","", "Stops the dummy motor"};
+
 };
 
 
@@ -124,17 +147,20 @@ private:
   virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
   virtual void appendCalibrationToMap();
   funcmapT funcMap;
-  ControlInput _controlInput;
+
   MotorControl control{this, "control", "Control words of the motor", false, {"MOTOR"}};
+  PositionSetpoint positionSetpoint{this, "positionSetpoint", "Position setpoints", false, {"MOTOR"}};
+  UserLimits userLimits{this, "userLimts", "User-definable limits", false, {"MOTOR"}};
   SoftwareLimitCtrl swLimits{this, "swLimits", "Control data of SW limits", false, {"MOTOR"}};
+  ReferenceSettings referenceSettings{this, "referenceSettings", "Settings to define the position reference", false, {"MOTOR"}};
+  Notification notification{this, "notification", "User notification", false, {"MOTOR"}};
+  DummySignals dummySignals{this, "dummySignals", " Signals triggering the dummy motor", false, {"DUMMY"}};
   CalibrationCommands _calibrationCommands;
 
   // Callbacks for the BasiStepperMotor
   void enableCallback();
   void disableCallback();
   void startCallback();
-  void setTargetPositionCallback();
-  void setTargetPositionInStepsCallback();
 
   //Callbacks for the LinearStepperMotor
   void calibrateCallback();
