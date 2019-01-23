@@ -57,21 +57,21 @@ struct MotorStatus : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-  ctk::ScalarOutput<int> isEnabled{this, "isEnabled", "", "Motor current enable status", {"MOTOR"}};
-  ctk::ScalarOutput<int> calibrationMode{this, "calibrationMode", "", "Current calibration mode", {"MOTOR"}};
-  ctk::ScalarOutput<int> isIdle{this, "isIdle", "", "Flags if system is idle and a movement or calibration can be started", {"MOTOR"}};
+  ctk::ScalarOutput<int> isEnabled{this, "isEnabled", "", "Motor current enable status"};
+  ctk::ScalarOutput<int> calibrationMode{this, "calibrationMode", "", "Current calibration mode"};
+  ctk::ScalarOutput<int> isIdle{this, "isIdle", "", "Flags if system is idle and a movement or calibration can be started"};
 
-  ctk::ScalarOutput<std::string> state{this, "state", "", "State of the motor driver", {"MOTOR"}};
-  ctk::ScalarOutput<int> errorId{this, "errorId", "", "Error ID of the motor driver", {"MOTOR"}};
+  ctk::ScalarOutput<std::string> state{this, "state", "", "State of the motor driver"};
+  ctk::ScalarOutput<int> errorId{this, "errorId", "", "Error ID of the motor driver"};
 
-  ctk::ScalarOutput<int> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active.", {"MOTOR"}};
-  ctk::ScalarOutput<int> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active", {"MOTOR"}};
+  ctk::ScalarOutput<int> isFullStepping{this, "isFullStepping", "", "Flags if full-stepping mode of the driver is active."};
+  ctk::ScalarOutput<int> autostartEnabled{this, "autostartEnabled", "", "Flags if autostart mode is active"};
 };
 
 /**
  * Data for SW-defined position limits
  */
-struct SoftwareLimits : public ctk::VariableGroup {
+struct SoftwareLimitStat : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
@@ -122,7 +122,7 @@ public:
   Limit           speedLimit{this, "speedLimit", "Speed data", false, {"MOTOR"}};
   Limit           currentLimit{this, "currentLimit", "Current data", false, {"MOTOR"}};
   MotorStatus     status{this, "status", "Status data of the motor driver", false, {"MOTOR"}};
-  SoftwareLimits  swLimits{this, "swLimits", "Status data of SW limits", false, {"MOTOR"}};
+  SoftwareLimitStat  swLimits{this, "swLimits", "Status data of SW limits", false, {"MOTOR"}};
   ReferenceSwitch positiveEndSwitch;
   ReferenceSwitch negativeEndSwitch;
 

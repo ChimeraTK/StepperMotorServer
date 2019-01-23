@@ -21,24 +21,50 @@
 
 namespace ctk = ChimeraTK;
 
-
+/**
+ * A map between the TransferElementID of a PV and the associated
+ * function of the MotorDriverCard library. This allows to pass on
+ * the changed PV to the library by the ID returned from readAny().
+ */
 using funcmapT = std::map<ctk::TransferElementID, std::function<void(void)>>;
+
+
+/// Motor control data
+struct MotorControl : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarPushInput<int> enable{this, "enable", "", "Enable the motor"};
+  ctk::ScalarPushInput<int> disable{this, "disable", "", "Disable the motor"};
+  ctk::ScalarPushInput<int> stop{this, "stop", "", "Stop the motor"};
+  ctk::ScalarPushInput<int> emergencyStop{this, "emergencyStop", "", "Emergency stop motor"};
+  ctk::ScalarPushInput<int> resetError{this, "resetError", "", "Reset error state"};
+
+  ctk::ScalarPushInput<int> enableFullStepping{this, "enableFullStepping", "", "Enables full-stepping mode of the motor driver, i.e., it will only stop on full steps"};
+  ctk::ScalarPushInput<int> enableAutostart{this, "enableAutostart", "", "Sets the autostart flag of the motor driver"};
+};
+
+struct SoftwareLimitCtrl : public ctk::VariableGroup {
+
+  using ctk::VariableGroup::VariableGroup;
+
+  ctk::ScalarPushInput<int> enable{this, "enable", "", "Enable SW limits"};
+  ctk::ScalarPushInput<float> maxPosition{this, "maxPosition", "", "Positive SW position limit"};
+  ctk::ScalarPushInput<float> minPosition{this, "minPosition", "", "Negative SW position limit"};
+  ctk::ScalarPushInput<int> maxPositionInSteps{this, "maxPositionInSteps", "", "Positive SW position limit"};
+  ctk::ScalarPushInput<int> minPositionInSteps{this, "minPositionInSteps", "", "Negative SW position limit"};
+};
 
 
 struct ControlInput : public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-  ctk::ScalarPushInput<int32_t> enableMotor{this, "enable", "", "Enable the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> disableMotor{this, "disable", "", "Disable the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> stopMotor{this, "stopMotor", "", "Stop the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> emergencyStopMotor{this, "emergencyStopMotor", "", "Emergency stop motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> resetError{this, "resetError", "", "Reset error state", {"MOTOR"}};
+
   ctk::ScalarPushInput<int32_t> positionSetpointInSteps{this, "positionSetpointInSteps", "steps", "Motor position setpoint", {"MOTOR"}};
   ctk::ScalarPushInput<float>   positionSetpoint{this, "positionSetpoint", "", "Motor position setpoint [user-defined unit]", {"MOTOR"}};
 
   ctk::ScalarPushInput<int32_t> startMotor{this, "startMotor", "", "Start the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> enableAutostart{this, "enableAutostart", "", "Sets the autostart flag of the motor driver", {"MOTOR"}};
 
   ctk::ScalarPushInput<int32_t> moveRelativeInSteps{this, "moveRelativeInSteps", "",
                                                     "Initiates a movement relative to the current position. Receives the position change in steps.", {"MOTOR"}};
@@ -53,16 +79,11 @@ struct ControlInput : public ctk::VariableGroup {
   ctk::ScalarPushInput<int32_t> axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point.", {"MOTOR"}};
   ctk::ScalarPushInput<float>   axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point.", {"MOTOR"}};
 
-  ctk::ScalarPushInput<int32_t> enableSWPositionLimits{this, "enableSWPositionLimits", "", "Enable SW limits", {"MOTOR"}};
-  ctk::ScalarPushInput<float>   maxSWPositionLimit{this, "maxSWPositionLimit", "", "Positive SW position limit", {"MOTOR"}};
-  ctk::ScalarPushInput<float>   minSWPositionLimit{this, "minSWPositionLimit", "", "Negative SW position limit", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> maxSWPositionLimitInSteps{this, "maxSWPositionLimitInSteps", "", "Positive SW position limit", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> minSWPositionLimitInSteps{this, "minSWPositionLimitInSteps", "", "Negative SW position limit", {"MOTOR"}};
+
 
   ctk::ScalarPushInput<double> currentLimit{this, "currentLimit", "A", "User current limit for the motor", {"MOTOR"}};
   ctk::ScalarPushInput<double> speedLimit{this, "speedLimit", "", "User speed limit for the motor", {"MOTOR"}};
 
-  ctk::ScalarPushInput<int32_t> enableFullStepping{this, "enableFullStepping", "", "Enables full-stepping mode of the motor driver, i.e., it will only stop on full steps", {"MOTOR"}};
 
   // Message output for feedback to the user
   ctk::ScalarOutput<int32_t>        userWarning{this, "userWarning", "", "Warning flag, true when an invalid input has been issued.", {"MOTOR"}};
@@ -97,7 +118,6 @@ public:
   //virtual ~ControlInputHandler() {}
 
   virtual void prepare() override;
-
   virtual void mainLoop() override;
 
 private:
@@ -105,6 +125,8 @@ private:
   virtual void appendCalibrationToMap();
   funcmapT funcMap;
   ControlInput _controlInput;
+  MotorControl control{this, "control", "Control words of the motor", false, {"MOTOR"}};
+  SoftwareLimitCtrl swLimits{this, "swLimits", "Control data of SW limits", false, {"MOTOR"}};
   CalibrationCommands _calibrationCommands;
 
   // Callbacks for the BasiStepperMotor
@@ -122,37 +144,4 @@ private:
   std::shared_ptr<ctk::StepperMotor> _motor;
 
 }; /* class ControlInputHandler */
-
-
-/**
- * @class LinearMotorControlInputHandler
- * @brief Specialization of the ControlInputHandler for StepperMotorWithReference instances (i.e., linear motors with end switches).
- */
-//class LinearMotorControlInputHandler : public BasicControlInputHandler{
-//public:
-//  LinearMotorControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-//                                                                 std::shared_ptr<ctk::StepperMotor> motor)
-//    : BasicControlInputHandler(owner, name, description, motor),
-//      _motor{motor},
-//      _controlInput{this, "linearMotorControlInput", "Control inputs for a linear stepper motor with reference switches"}{};
-
-//  virtual ~LinearMotorControlInputHandler(){};
-
-//  virtual void prepare() override{
-//    BasicControlInputHandler::createFunctionMap(_motor);
-//    createFunctionMap(_motor);
-//  };
-
-//protected:
-//  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
-
-//  //Callbacks
-//  void calibrateCallback();
-//  void determineToleranceCallback();
-
-//private:
-//  std::shared_ptr<ctk::StepperMotor> _motor;
-//  LinearMotorControlInput _controlInput;
-//};
-
 #endif /* INCLUDE_CONTROLINPUT_H_ */

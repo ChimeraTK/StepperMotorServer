@@ -8,18 +8,6 @@
 #include "ControlInput.h"
 
 
-/* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
-//ControlInput::ControlInput(ctk::EntityOwner *owner,
-//                                     const std::string &name,
-//                                     const std::string &description)
-//  : ctk::VariableGroup{owner, name, description, true} {};
-
-///* eliminateHierarchy set to true because we have this group to handle motor features, not to create additional structure on the PVs */
-//LinearMotorControlInput::LinearMotorControlInput(ctk::EntityOwner *owner,
-//                                     const std::string &name,
-//                                     const std::string &description)
-//  : ctk::VariableGroup{owner, name, description, true} {};
-
 
 ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)
     : ctk::ApplicationModule(owner, name, description),
@@ -36,15 +24,15 @@ ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::str
 
 void ControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
 
-  funcMap[_controlInput.enableMotor.getId()]               = [this]{enableCallback();};
-  funcMap[_controlInput.disableMotor.getId()]              = [this]{disableCallback();};
+  funcMap[control.enable.getId()]                    = [this]{enableCallback();};
+  funcMap[control.disable.getId()]                   = [this]{disableCallback();};
   funcMap[_controlInput.positionSetpointInSteps.getId()]   = [this]{setTargetPositionInStepsCallback();};
   funcMap[_controlInput.positionSetpoint.getId()]          = [this]{setTargetPositionCallback();};
   funcMap[_controlInput.startMotor.getId()]                = [this]{startCallback();};
-  funcMap[_controlInput.stopMotor.getId()]                 = [this, motor]{ if(_controlInput.stopMotor){motor->stop();} };
-  funcMap[_controlInput.emergencyStopMotor.getId()]        = [this, motor]{ if(_controlInput.emergencyStopMotor){ motor->emergencyStop();} };
-  funcMap[_controlInput.resetError.getId()]                = [      motor]{ motor->resetError(); };
-  funcMap[_controlInput.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(_controlInput.enableAutostart);};
+  funcMap[control.stop.getId()]                            = [this, motor]{ if(control.stop){motor->stop();} };
+  funcMap[control.emergencyStop.getId()]        = [this, motor]{ if(control.emergencyStop){ motor->emergencyStop();} };
+  funcMap[control.resetError.getId()]                = [      motor]{ motor->resetError(); };
+  funcMap[control.enableAutostart.getId()]           = [this, motor]{ motor->setAutostart(control.enableAutostart);};
   funcMap[_controlInput.moveRelativeInSteps.getId()]       = [this, motor]{ motor->moveRelativeInSteps(_controlInput.moveRelativeInSteps); };
   funcMap[_controlInput.moveRelative.getId()]              = [this, motor]{ motor->moveRelative(_controlInput.moveRelative); };
   funcMap[_controlInput.referencePositionInSteps.getId()]  = [this, motor]{ motor->setActualPositionInSteps(_controlInput.referencePositionInSteps); };
@@ -52,14 +40,14 @@ void ControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> m
   funcMap[_controlInput.encoderReferencePosition.getId()]  = [this, motor]{ motor->setActualEncoderPosition(_controlInput.encoderReferencePosition); };
   funcMap[_controlInput.axisTranslationInSteps.getId()]    = [this, motor]{ motor->translateAxisInSteps(_controlInput.axisTranslationInSteps); };
   funcMap[_controlInput.axisTranslation.getId()]           = [this, motor]{ motor->translateAxis(_controlInput.axisTranslation); };
-  funcMap[_controlInput.enableSWPositionLimits.getId()]    = [this, motor]{ motor->setSoftwareLimitsEnabled(_controlInput.enableSWPositionLimits); };
-  funcMap[_controlInput.maxSWPositionLimit.getId()]        = [this, motor]{ motor->setMaxPositionLimit(_controlInput.maxSWPositionLimit); };
-  funcMap[_controlInput.minSWPositionLimit.getId()]        = [this, motor]{ motor->setMinPositionLimit(_controlInput.minSWPositionLimit); };
-  funcMap[_controlInput.maxSWPositionLimitInSteps.getId()] = [this, motor]{ motor->setMaxPositionLimitInSteps(_controlInput.maxSWPositionLimitInSteps); };
-  funcMap[_controlInput.minSWPositionLimitInSteps.getId()] = [this, motor]{ motor->setMinPositionLimitInSteps(_controlInput.minSWPositionLimitInSteps); };
+  funcMap[swLimits.enable.getId()]               = [this, motor]{ motor->setSoftwareLimitsEnabled(swLimits.enable); };
+  funcMap[swLimits.maxPosition.getId()]                    = [this, motor]{ motor->setMaxPositionLimit(swLimits.maxPosition); };
+  funcMap[swLimits.minPosition.getId()]        = [this, motor]{ motor->setMinPositionLimit(swLimits.minPosition); };
+  funcMap[swLimits.maxPositionInSteps.getId()] = [this, motor]{ motor->setMaxPositionLimitInSteps(swLimits.maxPositionInSteps); };
+  funcMap[swLimits.minPositionInSteps.getId()] = [this, motor]{ motor->setMinPositionLimitInSteps(swLimits.minPositionInSteps); };
   funcMap[_controlInput.currentLimit.getId()]              = [this, motor]{ motor->setUserCurrentLimit(_controlInput.currentLimit); };
   funcMap[_controlInput.speedLimit.getId()]                = [this, motor]{ motor->setUserSpeedLimit(_controlInput.speedLimit); };
-  funcMap[_controlInput.enableFullStepping.getId()]        = [this, motor]{ motor->enableFullStepping(_controlInput.enableFullStepping); };
+  funcMap[control.enableFullStepping.getId()]        = [this, motor]{ motor->enableFullStepping(control.enableFullStepping); };
 }
 
 
@@ -94,7 +82,7 @@ void ControlInputHandler::mainLoop() {
       _controlInput.userWarning = 1;
     }
 
-    _controlInput.dummyMotorStop = _controlInput.stopMotor || _controlInput.emergencyStopMotor;
+    _controlInput.dummyMotorStop = control.stop || control.emergencyStop;
     _controlInput.dummyMotorTrigger++;
 
     writeAll();
