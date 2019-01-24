@@ -17,8 +17,8 @@ ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::str
   // If motor has HW reference switches,
   // calibration is supported
   if(_motor->hasHWReferenceSwitches()){
-      control.calibrate.replace(ctk::ScalarPushInput<int>(this, "calibrate", "", "Starts calibration", {"SPECIAL"}));
-      control.calibrationCtrl = CalibrationCommands{this, "calibrationControl", "Calibration commands", true};
+      control.calibrate.replace(ctk::ScalarPushInput<int>(&control, "calibrate", "", "Starts calibration", {"SPECIAL"}));
+      control.calibrationCtrl = CalibrationCommands{&control, "calibrationControl", "Calibration commands", true};
 
       _calibrationCommands = CalibrationCommands{this, "calibrationCommands", "Calibration commands", false};
   }
