@@ -6,7 +6,7 @@
  */
 
 #include "ControlInput.h"
-
+#include "mtca4u/MotorDriverCard/MotorDriverException.h"
 
 
 ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)

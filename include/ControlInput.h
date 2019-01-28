@@ -10,9 +10,9 @@
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ReadAnyGroup.h>
-#include <mtca4u/MotorDriverCard/StepperMotor.h>
-#include <mtca4u/MotorDriverCard/StepperMotorWithReference.h>
-#include <mtca4u/MotorDriverCard/MotorDriverException.h>
+#include <ChimeraTK/MotorDriverCard/StepperMotor.h>
+#include <ChimeraTK/MotorDriverCard/StepperMotorWithReference.h>
+//#include <mtca4u/MotorDriverCard/MotorDriverException.h>
 
 #include <map>
 #include <functional>

@@ -6,6 +6,7 @@
  */
 
 #include "MotorDriverReadback.h"
+#include "ChimeraTK/MotorDriverCard/StepperMotorException.h"
 
 void ReadbackHandler::mainLoop(){
 
