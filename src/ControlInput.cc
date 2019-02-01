@@ -9,7 +9,7 @@
 #include "mtca4u/MotorDriverCard/MotorDriverException.h"
 
 
-ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor)
+ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctkmot::StepperMotor> motor)
     : ctk::ApplicationModule(owner, name, description),
       _calibrationCommands{},
       _motor(motor)
@@ -24,7 +24,7 @@ ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::str
   }
 };
 
-void ControlInputHandler::createFunctionMap(std::shared_ptr<ctk::StepperMotor> motor){
+void ControlInputHandler::createFunctionMap(std::shared_ptr<ctkmot::StepperMotor> motor){
 
   funcMap[control.enable.getId()]                    = [this]{enableCallback();};
   funcMap[control.disable.getId()]                   = [this]{disableCallback();};

@@ -9,22 +9,22 @@
 #define INCLUDE_MOTORDRIVER_H_
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
-#include <ChimeraTK/ReadAnyGroup.h>
-#include <mtca4u/MotorDriverCard/StepperMotor.h>
+//#include <ChimeraTK/ReadAnyGroup.h>
+#include <ChimeraTK/MotorDriverCard/StepperMotor.h>
 
 #include "ControlInput.h"
 #include "MotorDriverReadback.h"
 
 #include <memory>
 
-namespace ctk = ChimeraTK;
+namespace ctkmot = ChimeraTK::motordriver;
 
 
 struct MotorDriver : public ctk::ModuleGroup {
   MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                    const ctk::StepperMotorParameters &motorParameters);
+                    const ctkmot::StepperMotorParameters &motorParameters);
 
-  std::shared_ptr<ctk::StepperMotor> motor;
+  std::shared_ptr<ctkmot::StepperMotor> motor;
   ControlInputHandler ctrlInputHandler;
   ReadbackHandler readbackHandler;
 };

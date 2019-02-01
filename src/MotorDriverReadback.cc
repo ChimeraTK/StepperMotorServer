@@ -43,7 +43,7 @@ void ReadbackHandler::mainLoop(){
 
 
 ReadbackHandler::ReadbackHandler(
-      std::shared_ptr<ctk::StepperMotor> motor,
+      std::shared_ptr<ctkmot::StepperMotor> motor,
       ctk::EntityOwner *owner, const std::string &name, const std::string &description)
   : ctk::ApplicationModule::ApplicationModule(owner, name, description),
     positiveEndSwitch{},

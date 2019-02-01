@@ -19,7 +19,8 @@
 #include <memory>
 #include <utility>
 
-namespace ctk = ChimeraTK;
+namespace ctk    = ChimeraTK;
+namespace ctkmot = ctk::motordriver;
 
 /**
  * A map between the TransferElementID of a PV and the associated
@@ -136,7 +137,7 @@ struct DummySignals : public ctk::VariableGroup {
 class ControlInputHandler : public ctk::ApplicationModule {
 public:
 
-  ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctk::StepperMotor> motor);
+  ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctkmot::StepperMotor> motor);
 
   //virtual ~ControlInputHandler() {}
 
@@ -144,7 +145,7 @@ public:
   virtual void mainLoop() override;
 
 private:
-  virtual void createFunctionMap(std::shared_ptr<ctk::StepperMotor> _motor);
+  virtual void createFunctionMap(std::shared_ptr<ctkmot::StepperMotor> _motor);
   virtual void appendCalibrationToMap();
   funcmapT funcMap;
 
@@ -167,7 +168,7 @@ private:
   void determineToleranceCallback();
 
   ctk::ReadAnyGroup inputGroup;
-  std::shared_ptr<ctk::StepperMotor> _motor;
+  std::shared_ptr<ctkmot::StepperMotor> _motor;
 
 }; /* class ControlInputHandler */
 #endif /* INCLUDE_CONTROLINPUT_H_ */

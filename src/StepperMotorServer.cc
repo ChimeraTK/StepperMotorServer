@@ -10,7 +10,7 @@
 #include "version.h"
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
-#include "mtca4u/MotorDriverCard/StepperMotor.h"
+#include "ChimeraTK/MotorDriverCard/StepperMotor.h"
 #include "ChimeraTK/DMapFilesParser.h"
 
 #include <boost/shared_ptr.hpp>
@@ -23,7 +23,7 @@
 #include <algorithm>
 
 
-
+namespace ctkmot = ctk::motordriver;
 
 
 static StepperMotorServer server;
@@ -123,15 +123,15 @@ void StepperMotorServer::defineConnections(){
 
 
     // Motor configuration
-    ctk::StepperMotorParameters motorParameters;
+    ctkmot::StepperMotorParameters motorParameters;
     motorParameters.deviceName     = motorDriverCardDeviceNames[i];
     motorParameters.moduleName     = motorDriverCardModuleNames[i];
     motorParameters.driverId       = motorDriverCardIds[i];
     motorParameters.configFileName = motorDriverCardConfigFiles[i];
     motorParameters.motorUnitsConverter
-        = std::make_shared<ctk::StepperMotorUtility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
+        = std::make_shared<ctkmot::utility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
     motorParameters.encoderUnitsConverter
-        = std::make_shared<ctk::StepperMotorUtility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
+        = std::make_shared<ctkmot::utility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
 
 
     // Configure motor driver HW
@@ -141,10 +141,10 @@ void StepperMotorServer::defineConnections(){
 
     // Create a motor driver according to the motor type
     if(motorType[i] == basicLinearMotorType){
-      motorParameters.motorType = ctk::StepperMotorType::BASIC;
+      motorParameters.motorType = ctkmot::StepperMotorType::BASIC;
     }
     else if (motorType[i] == linearMotorWithReferenceType){
-      motorParameters.motorType = ctk::StepperMotorType::LINEAR;
+      motorParameters.motorType = ctkmot::StepperMotorType::LINEAR;
     }
     else{
       std::stringstream msg;

@@ -12,12 +12,13 @@
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ReadAnyGroup.h>
 #include <ChimeraTK/MotorDriverCard/StepperMotor.h>
-#include <ChimeraTK/MotorDriverCard/StepperMotorWithReference.h>
+//#include <ChimeraTK/MotorDriverCard/StepperMotorWithReference.h>
 #include "ExecutionTimer.h"
 
 #include <functional>
 
-namespace ctk = ChimeraTK;
+namespace ctk    = ChimeraTK;
+namespace ctkmot = ctk::motordriver;
 
 
 /**
@@ -106,7 +107,7 @@ class ReadbackHandler : public ctk::ApplicationModule {
 
 public:
 
-  ReadbackHandler(std::shared_ptr<ctk::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
+  ReadbackHandler(std::shared_ptr<ctkmot::StepperMotor> motor, ctk::EntityOwner *owner, const std::string &name, const std::string &description);
 
   //ctk::ScalarPushInput<int> trigger{this, "trigger", "", "Trigger to initiate reading from HW", {"MOT_TRIG"}};
   ctk::ScalarPushInput<uint64_t> trigger{this, "tick", "", "Trigger to initiate reading from HW", {"MOT_TRIG"}};
@@ -138,7 +139,7 @@ private:
    */
   void readConstData();
 
-  std::shared_ptr<ctk::StepperMotor> _motor;
+  std::shared_ptr<ctkmot::StepperMotor> _motor;
   ExecutionTimer<> execTimer;
   ExecutionTimer<> receiveTimer;
 
