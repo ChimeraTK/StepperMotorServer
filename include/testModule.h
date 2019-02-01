@@ -32,6 +32,7 @@ struct TestModule : public ChimeraTK::ApplicationModule{
     while(true){
 
       inputGroup.readAny();
+      readAll();
 
       userSpeedLimit = speedLimit.userValue * 2;
       writeAll();
