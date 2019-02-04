@@ -34,8 +34,8 @@ struct CalibrationCommands: public ctk::VariableGroup {
 
   using ctk::VariableGroup::VariableGroup;
 
-  ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrateMotor", "", "Calibrates the motor", {"MOTOR"}};
-  ctk::ScalarPushInput<int32_t> determineTolerance{this, "determineTolerance", "", "Determines tolerance of the end switch positions", {"MOTOR"}};
+  ctk::ScalarPushInput<int32_t> calibrateMotor{this, "calibrate", "", "Calibrates the motor"};
+  ctk::ScalarPushInput<int32_t> determineTolerance{this, "determineTolerance", "", "Determines tolerance of the end switch positions"};
 };
 
 /// Motor control data
@@ -46,7 +46,7 @@ struct MotorControl : public ctk::VariableGroup {
   ctk::ScalarPushInput<int> enable{this, "enable", "", "Enable the motor"};
   ctk::ScalarPushInput<int> disable{this, "disable", "", "Disable the motor"};
   ctk::ScalarPushInput<int> start{this, "start", "", "Start the motor"};
-  ctk::ScalarPushInput<int> calibrate{this, "calibDoNotUSE", "", "Calibration input dummy, do not use!"};
+  //ctk::ScalarPushInput<int> calibrate{this, "calibDoNotUSE", "", "Calibration input dummy, do not use!"};
 
   CalibrationCommands calibrationCtrl;
 
@@ -155,7 +155,7 @@ private:
   ReferenceSettings referenceSettings{this, "referenceSettings", "Settings to define the position reference", false, {"MOTOR"}};
   Notification notification{this, "notification", "User notification", false, {"MOTOR"}};
   DummySignals dummySignals{this, "dummySignals", " Signals triggering the dummy motor", false, {"DUMMY"}};
-  CalibrationCommands _calibrationCommands;
+  //CalibrationCommands _calibrationCommands;
 
   // Callbacks for the BasiStepperMotor
   void enableCallback();

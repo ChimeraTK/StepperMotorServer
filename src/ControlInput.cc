@@ -11,16 +11,16 @@
 
 ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::string &name, const std::string &description, std::shared_ptr<ctkmot::StepperMotor> motor)
     : ctk::ApplicationModule(owner, name, description),
-      _calibrationCommands{},
+      //_calibrationCommands{},
       _motor(motor)
 {
   // If motor has HW reference switches,
   // calibration is supported
   if(_motor->hasHWReferenceSwitches()){
-      control.calibrate.replace(ctk::ScalarPushInput<int>(&control, "calibrate", "", "Starts calibration", {"SPECIAL"}));
-      control.calibrationCtrl = CalibrationCommands{&control, "calibrationControl", "Calibration commands", true};
+      //control.calibrate.replace(ctk::ScalarPushInput<int>(&control, "calibrate", "", "Starts calibration", {"SPECIAL"}));
+      control.calibrationCtrl = CalibrationCommands{&control, "calibrationControl", "Calibration commands", true, {"MOTOR"}};
 
-      _calibrationCommands = CalibrationCommands{this, "calibrationCommands", "Calibration commands", false};
+      //_calibrationCommands = CalibrationCommands{this, "calibrationCommands", "Calibration commands", false};
   }
 };
 
@@ -118,12 +118,12 @@ void ControlInputHandler::startCallback(){
 
 void ControlInputHandler::appendCalibrationToMap(){
 
-  funcMap[_calibrationCommands.calibrateMotor.getId()]     = [this]{calibrateCallback();};
-  funcMap[_calibrationCommands.determineTolerance.getId()] = [this]{determineToleranceCallback();};
+  funcMap[control.calibrationCtrl.calibrateMotor.getId()]     = [this]{calibrateCallback();};
+  funcMap[control.calibrationCtrl.determineTolerance.getId()] = [this]{determineToleranceCallback();};
 }
 
 void ControlInputHandler::calibrateCallback(){
-  if(_calibrationCommands.calibrateMotor){
+  if(control.calibrationCtrl.calibrateMotor){
     if(_motor->isSystemIdle()){
       _motor->calibrate();
     }
@@ -134,7 +134,7 @@ void ControlInputHandler::calibrateCallback(){
 }
 
 void ControlInputHandler::determineToleranceCallback(){
-  if(_calibrationCommands.determineTolerance){
+  if(control.calibrationCtrl.determineTolerance){
     if(_motor->isSystemIdle()){
       _motor->determineTolerance();
     }
