@@ -18,7 +18,7 @@
 #include <functional>
 
 namespace ctk    = ChimeraTK;
-namespace ctkmot = ctk::motordriver;
+namespace ctkmot = ctk::MotorDriver;
 
 
 /**

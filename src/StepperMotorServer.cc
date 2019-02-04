@@ -23,7 +23,7 @@
 #include <algorithm>
 
 
-namespace ctkmot = ctk::motordriver;
+namespace ctkmot = ctk::MotorDriver;
 
 
 static StepperMotorServer server;
@@ -129,9 +129,9 @@ void StepperMotorServer::defineConnections(){
     motorParameters.driverId       = motorDriverCardIds[i];
     motorParameters.configFileName = motorDriverCardConfigFiles[i];
     motorParameters.motorUnitsConverter
-        = std::make_shared<ctkmot::utility::StepperMotorUnitsScalingConverter>(userUnitToStepsRatios[i]);
+        = std::make_shared<ctkmot::utility::ScalingMotorStepsConverter>(userUnitToStepsRatios[i]);
     motorParameters.encoderUnitsConverter
-        = std::make_shared<ctkmot::utility::EncoderUnitsScalingConverter>(encoderUnitToStepsRatios[i]);
+        = std::make_shared<ctkmot::utility::ScalingEncoderStepsConverter>(encoderUnitToStepsRatios[i]);
 
 
     // Configure motor driver HW

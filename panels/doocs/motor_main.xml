@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="289,5,640,860"><author>Christoph Kampmeyer</author><fillColor>210,210,210</fillColor><adr>TEST.DOOCS/LOCALHOST_610498009/*/*</adr><grid>14.383333,12.6285715</grid>
+<DOOCSLocationChooser name="LocationChooser1" bounds="14,13,460,50"><headline>true</headline><facility>true</facility><device>true</device><location>false</location><locationRegexFilter>(?!DEVGRP).*(?&#60;!_SVR)</locationRegexFilter></DOOCSLocationChooser>
+<DOOCSTabbedPane name="TabbedPane1" bounds="14,76,600,760"><adr>///</adr><activeTab></activeTab>
+<DOOCSTab name="Tab0" bounds="2,24,595,733"><adr>//Motor1/</adr><title></title><tabColor>238,238,238</tabColor><grid>6.601413,7.541779</grid>
+<DOOCSIncludeComponent name="IncludeComponent1" bounds="0,0,594,732"><xmlFile>/home/kampmeyer/Code/Projects/motorctrl/ChimeraTK_StepperMotor/panels/New/include/motor_dev.xml</xmlFile></DOOCSIncludeComponent>
+</DOOCSTab>
+<DOOCSTab name="Tab1" bounds="2,24,595,733"><adr>//Motor2/</adr><tabColor>238,238,238</tabColor><grid>10.0,10.0</grid>
+<DOOCSIncludeComponent name="IncludeComponent1" bounds="1,1,594,732"><adr>//Motor2/</adr><xmlFile>/home/kampmeyer/Code/Projects/motorctrl/ChimeraTK_StepperMotor/panels/New/include/motor_dev.xml</xmlFile></DOOCSIncludeComponent>
+</DOOCSTab>
+</DOOCSTabbedPane>
+</DOOCSLayeredPane>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAEEAAABXCAYAAABbeCjDAAAEJklEQVR42u1cTU8aQRjeu3Dhj/RgghcTTXrw6g8gXpree2vSm23ioUfjQWJIjDFEkQ8hSviwgooKBgpi6qlN46HtzYOHHnrwbZ+hQ7Z0FxeY/Z4xT2ZZ1oF5eL93ZpVqtUp+hoKGg8XFRZqdnaVut0vT09O0v7/PjkWg3W6zMYG5uTn2emFhQdj4k6JPAv+S8/PzrBf9QYlEgiKRSJ/k3d1d55GAF076dWwh4f7+Xjii0WgfZo7teBIK7W+mkcDHFkYCBhQN9a9l5thCbQJnWd18axPQ6l8e6MXbir9IwITVDSR4ub15H/2fBD9CkwQBYvUPrBZrIy0ej7NrRyJhb2+PSqUSFQoFymazlMlkKJfL6ZLAmx0kYIJGMDIJkyBXzFH8KC4UyXJSyHezTB2U538g+G/m04z1JBwcHDBViMVilEwmaXNzk6nHxsYGFYtFphrlclmbhGcKhbNhCi4HKZz+22fCFHodonAiTIF3Adbz8+gxSSWm6PZLzSVnS4KbMBIJ6XSadnZ2mIF8auBms+lNEqQkuCxOMI0ExAUwfMDq6mr/GIDBBNSG0c44wTZJaDQa3pcEaRNcZvGlJEgSPEiCFQZWOAlIsbe3t5k7FUWC2a5WSoIkwSQSkFxtbW1RrVbzHglG63V6SJVSrLCyXFsW2q+crVhLAr8XcXt7S3d3d3R9fc16nOMkcEmAgVQXWtaqa5rVoanuFAUbQQp8DPT6doBC+VDvuNU7x8+jH/z/0OfQxMGcYRKMFi11C59HcYo0I6S8UsT2LxUZLMmIUZIgSXCmixynPWVMrYorxnKRetByncNghARUuLH4Am4WrhcQnWtISRAdJ4wDaRgNIJVKMXXgd8R5BIpUHSl7Pp/vV7xNJ2FQzLC6A0CihCrz2dkZXV1dsf7y8tKb3kGPBC+k1Y43jFADrK3udDqaJIiogDveRVpx41d6B7dJgu02wS5JgE3AjV64R61o0HKbYHfE6AjvIA2jNIzuSaB8qQ5SEvziImUqLUmQJEgSXE+Cm9YvjkXC4eEhS2ZQ20Nig/oegKIHzuuVvAdLccDFxQWdn5+zctzJyQl7r16v969BiQ7lumG1x+PjY+ZhcPcbNcb19XWWaFkqCa1Wi0G9mlVLEoyW4lA9GnUC/PMdpQ567fHxkT7c/GA7WtHjtcjtvZbud4DYcRGEGlQqFcORJSbc+drbcPrw8xebPBonYZSMcJRr8Z25+mqV5seShGEiaNce50lUx3Z1UEuCZ1zkqOqglgSz1AGqMGzLknASnKwOjvUOrlMHvv8RQQq/KXp6eipMHcyCKd7Brepgu3cwEid4xiZgokYeBlO5+W5ZxGi5d5CptIXgK1dgpNVrqPE0L3VW6cuiyjhZpWtJcHTEKG2CJEGS4E0SfP+wKT8+jFKSMEiCbIryG8Yej8iDC4a1AAAAAElFTkSuQmCC</thumbnail>
+</jdddPanel>

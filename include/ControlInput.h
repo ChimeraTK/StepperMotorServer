@@ -11,8 +11,7 @@
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ReadAnyGroup.h>
 #include <ChimeraTK/MotorDriverCard/StepperMotor.h>
-#include <ChimeraTK/MotorDriverCard/StepperMotorWithReference.h>
-//#include <mtca4u/MotorDriverCard/MotorDriverException.h>
+#include <ChimeraTK/MotorDriverCard/LinearStepperMotor.h>
 
 #include <map>
 #include <functional>
@@ -20,7 +19,7 @@
 #include <utility>
 
 namespace ctk    = ChimeraTK;
-namespace ctkmot = ctk::motordriver;
+namespace ctkmot = ctk::MotorDriver;
 
 /**
  * A map between the TransferElementID of a PV and the associated
@@ -82,7 +81,7 @@ struct ReferenceSettings : public ctk::VariableGroup {
   ctk::ScalarPushInput<float> position{this, "position", "", "Writing to this value sets the actual motor position to a given reference"};
   ctk::ScalarPushInput<int> positionInSteps{this, "positionInSteps", "", "Writing to this value sets the actual motor position to a given reference"};
 
-  ctk::ScalarPushInput<int32_t> encoderPosition{this, "encoderReferencePosition", "", "Writing to this value sets the actual encoder position to a given reference"};
+  ctk::ScalarPushInput<int32_t> encoderPosition{this, "encoderPosition", "", "Writing to this value sets the actual encoder position to a given reference"};
 
   ctk::ScalarPushInput<int>   axisTranslationInSteps{this, "axisTranslationInSteps", "steps", "Offset to translate axis, i.e. shift the reference point."};
   ctk::ScalarPushInput<float> axisTranslation{this, "axisTranslation", "", "Offset to translate axis, i.e. shift the reference point."};
@@ -106,7 +105,7 @@ struct Notification : public ctk::VariableGroup {
   using ctk::VariableGroup::VariableGroup;
 
   ctk::ScalarOutput<int>         hasMessage{this, "hasMessage", "", "Warning flag, true when an invalid input has been issued."};
-  ctk::ScalarOutput<std::string> message{this, "essage", "", "Message for user notification from ControlInput module"};
+  ctk::ScalarOutput<std::string> message{this, "message", "", "Message for user notification from ControlInput module"};
 };
 
 /// User-definable limits
@@ -151,7 +150,7 @@ private:
 
   MotorControl control{this, "control", "Control words of the motor", false, {"MOTOR"}};
   PositionSetpoint positionSetpoint{this, "positionSetpoint", "Position setpoints", false, {"MOTOR"}};
-  UserLimits userLimits{this, "userLimts", "User-definable limits", false, {"MOTOR"}};
+  UserLimits userLimits{this, "userLimits", "User-definable limits", false, {"MOTOR"}};
   SoftwareLimitCtrl swLimits{this, "swLimits", "Control data of SW limits", false, {"MOTOR"}};
   ReferenceSettings referenceSettings{this, "referenceSettings", "Settings to define the position reference", false, {"MOTOR"}};
   Notification notification{this, "notification", "User notification", false, {"MOTOR"}};

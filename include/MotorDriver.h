@@ -17,7 +17,7 @@
 
 #include <memory>
 
-namespace ctkmot = ChimeraTK::motordriver;
+namespace ctkmot = ChimeraTK::MotorDriver;
 
 
 struct MotorDriver : public ctk::ModuleGroup {

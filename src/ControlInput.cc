@@ -26,11 +26,11 @@ ControlInputHandler::ControlInputHandler(ctk::EntityOwner *owner, const std::str
 
 void ControlInputHandler::createFunctionMap(std::shared_ptr<ctkmot::StepperMotor> motor){
 
-  funcMap[control.enable.getId()]                    = [this]{enableCallback();};
-  funcMap[control.disable.getId()]                   = [this]{disableCallback();};
-  funcMap[control.start.getId()]                = [this]{startCallback();};
-  funcMap[control.stop.getId()]                            = [this, motor]{ if(control.stop){motor->stop();} };
-  funcMap[control.emergencyStop.getId()]        = [this, motor]{ if(control.emergencyStop){ motor->emergencyStop();} };
+  funcMap[control.enable.getId()]              = [this]{enableCallback();};
+  funcMap[control.disable.getId()]             = [this]{disableCallback();};
+  funcMap[control.start.getId()]               = [this]{startCallback();};
+  funcMap[control.stop.getId()]                = [this, motor]{ if(control.stop){motor->stop();} };
+  funcMap[control.emergencyStop.getId()]       = [this, motor]{ if(control.emergencyStop){ motor->emergencyStop();} };
   funcMap[control.resetError.getId()]          = [      motor]{ motor->resetError(); };
   funcMap[control.enableAutostart.getId()]     = [this, motor]{ motor->setAutostart(control.enableAutostart);};
   funcMap[control.enableFullStepping.getId()]  = [this, motor]{ motor->enableFullStepping(control.enableFullStepping); };

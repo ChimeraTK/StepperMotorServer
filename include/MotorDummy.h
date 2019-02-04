@@ -20,7 +20,7 @@
 #include <thread>
 
 namespace ctk = ChimeraTK;
-namespace ctkmot = ctk::motordriver;
+namespace ctkmot = ctk::MotorDriver;
 
 
 /** MotorDummy - A dummy application module to employ the MotorControlerDummy functionality of the MotorDriverCard library

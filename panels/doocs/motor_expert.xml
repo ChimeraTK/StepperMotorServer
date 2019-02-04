@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="119,5,860,480"><author>Christoph Kampmeyer</author><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
+<DOOCSLabel name="Label40" bounds="441,260,33,20"><text>max.</text></DOOCSLabel>
+<DOOCSLabel name="Label39" bounds="442,230,33,20"><text>min.</text></DOOCSLabel>
+<DOOCSLabel name="Label38" bounds="441,200,229,20"><text>HW Endswitch Tolerance</text></DOOCSLabel>
+<DOOCSValue name="Value21" bounds="506,260,98,20"><adr>///readback.positiveEndSwitch.tolerance</adr></DOOCSValue>
+<DOOCSValue name="Value20" bounds="507,230,98,20"><adr>///readback.negativeEndSwitch.tolerance</adr></DOOCSValue>
+<DOOCSDial name="Dial15" bounds="163,200,131,20"><adr>///controlInput.swLimits.maxPosition</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial14" bounds="163,140,131,20"><adr>///controlInput.swLimits.minPosition</adr><precision>2</precision></DOOCSDial>
+<DOOCSColouredIndicator name="ColouredIndicator3" bounds="293,50,33,20"><adr>///readback.swLimits.isEnabled</adr><colorMap>GrayGreen</colorMap><threshold>0.5</threshold></DOOCSColouredIndicator>
+<DOOCSDial name="Dial3" bounds="163,170,131,20"><adr>///controlInput.swLimits.maxPositionInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial2" bounds="163,110,131,20"><adr>///controlInput.swLimits.minPositionInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label3" bounds="163,50,163,20"><text>SW Limits</text></DOOCSLabel>
+<DOOCSToggleButton name="ToggleButton1" bounds="163,80,131,20"><adr>///controlInput.swLimits.enable</adr><textON>On</textON><textOFF>Off</textOFF></DOOCSToggleButton>
+<DOOCSDial name="Dial13" bounds="163,300,131,20"><adr>///controlInput.referenceSettings.encoderPosition</adr><precision>9</precision></DOOCSDial>
+<DOOCSLabel name="Label30" bounds="326,270,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label29" bounds="326,240,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSDial name="Dial12" bounds="163,270,131,20"><adr>///controlInput.referenceSettings.position</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial11" bounds="163,240,131,20"><adr>///controlInput.referenceSettings.positionInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label28" bounds="65,240,82,20"><text>Reference</text></DOOCSLabel>
+<DOOCSLabel name="Label24" bounds="326,370,49,20"><text>mm</text></DOOCSLabel>
+<DOOCSLabel name="Label23" bounds="326,340,49,20"><text>steps</text></DOOCSLabel>
+<DOOCSDial name="Dial10" bounds="163,370,131,20"><adr>///controlInput.referenceSettings.axisTranslation</adr><precision>2</precision></DOOCSDial>
+<DOOCSDial name="Dial9" bounds="163,340,131,20"><adr>///controlInput.referenceSettings.axisTranslationInSteps</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label22" bounds="65,340,82,20"><text>Translation</text></DOOCSLabel>
+<DOOCSLabel name="Label25" bounds="441,110,98,20"><text>Max current [A]</text></DOOCSLabel>
+<DOOCSValue name="Value3" bounds="702,80,82,20"><adr>///readback.speedLimit.maxValue</adr><representation>Float</representation></DOOCSValue>
+<DOOCSValue name="Value18" bounds="702,110,81,20"><adr>///readback.currentLimit.maxValue</adr></DOOCSValue>
+<DOOCSValue name="Value17" bounds="702,50,82,20"><adr>///readback.speedLimit.userValue</adr><representation>Float</representation></DOOCSValue>
+<DOOCSDial name="Dial7" bounds="555,50,131,20"><adr>///controlInput.userLimits.speed</adr><precision>2</precision></DOOCSDial>
+<DOOCSLabel name="Label18" bounds="457,50,98,20"><text>Speed Limit</text></DOOCSLabel>
+<DOOCSDial name="Dial4" bounds="555,140,131,20"><adr>///controlInput.userLimits.current</adr><precision>2</precision></DOOCSDial>
+<DOOCSValue name="Value16" bounds="702,140,82,20"><adr>///readback.currentLimit.userValue</adr></DOOCSValue>
+<DOOCSLabel name="Label16" bounds="441,140,98,20"><text>Current Limit [A]</text></DOOCSLabel>
+<DOOCSLabel name="Label15" bounds="457,370,180,20"><text>Readback time [ms]</text></DOOCSLabel>
+<DOOCSLabel name="Label6" bounds="457,350,163,20"><text>Cycle time [s]</text></DOOCSLabel>
+<DOOCSValue name="Value5" bounds="653,350,82,20"><adr>///readback.actualCycleTime</adr><representation>Float</representation><updateTime>0.5</updateTime><precision>3</precision><dataOp>$adr/1000</dataOp></DOOCSValue>
+</DOOCSLayeredPane>
+<thumbnail>iVBORw0KGgoAAAANSUhEUgAAAFcAAAAxCAYAAACvZTUrAAABzElEQVR42u2aS2vCQBSF/f/gzo24UEREfCsq8YHoXqj4H7ruRtqKhWnPhRF8YG2aSKLfwCGTiJlwvH5z72Qyi8XCoeiVUVNns9mgiIW5mIu5KCnm/gx7pLjGuda2n3u3/di7992XHd+2O7uez+eTY2673bYHmk6nrlwum24x17ew5mrc0Whk40r9fv/wDMPh8FdzL7Xg5fVgru4XBIFrNpt2X7DwaFgI06rVKubeIhkVRkk3Byw8MxbinpFh7pUZOYwKhYL9XSeTiZvP59avVCp2nsvl3HK5BAtEbsqxkPoi4t5YGAwGRyhoNBpWOGSz2TMkUESABbKFp8ACq2IILICFE7VaLfu+sgRlC36psdPpWAahZUhdH4/Hdk2zvS84wsz6YAHmYm7imSscdLtdt16vzz5brVbpMbdWqxmn6vW68esSu6Jgru4n0/xrGyIXPSYW/JLjKRpShYV7pWIyTCJyERUaWMBchLkwF+YepFzSryqpclK/VCrZORXaA2NBLypns5mV4yrNtWdBP4x2P/5178J/X0aCBSq028f1i0qKOEVer9ezviJZUe0juVgs2jGqnThkCzAXcxHmYi7mIszFXMzF3PjMpcXXvgHPGud4lPjQhAAAAABJRU5ErkJggg==</thumbnail>
+</jdddPanel>
