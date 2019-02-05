@@ -26,9 +26,8 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic
 
 
 include(cmake/add_dependency.cmake)
-add_dependency(ChimeraTK-ApplicationCore 00.13 REQUIRED)
-# TODO Move to new version after update of library?
-add_dependency(mtca4u-MotorDriverCard 01.04 REQUIRED)
+add_dependency(ChimeraTK-ApplicationCore 01.00 REQUIRED)
+add_dependency(mtca4u-MotorDriverCard 01.08 REQUIRED)
 
 IF(ADAPTER STREQUAL "OPCUA")
   message("Building against the OPC UA ControlSystemAdater")
@@ -123,29 +122,15 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
   )
 ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
-# TODO Use the DOOCS backend?
-#  Copy DOOCSBackend library
-#list(GET ChimeraTK-DeviceAccess-DoocsBackend_LIBRARIES 0 DoocsBackendLibSymlink)
-#get_filename_component(DoocsBackendLib ${DoocsBackendLibSymlink} REALPATH)
-# EXECUTE_PROCESS(COMMAND ln -sf ${DoocsBackendLib} libChimeraTK-DeviceAccess-DoocsBackend.so
-#                WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-
-
-
-# TODO: Sort this out later (also: use mapp or map)
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/dummies.dmap DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
-#FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.mapp DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
 
-IF(ADAPTER STREQUAL "OPCUA")
-  # TODO Implement [OPCUA]
-  FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorMapping.xml DESTINATION ${PROJECT_BINARY_DIR})
-ELSEIF(ADAPTER STREQUAL "DOOCS")
+
+IF(ADAPTER STREQUAL "DOOCS")
   FILE( COPY ${CMAKE_SOURCE_DIR}/config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_BINARY_DIR})
   #FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorServer-DoocsVariableConfig.xml DESTINATION ${PROJECT_BINARY_DIR}) # Do not export until adapted to internal structure
 ENDIF()
@@ -155,9 +140,7 @@ FILE( COPY ${CMAKE_SOURCE_DIR}/config/initMotorDriverHW.py DESTINATION ${PROJECT
 if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
   install(TARGETS ${LIBRARY_OUTPUT_NAME} LIBRARY DESTINATION ${PROJECT_NAME}/lib)
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${PROJECT_NAME}/bin)
-  # TODO Remove or adapt
-  #install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION llrfCtrl_server/bin)
-  #install(FILES ${PROJECT_BINARY_DIR}/libChimeraTK-DeviceAccess-DoocsBackend.so DESTINATION ${PROJECT_NAME})
+  install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION ${PROJECT_NAME}/bin)
 
   # if no configuration exists, prepare configuration for dummy system
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/CTK_StepperMotorServer/${PROJECT_NAME}.conf")
@@ -165,9 +148,6 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
     
-    # TODO Remove or adapt
-    #install(FILES config/${PROJECT_NAME}_controller.xlmap DESTINATION ${PROJECT_NAME})
-    #install(FILES config/${PROJECT_NAME}_adc0.xlmap DESTINATION ${PROJECT_NAME})
     install(FILES config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_NAME})
     install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
     install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
@@ -182,8 +162,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
   endif()
 else()
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-  # TODO Remove or adapt
-  #install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
+  install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
   install(TARGETS ${LIBRARY_OUTPUT_NAME} LIBRARY DESTINATION lib)
 endif()
 

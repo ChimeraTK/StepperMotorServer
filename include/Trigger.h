@@ -10,8 +10,6 @@
 
 namespace ctk = ChimeraTK;
 
-// TODO Evaluate this approach. Does it work  also with testing? Eventually move to App'Core
-
 
 struct Trigger : public ctk::ApplicationModule {
     using ApplicationModule::ApplicationModule;
@@ -64,7 +62,6 @@ template <typename timebaseT = std::chrono::milliseconds>
 struct Timer : public ctk::ApplicationModule {
     using ApplicationModule::ApplicationModule;
 
-    // TODO: template description?
     ctk::ScalarPollInput<int32_t> timeout{this, "timeout", "", "Timeout (user-defined unit)"};
     ctk::ScalarOutput<int> tick{this, "tick", "", "Timer tick"};
 
