@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdddPanel><DOOCSLayeredPane name="EditorPanel" bounds="309,5,600,780"><showToolTips>true</showToolTips><fillColor>210,210,210</fillColor><grid>16.333334,10.0</grid>
-<DOOCSButton name="Button1" bounds="490,10,98,20"><function>New Window</function><buttonColor>238,238,238</buttonColor><xmlFile>/home/kampmeyer/Code/Projects/motorctrl/ChimeraTK_StepperMotor/panels/New/motor_expert.xml</xmlFile><scale>false</scale></DOOCSButton>
+<DOOCSButton name="Button_openExpertPanel" bounds="490,10,98,20"><function>New Window</function><text>Expert Settings</text><buttonColor>238,238,238</buttonColor><xmlFile>motor_expert.xml</xmlFile><scale>false</scale></DOOCSButton>
 <DOOCSIf name="CalibrationMode" bounds="212,40,213,20"><adr>///readback.status.calibrationMode</adr>
 <DOOCSSwitchCase name="X = 1" bounds="0,0,213,20">
 <DOOCSRect name="Rect1" bounds="0,0,213,20"><fillColor>0,255,0</fillColor></DOOCSRect>
