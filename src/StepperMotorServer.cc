@@ -28,7 +28,8 @@ namespace ctkmot = ctk::MotorDriver;
 
 static StepperMotorServer server;
 
-static std::string basicLinearMotorType{"LinearMotor"};
+// Definition of supported motor types
+static std::string basicLinearMotorType{"Basic"};
 static std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
 
 /**

@@ -6,7 +6,7 @@
     <value i="1" v="MD22"/>
   </variable>
   <variable name="motorType" type="string">
-    <value i="0" v="LinearMotor"/>
+    <value i="0" v="Basic"/>
     <value i="1" v="LinearMotorWithReferenceSwitch"/>
   </variable>
   <variable name="motorDriverDeviceName" type="string">
