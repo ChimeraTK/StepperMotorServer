@@ -123,7 +123,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/dummies.dmap DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
@@ -145,7 +145,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
 
   # if no configuration exists, prepare configuration for dummy system
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/CTK_StepperMotorServer/${PROJECT_NAME}.conf")
-    install(FILES config/dummies.dmap DESTINATION ${PROJECT_NAME})
+    install(FILES config/devMapFile.dmap DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
     
