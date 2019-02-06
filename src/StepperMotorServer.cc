@@ -59,7 +59,7 @@ static void terminateServer(std::string msg){
 /** Define interconnection of modules */
 void StepperMotorServer::defineConnections(){
 
-  std::string dMapFileName{"dummies.dmap"};
+  std::string dMapFileName{"devMapFile.dmap"};
 
   ChimeraTK::setDMapFilePath(dMapFileName);
 
