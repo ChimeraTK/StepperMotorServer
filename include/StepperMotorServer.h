@@ -17,7 +17,7 @@
 
 #include <memory>
 
-static std::string serverConfigFile{"CTK_StepperMotorConfig.xml"};
+static std::string serverConfigFile{"ServerConfiguration.xml"};
 
 namespace ctk = ChimeraTK;
 

@@ -27,7 +27,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic
 
 include(cmake/add_dependency.cmake)
 add_dependency(ChimeraTK-ApplicationCore 01.00 REQUIRED)
-add_dependency(mtca4u-MotorDriverCard 01.08 REQUIRED)
+add_dependency(mtca4u-MotorDriverCard 01.09 REQUIRED)
 
 IF(ADAPTER STREQUAL "OPCUA")
   message("Building against the OPC UA ControlSystemAdater")
@@ -124,9 +124,10 @@ ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/dummies.dmap DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/ServerConfiguration.xml DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
 
 
@@ -148,7 +149,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
     
-    install(FILES config/CTK_StepperMotorConfig.xml DESTINATION ${PROJECT_NAME})
+    install(FILES config/ServerConfiguration.xml DESTINATION ${PROJECT_NAME})
     install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
     install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
     #install(FILES config/${PROJECT_NAME}-DoocsVariableConfig.xml DESTINATION ${PROJECT_NAME}) # Do not export until adapted to internal structure
@@ -171,12 +172,12 @@ find_package(Doxygen)
 if(DOXYGEN_FOUND)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 
-  # The write_default_config target is defined in the ConfigCalculator subdirectory
-  # the 
   add_custom_target(doc ${DOC_DEPENDENCY}
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
+
+  #FIXME At least for Doocs this does not fit
   install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/ DESTINATION share/doc/${PROJECT_NAME}-${${PROJECT_NAME}_SOVERSION} )
 else(DOXYGEN_FOUND)
   message("Doxygen not found, documentation cannot be build.")

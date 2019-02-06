@@ -1,5 +1,5 @@
 
-#MOTOR sdm://./pci:pcieunis6 controller_pzt4_md22_md22_fmc25_70t_r2261.map
+#MOTOR sdm://./pci:pcieunis5 controller_pzt4_md22_md22_fmc25_70t_r2261.map
 
-MOTOR_DUMMY1 /dummy/MotorDriverCard DFMC_MD22_test.map
+MOTOR_DUMMY1 /dummy/MotorDriverCard DFMC_MD22_test.mapp
 MOTOR_DUMMY2 /dummy/MotorDriverCard DFMC_MD22_test.map

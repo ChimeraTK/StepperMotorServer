@@ -1,6 +1,5 @@
 <configuration>
   <variable name="cycleTimeMs" type="uint32" value="1000"/>
-  <variable name="cycleTimeEnable" type="int32" value="1"/>
   <variable name="nMotors" type="uint32" value="2"/>
   <variable name="motorDriverType" type="string">
     <value i="0" v="MD22"/>

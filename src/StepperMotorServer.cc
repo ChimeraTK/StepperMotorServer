@@ -68,11 +68,9 @@ void StepperMotorServer::defineConnections(){
 
 
   // Setup poll trigger
-//  config("cycleTime") >> timer.timeout;
   config("cycleTimeMs") >> trigger("period");
   //timer.tick >> trigger.tick;
   //cs["Timer"]("updateOnce") >> trigger.forceUpdate;
-  //config("cycleTimeEnable") >> trigger.automaticUpdate;
   trigger.tick >> cs["Timer"]("countdown");
 
   // Publish configuration
