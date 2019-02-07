@@ -143,7 +143,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION ${PROJECT_NAME}/bin)
 
   # if no configuration exists, prepare configuration for dummy system
-  if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/CTK_StepperMotorServer/${PROJECT_NAME}.conf")
+  if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/${PROJECT_NAME}.conf")
     install(FILES config/devMapFile.dmap DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
