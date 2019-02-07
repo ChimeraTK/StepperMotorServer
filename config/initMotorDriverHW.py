@@ -14,5 +14,4 @@ print("Performing initialization of device "+deviceName+".")
 mtca4u.set_dmap_location(dMapFileName)
 device = mtca4u.Device(deviceName)
  
-device.write("BOARD0", "WORD_RESET_N", 1);
-
+device.write("BOARD/0", "WORD_RESET_N", 1);
