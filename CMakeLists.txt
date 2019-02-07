@@ -87,7 +87,6 @@ add_library(${LIBRARY_OUTPUT_NAME} SHARED ${library_sources} )
 set_target_properties(${LIBRARY_OUTPUT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}
                                                     SOVERSION ${${PROJECT_NAME}_SOVERSION})
 target_link_libraries(${LIBRARY_OUTPUT_NAME} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES} )
-#    ${LLRFLibrary_LIBRARIES}  ${mtca4u-VirtualLab_LIBRARIES} )
 
 # main server executable
 add_executable(${PROJECT_NAME} src/StepperMotorServer.cc)
@@ -157,7 +156,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(CODE "
          EXECUTE_PROCESS(COMMAND ln -sf bin/${PROJECT_NAME} ${PROJECT_NAME}
                          WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
-         EXECUTE_PROCESS(COMMAND ln -sf lib/libCTK_StepperMotorServerlib.so .
+         EXECUTE_PROCESS(COMMAND ln -sf lib/lib${LIBRARY_OUTPUT_NAME}.so .
                          WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
      ")
   endif()
