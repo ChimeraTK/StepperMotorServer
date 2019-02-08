@@ -10,7 +10,7 @@ include(cmake/set_version_numbers.cmake)
 
 # Set names for output binary and library
 set(BINARY_OUTPUT_NAME "${PROJECT_NAME}")
-set(LIBRARY_OUTPUT_NAME "${PROJECT_NAME}lib")
+#set(LIBRARY_OUTPUT_NAME "${PROJECT_NAME}lib")
 
 # Moderate version of the compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -ansi -Wuninitialized -O3 -fomit-frame-pointer")
@@ -55,20 +55,19 @@ FIND_PACKAGE(Boost COMPONENTS thread system filesystem unit_test_framework REQUI
 ENABLE_TESTING()
 
 # extend compiler flags with flags from dependencies
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LLRFLibrary_CXX_FLAGS} ${ChimeraTK-ApplicationCore_CXX_FLAGS} ${mtca4u-MotorDriverCard_CXX_FLAGS}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ChimeraTK-ApplicationCore_CXX_FLAGS} ${mtca4u-MotorDriverCard_CXX_FLAGS}" )
 
 set(CMAKE_LINK_FLAGS "-Wl,--no-as-needed ${Adapter_LINK_FLAGS} ${ChimeraTK-ApplicationCore_LINK_FLAGS}" )
 
 # set include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(SYSTEM ${mtca4u-MotorDriverCard_INCLUDE_DIRS})
-message("MotorDriverCard include directories:   ${mtca4u-MotorDriverCard_INCLUDE_DIRS}")
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 set(${PROJECT_NAME}_INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/)
 
 # create lists with source files
-aux_source_directory(${CMAKE_SOURCE_DIR}/src library_sources)
-list(REMOVE_ITEM library_sources ${CMAKE_SOURCE_DIR}/src/StepperMotorServer.cc)
+#aux_source_directory(${CMAKE_SOURCE_DIR}/src library_sources)
+#list(REMOVE_ITEM library_sources ${CMAKE_SOURCE_DIR}/src/StepperMotorServer.cc)
 
 # configure version.h
 configure_file(include/version.h.in ${PROJECT_BINARY_DIR}/version/version.h)
@@ -82,22 +81,25 @@ else()
 endif()
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# server library (to avoid compiling everyting multiple times)
-add_library(${LIBRARY_OUTPUT_NAME} SHARED ${library_sources} )
-set_target_properties(${LIBRARY_OUTPUT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}
-                                                    SOVERSION ${${PROJECT_NAME}_SOVERSION})
-target_link_libraries(${LIBRARY_OUTPUT_NAME} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES} )
+# Library providing the steppermotor ModuleGroup
+add_subdirectory(steppermotor_module)
+message("   ** Library headers in ${LIBRARY_HEADER_DIR}")
+#set_target_properties(${LIBRARY_OUTPUT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}
+#                                                    SOVERSION ${${PROJECT_NAME}_SOVERSION})
 
 # main server executable
 add_executable(${PROJECT_NAME} src/StepperMotorServer.cc)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_link_libraries(${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ChimeraTK-StepperMotorModule ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
 
 #XML file generation
 add_executable(${PROJECT_NAME}-xmlGenerator src/StepperMotorServer.cc)
 set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES COMPILE_FLAGS "-DGENERATE_XML")
 set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_link_libraries(${PROJECT_NAME}-xmlGenerator ${LIBRARY_OUTPUT_NAME} ${mtca4u-MotorDriverCard_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-xmlGenerator ChimeraTK-StepperMotorModule ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
+target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY_HEADER_DIR})
+
 
 #add_custom_target(${PROJECT_NAME}-xml ALL DEPENDS ${PROJECT_NAME}-xmlGenerator COMMAND ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-xmlGenerator WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
@@ -107,9 +109,12 @@ target_link_libraries(${PROJECT_NAME}-xmlGenerator ${LIBRARY_OUTPUT_NAME} ${mtca
 aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
 include_directories(${CMAKE_SOURCE_DIR}/test)
 add_executable(test_${PROJECT_NAME} ${test_sources})
-target_link_libraries(test_${PROJECT_NAME} ${LIBRARY_OUTPUT_NAME} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES})
+target_link_libraries(test_${PROJECT_NAME} ChimeraTK-StepperMotorModule ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
 set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+target_include_directories(test_${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
+
 add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
+
 
 # The make coverage command is only available in debug mode
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -138,7 +143,6 @@ FILE( COPY ${CMAKE_SOURCE_DIR}/config/initMotorDriverHW.py DESTINATION ${PROJECT
 
 # Install the executable and the RPC_LIBNO file
 if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
-  install(TARGETS ${LIBRARY_OUTPUT_NAME} LIBRARY DESTINATION ${PROJECT_NAME}/lib)
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${PROJECT_NAME}/bin)
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION ${PROJECT_NAME}/bin)
 
@@ -156,14 +160,11 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(CODE "
          EXECUTE_PROCESS(COMMAND ln -sf bin/${PROJECT_NAME} ${PROJECT_NAME}
                          WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
-         EXECUTE_PROCESS(COMMAND ln -sf lib/lib${LIBRARY_OUTPUT_NAME}.so .
-                         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
-     ")
+    ")
   endif()
 else()
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
-  install(TARGETS ${LIBRARY_OUTPUT_NAME} LIBRARY DESTINATION lib)
 endif()
 
 

@@ -12,7 +12,7 @@
 #include <ChimeraTK/ApplicationCore/ConfigReader.h>
 #include <ChimeraTK/ApplicationCore/PeriodicTrigger.h>
 
-#include "MotorDriver.h"
+#include "StepperMotorModule.h"
 #include "MotorDummy.h"
 
 #include <memory>
@@ -27,8 +27,6 @@ struct StepperMotorServer : ctk::Application{
 
   ctk::ConfigReader config{this, "Configuration", serverConfigFile};
 
-  //Trigger trigger{this, "trigger", ""};
-  //Timer<std::chrono::milliseconds> timer{this, "TIMER", ""};
   ctk::PeriodicTrigger trigger{this, "trigger", ""};
 
   std::vector<MotorDriver> motorDriver;

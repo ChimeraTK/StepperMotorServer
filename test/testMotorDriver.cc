@@ -10,7 +10,7 @@
 #include <boost/test/unit_test.hpp>
 using namespace boost::unit_test_framework;
 
-#include "MotorDriver.h"
+#include "StepperMotorModule.h"
 #include "ChimeraTK/ApplicationCore/TestFacility.h"
 //#include "mtca4u/MotorDriverCard/StepperMotor.h"
 
