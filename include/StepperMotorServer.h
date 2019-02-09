@@ -29,7 +29,7 @@ struct StepperMotorServer : ctk::Application{
 
   ctk::PeriodicTrigger trigger{this, "trigger", ""};
 
-  std::vector<ctk::MotorDriver::MotorDriver> motorDriver;
+  std::vector<ctk::MotorDriver::StepperMotorModule> motorDriver;
   std::vector<MotorDummy> motorDummy;
 
   ctk::ControlSystemModule cs;
