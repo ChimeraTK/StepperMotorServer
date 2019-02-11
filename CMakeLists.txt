@@ -55,7 +55,6 @@ ELSE()
 ENDIF()
 
 FIND_PACKAGE(Boost COMPONENTS thread system filesystem unit_test_framework REQUIRED)
-ENABLE_TESTING()
 
 # extend compiler flags with flags from dependencies
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ChimeraTK-MotorDriverCard-ApplicationModule_CXX_FLAGS}")
@@ -107,14 +106,16 @@ target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY
 # Create the executable for automated unit testing.
 # add the test executable with all test source files
 # TODO Add test
-aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
-include_directories(${CMAKE_SOURCE_DIR}/test)
-add_executable(test_${PROJECT_NAME} ${test_sources})
-target_link_libraries(test_${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
-set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_include_directories(test_${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
+#ENABLE_TESTING()
 
-add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
+#aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
+#include_directories(${CMAKE_SOURCE_DIR}/test)
+#add_executable(test_${PROJECT_NAME} ${test_sources})
+#target_link_libraries(test_${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
+#set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+#target_include_directories(test_${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
+
+#add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
 
 
 # The make coverage command is only available in debug mode

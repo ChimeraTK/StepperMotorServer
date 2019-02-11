@@ -5,7 +5,7 @@
  *      Author: ckampm
  */
 
-#define BOOST_TEST_DYN_LINK
+//#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE MotorDriverTest
 #include <boost/test/unit_test.hpp>
 using namespace boost::unit_test_framework;
@@ -19,7 +19,7 @@ using namespace boost::unit_test_framework;
 
 namespace ctk = ChimeraTK;
 
-static ChimeraTK::TestFacility testFacility;
+static ctk::TestFacility testFacility;
 
 static const std::string stepperMotorDeviceName("MOTOR_DUMMY");
 static const std::string stepperMotorDeviceConfigFile("motorConfig.xml");
@@ -30,6 +30,17 @@ static const std::string stepperMotorModuleName("MD22.1");
 void setup(){
   testFacility.writeScalar("Motor1/controlInput/enable", 0);
 }
+
+
+struct Fixture {
+  Fixture(){
+    testFacility.runApplication();
+    setup();
+
+    testFacility.stepApplication();
+  }
+};
+static Fixture fixture;
 
 
 BOOST_AUTO_TEST_SUITE( MotorDriverTestSuite )
