@@ -164,16 +164,16 @@ void StepperMotorServer::defineConnections(){
       motorDummy.emplace_back(this, "MotorDummy"+std::to_string(i), "Dummy for motor"+std::to_string(i), motorParameters);
       motorDriver[i].flatten().findTag("DUMMY").connectTo(motorDummy[i]);
     }
-  }
 
-  // Document module structure and connections
-  motorDriver[0].dumpGraph("motorDriverModuleGraph0.dot");
-  motorDriver[1].dumpGraph("motorDriverModuleGraph1.dot");
+    // Document module structure and connections
+    //motorDriver[i].dumpGraph("motorDriverModuleGraph" + std::to_string(i) + ".dot");
+
+  }
 
   findTag("MOT_TRIG").flatten().connectTo(trigger);
   findTag("MOTOR|MOT_DIAG").connectTo(cs);
 
-  dumpConnectionGraph();
+  //dumpConnectionGraph();
 
 } /* defineConnections() */
 
