@@ -169,19 +169,4 @@ else()
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
 endif()
 
-
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-
-  add_custom_target(doc ${DOC_DEPENDENCY}
-    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
-
-  #FIXME At least for Doocs this does not fit
-  install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/ DESTINATION share/doc/${PROJECT_NAME}-${${PROJECT_NAME}_SOVERSION} )
-else(DOXYGEN_FOUND)
-  message("Doxygen not found, documentation cannot be build.")
-endif(DOXYGEN_FOUND)
-
+include(cmake/enable_doxygen_documentation.cmake)
