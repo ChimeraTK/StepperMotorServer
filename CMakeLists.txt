@@ -11,18 +11,14 @@ include(cmake/set_version_numbers.cmake)
 # Set names for output binary and library
 set(BINARY_OUTPUT_NAME "${PROJECT_NAME}")
 
-# Moderate version of the compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wextra -ansi -Wuninitialized -O3 -fomit-frame-pointer")
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/set_default_build_to_release.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/set_default_flags.cmake)
 
 # add constants for HOST and USER
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSER=\\\"`whoami`\\\" -DHOST=\\\"`hostname`\\\"")
 
-#use -DCMAKE_BUILD_TYPE=Debug in your cmake command to turn on the coverage option
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 --coverage")
-
 # linker flags
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic -Wl,--no-as-needed")
-
 
 include(cmake/add_dependency.cmake)
 add_dependency(ChimeraTK-ApplicationCore 01.00 REQUIRED)
@@ -117,17 +113,7 @@ target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY
 
 #add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
 
-
-# The make coverage command is only available in debug mode
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  configure_file(cmake/Makefile.coverage.in ${PROJECT_BINARY_DIR}/Makefile.coverage @ONLY)
-  add_custom_target(coverage
-    make -f Makefile.coverage
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating test coverage documentation" VERBATIM
-  )
-ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-
+include(cmake/enable_code_coverage_report.cmake)
 
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
