@@ -44,14 +44,14 @@ static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias)
     std::cout << "*** Error calling initialization script " << command << std::endl;
     std::exit(result);
   }
-};
+}
 
 static void terminateServer(std::string msg){
 
   std::cout << std::endl <<"!!! Terminating the server!" << std::endl
             << msg << std::endl;
   exit(1);
-};
+}
 
 
 /** Define interconnection of modules */
