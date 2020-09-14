@@ -101,15 +101,30 @@ target_link_libraries(${PROJECT_NAME}-xmlGenerator ${ChimeraTK-MotorDriverCard-A
 target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY_HEADER_DIR})
 
 
-#add_custom_target(${PROJECT_NAME}-xml ALL DEPENDS ${PROJECT_NAME}-xmlGenerator COMMAND ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-xmlGenerator WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
 # Create the executable for automated unit testing.
 # add the test executable with all test source files
-# TODO Add test
-#ENABLE_TESTING()
+ENABLE_TESTING()
 
-#aux_source_directory(${CMAKE_SOURCE_DIR}/test test_sources)
-#include_directories(${CMAKE_SOURCE_DIR}/test)
+aux_source_directory(${CMAKE_SOURCE_DIR}/tests/executables_src testExecutables)
+include_directories(${CMAKE_SOURCE_DIR}/test)
+
+foreach( testExecutableSrcFile ${testExecutables})
+  #NAME_WE means the base name without path and (longest) extension
+  get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
+  add_executable(${executableName} ${testExecutableSrcFile} src/StepperMotorServer.cc)
+  # do not link against the boost unit test library, the tests are not written for it!
+  target_link_libraries(${executableName} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
+#    ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
+#    ${Adapter_LIBRARIES}
+#    ${mtca4u-MotorDriverCard_LIBRARIES}
+#    ${Boost_LIBRARIES}
+#    ${ChimeraTK-ApplicationCore_LIBRARIES}
+#  )
+  set_target_properties(${executableName} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+  target_include_directories(${executableName} PUBLIC include ${LIBRARY_HEADER_DIR})
+  add_test(${executableName} ${executableName})
+endforeach( testExecutableSrcFile )
+
 #add_executable(test_${PROJECT_NAME} ${test_sources})
 #target_link_libraries(test_${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
 #set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
@@ -118,15 +133,18 @@ target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY
 #add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
 
 
-# The make coverage command is only available in debug mode
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  configure_file(cmake/Makefile.coverage.in ${PROJECT_BINARY_DIR}/Makefile.coverage @ONLY)
-  add_custom_target(coverage
-    make -f Makefile.coverage
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating test coverage documentation" VERBATIM
-  )
-ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+## The make coverage command is only available in debug mode
+#IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#  configure_file(cmake/Makefile.coverage.in ${PROJECT_BINARY_DIR}/Makefile.coverage @ONLY)
+#  add_custom_target(coverage
+#    make -f Makefile.coverage
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+#    COMMENT "Generating test coverage documentation" VERBATIM
+#  )
+#ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+# enable code coverate report
+include(cmake/enable_code_coverage_report.cmake)
 
 
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
