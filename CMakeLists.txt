@@ -80,21 +80,17 @@ else()
 endif()
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-## Library providing the steppermotor ModuleGroup
-#file(COPY ${CMAKE_SOURCE_DIR}/cmake/ DESTINATION ${CMAKE_SOURCE_DIR}/steppermotor_module/cmake)
-#add_subdirectory(steppermotor_module)
-#message("   ** Library headers in ${LIBRARY_HEADER_DIR}")
-##set_target_properties(${LIBRARY_OUTPUT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_FULL_LIBRARY_VERSION}
-##                                                    SOVERSION ${${PROJECT_NAME}_SOVERSION})
+# Make object file of the Application's "main" module available
+add_library(objStepperMotorServer OBJECT src/StepperMotorServer.cc)
 
 # main server executable
-add_executable(${PROJECT_NAME} src/StepperMotorServer.cc)
+add_executable(${PROJECT_NAME} src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
 target_link_libraries(${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
 
 #XML file generation
-add_executable(${PROJECT_NAME}-xmlGenerator src/StepperMotorServer.cc)
+add_executable(${PROJECT_NAME}-xmlGenerator src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
 set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES COMPILE_FLAGS "-DGENERATE_XML")
 set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
 target_link_libraries(${PROJECT_NAME}-xmlGenerator ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
@@ -111,7 +107,8 @@ include_directories(${CMAKE_SOURCE_DIR}/test)
 foreach( testExecutableSrcFile ${testExecutables})
   #NAME_WE means the base name without path and (longest) extension
   get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
-  add_executable(${executableName} ${testExecutableSrcFile} src/StepperMotorServer.cc)
+  add_executable(${executableName} ${testExecutableSrcFile})
+  target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
   # do not link against the boost unit test library, the tests are not written for it!
   target_link_libraries(${executableName} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
 #    ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}

@@ -26,11 +26,9 @@
 namespace ctkmot = ctk::MotorDriver;
 
 
-static StepperMotorServer server;
-
 // Definition of supported motor types
-static std::string basicLinearMotorType{"Basic"};
-static std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
+static const std::string basicLinearMotorType{"Basic"};
+static const std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
 
 /**
  *  Hardware initialization
@@ -63,6 +61,7 @@ void StepperMotorServer::defineConnections(){
 
   ChimeraTK::setDMapFilePath(dMapFileName);
 
+  std::cout << "BasicLinearMotorType: " << basicLinearMotorType << std::endl;
   std::cout << "****************************************************************" << std::endl;
   std::cout << "*** ChimeraTK Stepper Motor Server version "
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
@@ -139,7 +138,8 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver according to the motor type
-    if(motorType[i] == basicLinearMotorType){
+    std::cout << "BasicLinearMotorType: " << basicLinearMotorType << std::endl;
+      if(motorType[i] == basicLinearMotorType){
       motorParameters.motorType = ctkmot::StepperMotorType::BASIC;
     }
     else if (motorType[i] == linearMotorWithReferenceType){
@@ -148,7 +148,7 @@ void StepperMotorServer::defineConnections(){
     else{
       std::stringstream msg;
       msg << "Unknown motor type \"" << motorType[i]
-          << " requested in MotorDriver configuration provided by: "
+          << "\" requested in MotorDriver configuration provided by: "
           << std::endl << serverConfigFile << "." << std::endl;
 
       terminateServer(msg.str());
