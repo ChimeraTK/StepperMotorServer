@@ -27,8 +27,8 @@ namespace ctkmot = ctk::MotorDriver;
 
 
 // Definition of supported motor types
-static const std::string basicLinearMotorType{"Basic"};
-static const std::string linearMotorWithReferenceType{"LinearMotorWithReferenceSwitch"};
+static constexpr char basicLinearMotorType[] = "Basic";
+static constexpr char linearMotorWithReferenceType[] = "LinearMotorWithReferenceSwitch";
 
 /**
  *  Hardware initialization
@@ -61,7 +61,6 @@ void StepperMotorServer::defineConnections(){
 
   ChimeraTK::setDMapFilePath(dMapFileName);
 
-  std::cout << "BasicLinearMotorType: " << basicLinearMotorType << std::endl;
   std::cout << "****************************************************************" << std::endl;
   std::cout << "*** ChimeraTK Stepper Motor Server version "
             << AppVersion::major << "." << AppVersion::minor << "." << AppVersion::patch << std::endl;
@@ -138,8 +137,7 @@ void StepperMotorServer::defineConnections(){
     }
 
     // Create a motor driver according to the motor type
-    std::cout << "BasicLinearMotorType: " << basicLinearMotorType << std::endl;
-      if(motorType[i] == basicLinearMotorType){
+    if(motorType[i] == basicLinearMotorType){
       motorParameters.motorType = ctkmot::StepperMotorType::BASIC;
     }
     else if (motorType[i] == linearMotorWithReferenceType){
