@@ -110,35 +110,18 @@ foreach( testExecutableSrcFile ${testExecutables})
   add_executable(${executableName} ${testExecutableSrcFile})
   target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
   # do not link against the boost unit test library, the tests are not written for it!
-  target_link_libraries(${executableName} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
-#    ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
-#    ${Adapter_LIBRARIES}
-#    ${mtca4u-MotorDriverCard_LIBRARIES}
-#    ${Boost_LIBRARIES}
-#    ${ChimeraTK-ApplicationCore_LIBRARIES}
-#  )
+  target_link_libraries(${executableName}
+    ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
+    ${Adapter_LIBRARIES}
+    ${mtca4u-MotorDriverCard_LIBRARIES}
+    ${Boost_LIBRARIES}
+    ${ChimeraTK-ApplicationCore_LIBRARIES}
+  )
   set_target_properties(${executableName} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
   target_include_directories(${executableName} PUBLIC include ${LIBRARY_HEADER_DIR})
   add_test(${executableName} ${executableName})
 endforeach( testExecutableSrcFile )
 
-#add_executable(test_${PROJECT_NAME} ${test_sources})
-#target_link_libraries(test_${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${Boost_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
-#set_target_properties(test_${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-#target_include_directories(test_${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
-
-#add_test(test_${PROJECT_NAME} test_${PROJECT_NAME})
-
-
-## The make coverage command is only available in debug mode
-#IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-#  configure_file(cmake/Makefile.coverage.in ${PROJECT_BINARY_DIR}/Makefile.coverage @ONLY)
-#  add_custom_target(coverage
-#    make -f Makefile.coverage
-#    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-#    COMMENT "Generating test coverage documentation" VERBATIM
-#  )
-#ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 # enable code coverate report
 include(cmake/enable_code_coverage_report.cmake)
