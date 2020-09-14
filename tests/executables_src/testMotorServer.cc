@@ -7,21 +7,17 @@
 
 #include "StepperMotorServer.h"
 
-
 // Declare the server instance
 static StepperMotorServer theServer;
 
 static ChimeraTK::TestFacility testFacility;
 
 struct TestFixture {
-  TestFixture(){
-    testFacility.runApplication();
-  }
+  TestFixture() { testFacility.runApplication(); }
 };
 static TestFixture fixture;
 
 using namespace boost::unit_test_framework;
-
 
 /// TestSuite for the server
 BOOST_AUTO_TEST_SUITE(StepperMotorServerTestSuite)
@@ -29,7 +25,7 @@ BOOST_AUTO_TEST_SUITE(StepperMotorServerTestSuite)
 /**********************************************************************************************************************/
 
 /// A template test case
-BOOST_AUTO_TEST_CASE(testTemplate){
+BOOST_AUTO_TEST_CASE(testTemplate) {
   std::cout << "testTemplate" << std::endl;
 }
 

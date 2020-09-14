@@ -21,7 +21,7 @@ static std::string serverConfigFile{"ServerConfiguration.xml"};
 
 namespace ctk = ChimeraTK;
 
-struct StepperMotorServer : public ctk::Application{
+struct StepperMotorServer : public ctk::Application {
   StepperMotorServer() : Application("steppermotorserver") {}
   ~StepperMotorServer() override { shutdown(); }
 
@@ -35,5 +35,5 @@ struct StepperMotorServer : public ctk::Application{
   ctk::ControlSystemModule cs;
   void defineConnections() override;
 
-}; /* struct StepperMotorServer */
+};     /* struct StepperMotorServer */
 #endif /* INCLUDE_STEPPER_MOTOR_SERVER_H_ */

@@ -19,15 +19,13 @@
 
 namespace ctkmot = ChimeraTK::MotorDriver;
 
-
 struct MotorDriver : public ctk::ModuleGroup {
-  MotorDriver(ctk::EntityOwner *owner, const std::string &name, const std::string &description,
-                    const ctkmot::StepperMotorParameters &motorParameters);
+  MotorDriver(ctk::EntityOwner* owner, const std::string& name, const std::string& description,
+      const ctkmot::StepperMotorParameters& motorParameters);
 
   std::shared_ptr<ctkmot::StepperMotor> motor;
   ControlInputHandler ctrlInputHandler;
   ReadbackHandler readbackHandler;
 };
-
 
 #endif /* INCLUDE_MOTORDRIVER_H_ */
