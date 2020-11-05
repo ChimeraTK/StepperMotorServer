@@ -108,7 +108,6 @@ foreach( testExecutableSrcFile ${testExecutables})
   # do not link against the boost unit test library, the tests are not written for it!
   target_link_libraries(${executableName}
     ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
-    ${Adapter_LIBRARIES}
     ${mtca4u-MotorDriverCard_LIBRARIES}
     ${Boost_LIBRARIES}
     ${ChimeraTK-ApplicationCore_LIBRARIES}
