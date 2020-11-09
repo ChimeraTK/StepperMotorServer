@@ -105,7 +105,6 @@ foreach( testExecutableSrcFile ${testExecutables})
   get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
   add_executable(${executableName} ${testExecutableSrcFile})
   target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
-  # do not link against the boost unit test library, the tests are not written for it!
   target_link_libraries(${executableName}
     ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
     ${mtca4u-MotorDriverCard_LIBRARIES}
