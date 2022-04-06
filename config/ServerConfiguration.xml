@@ -37,4 +37,8 @@
     <value i="0" v="0.5 steps"/>
     <value i="1" v="2.0 steps"/>
   </variable>
+  <variable name="dummy" type="int32">
+    <value i="0" v="1" />
+    <value i="1" v="1" />
+  </variable>
 </configuration>

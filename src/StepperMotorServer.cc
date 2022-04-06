@@ -8,10 +8,10 @@
 #include "StepperMotorServer.h"
 
 #include "version.h"
+#include <ChimeraTK/DMapFileParser.h>
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "ChimeraTK/MotorDriverCard/StepperMotor.h"
-#include "ChimeraTK/DMapFilesParser.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -88,10 +88,12 @@ void StepperMotorServer::defineConnections() {
 
   auto userUnitToStepsRatios = config.get<std::vector<float>>("userUnitToStepsRatio");
   auto userPositionUnits = config.get<std::vector<std::string>>("userPositionUnit");
+  auto useDummyMotor = config.get<std::vector<int>>("dummy");
 
   if(motorDriverCardDeviceNames.size() != nMotors || motorDriverCardModuleNames.size() != nMotors ||
       motorDriverCardIds.size() != nMotors || motorDriverCardConfigFiles.size() != nMotors) {
-    std::stringstream msg{"A mismatch of dimensions in the MotorDriver configuration provided by "};
+    std::stringstream msg;
+    msg << "A mismatch of dimensions in the MotorDriver configuration provided by ";
     msg << serverConfigFile;
     terminateServer(msg.str());
   }
@@ -99,14 +101,7 @@ void StepperMotorServer::defineConnections() {
   // Set up modules for each motor
   std::unordered_set<std::string> initializedMotorDriverHW;
   for(size_t i = 0; i < nMotors; ++i) {
-    // Use a dummy motor, if requested
-    bool useDummyMotors = false;
-    if(ctk::DMapFilesParser(".").getdMapFileElem(motorDriverCardDeviceNames[i]).uri == "/dummy/MotorDriverCard") {
-      useDummyMotors = true;
-      std::cout << "*** Setting up MotorDriverCard instance " << motorDriverCardDeviceNames[i] << " as a dummy."
-                << std::endl;
-    }
-    mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotors);
+    mtca4u::MotorDriverCardFactory::instance().setDummyMode(useDummyMotor[i] == 1);
 
     // Motor configuration
     ctkmot::StepperMotorParameters motorParameters;
@@ -120,7 +115,7 @@ void StepperMotorServer::defineConnections() {
         std::make_shared<ctkmot::utility::ScalingEncoderStepsConverter>(encoderUnitToStepsRatios[i]);
 
     // Configure motor driver HW
-    if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && !useDummyMotors) {
+    if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && (useDummyMotor[i] == 0)) {
       initMotorDriverHW(dMapFileName, motorDriverCardDeviceNames[i]);
     }
 
@@ -147,7 +142,7 @@ void StepperMotorServer::defineConnections() {
               << " on device " << motorDriverCardDeviceNames[i]
               << ". Configuration file: " << motorDriverCardConfigFiles[i] << std::endl;
 
-    if(useDummyMotors) {
+    if(useDummyMotor[i] == 1) {
       motorDummy.emplace_back(
           this, "MotorDummy" + std::to_string(i), "Dummy for motor" + std::to_string(i), motorParameters);
       motorDriver[i].flatten().findTag("DUMMY").connectTo(motorDummy[i]);
