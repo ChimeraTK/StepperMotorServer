@@ -1,0 +1,4 @@
+@Library('ChimeraTK') _
+env.CMAKE_EXTRA_ARGS="-DADAPTER=DOOCS"
+env.CTESTOPTS=""
+autojob(['ChimeraTK/ApplicationCore', 'ChimeraTK/ControlSystemAdapter-DoocsAdapter', 'ChimeraTK/MotorDriverCard-ApplicationModule'], 'https://github.com/ChimeraTK/StepperMotorServer')
