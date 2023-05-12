@@ -11,7 +11,7 @@ using namespace boost::unit_test_framework;
 // Just checks that the server instance can be instantiated and started
 BOOST_AUTO_TEST_CASE(testInstantiaton) {
   StepperMotorServer theServer;
-  ChimeraTK::TestFacility testFacility;
+  ChimeraTK::TestFacility testFacility{theServer};
   testFacility.runApplication();
 }
 

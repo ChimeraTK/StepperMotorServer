@@ -9,18 +9,20 @@
 #define INCLUDE_MOTORDUMMY_H_
 
 #include <ChimeraTK/ApplicationCore/Application.h>
+#include <ChimeraTK/ApplicationCore/ScalarAccessor.h>
 #include <ChimeraTK/ReadAnyGroup.h>
 #include <ChimeraTK/ApplicationCore/ApplicationModule.h>
+#include <ChimeraTK/MotorDriverCard/StepperMotor.h>
 
+#include "mtca4u/MotorDriverCard/MotorDriverCard.h"
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "mtca4u/MotorDriverCard/MotorControlerDummy.h"
-#include "mtca4u/MotorDriverCard/StepperMotor.h"
 
 #include <boost/shared_ptr.hpp>
 #include <thread>
 
 namespace ctk = ChimeraTK;
-namespace ctkmot = ctk::MotorDriver;
+namespace ctkmot = ChimeraTK::MotorDriver;
 
 /** MotorDummy - A dummy application module to employ the MotorControlerDummy functionality of the MotorDriverCard library
  *
@@ -28,9 +30,9 @@ namespace ctkmot = ctk::MotorDriver;
  *       not supported by the real MotorControler.
  */
 struct MotorDummy : public ctk::ApplicationModule {
-  MotorDummy(ctk::EntityOwner* owner, const std::string& name, const std::string& description,
+  MotorDummy(ctk::ModuleGroup* owner, const std::string& name, const std::string& description,
       const ctkmot::StepperMotorParameters& dp)
-  : ctk::ApplicationModule(owner, name, description, true),
+  : ctk::ApplicationModule(owner, name, description),
     _motorControlerDummy(boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(
         mtca4u::MotorDriverCardFactory::instance()
             .createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)
@@ -38,10 +40,10 @@ struct MotorDummy : public ctk::ApplicationModule {
 
   boost::shared_ptr<mtca4u::MotorControlerDummy> _motorControlerDummy;
 
-  ctk::ScalarPushInput<int32_t> trigger{this, "dummyMotorTrigger", "", "Triggers movement of the dummy motor"};
-  ctk::ScalarPollInput<int32_t> stop{this, "dummyMotorStop", "", "Stops the dummy motor"};
+  ctk::ScalarPushInput<int32_t> trigger{this, "controlInput/dummySignals/dummyMotorTrigger", "", "Triggers movement of the dummy motor"};
+  ctk::ScalarPollInput<int32_t> stop{this, "controlInput/dummySignals/dummyMotorStop", "", "Stops the dummy motor"};
 
-  void mainLoop() {
+  void mainLoop() override {
     // FIXME HACK: enabled this permanently because there is no relation between StepperMotor and the dummy of the library
     //             and I don't want to reprogram it here
     _motorControlerDummy->setMotorCurrentEnabled(true);
