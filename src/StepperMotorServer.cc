@@ -1,26 +1,23 @@
-/*
- * StepperMotorServer.cc
- *
- *  Created on: Jun 8, 2018
- *      Author: ckampm
- */
+// SPDX-FileCopyrightText: Deutsches Elektronen-Synchrotron DESY, MSK
+// SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "StepperMotorServer.h"
 
-#include "version.h"
-#include <ChimeraTK/DMapFileParser.h>
-#include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
-#include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "ChimeraTK/MotorDriverCard/StepperMotor.h"
+#include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
+#include "version.h"
+#include <unordered_set>
+
+#include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
+#include <ChimeraTK/DMapFileParser.h>
 
 #include <boost/shared_ptr.hpp>
 
+#include <algorithm>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
-#include <unordered_set>
-#include <memory>
-#include <algorithm>
 
 namespace ctkmot = ctk::MotorDriver;
 
@@ -34,7 +31,7 @@ static constexpr char linearMotorWithReferenceType[] = "LinearMotorWithReference
  *  and this has to be done per FMC carrier board, not per motor (represented by the ApplicationModules).
  *  TODO Review this once additional driver HW gets supported
  */
-static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias) {
+static void initMotorDriverHW(const std::string& dMapFileName, const std::string& deviceAlias) {
   std::string command{"./initMotorDriverHW.py " + dMapFileName + " " + deviceAlias};
 
   int result = std::system(command.c_str());
@@ -44,57 +41,38 @@ static void initMotorDriverHW(std::string dMapFileName, std::string deviceAlias)
   }
 }
 
-static void terminateServer(std::string msg) {
+/********************************************************************************************************************/
+
+[[noreturn]] static void terminateServer(const std::string& msg) {
   std::cout << std::endl << "!!! Terminating the server!" << std::endl << msg << std::endl;
   exit(1);
 }
 
-/** Define interconnection of modules */
-void StepperMotorServer::defineConnections() {
-  std::string dMapFileName{"devMapFile.dmap"};
+/********************************************************************************************************************/
 
-  ChimeraTK::setDMapFilePath(dMapFileName);
-
+StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
   std::cout << "****************************************************************" << std::endl;
   std::cout << "*** ChimeraTK Stepper Motor Server version " << AppVersion::major << "." << AppVersion::minor << "."
             << AppVersion::patch << std::endl;
 
-  // Setup poll trigger
-  config("cycleTimeMs") >> trigger("period");
-  //timer.tick >> trigger.tick;
-  //cs["Timer"]("updateOnce") >> trigger.forceUpdate;
-  trigger.tick >> cs["Timer"]("countdown");
-
-  // Publish configuration
-  config.connectTo(cs["Configuration"]);
-  /// @todo This is a work-around until string arrays do not crash the OPC UA adapter any more!
-  //  for(auto &a : config.getAccessorList()) {
-  //    if(a.getValueType() == typeid(std::string) && a.getNumberOfElements() > 1) {
-  //      std::cout << "*** WARNING: Workaround active: Not publishing /Configuration/"+a.getName()+
-  //                   " to avoid crash of OPC UA adapter." << std::endl;
-  //      continue;
-  //    }
-  //    a >> cs["Configuration"](a.getName());
-  //  }
-
   // Get and validate motor configuration
-  auto nMotors = config.get<uint32_t>("nMotors");
-  auto motorType = config.get<std::vector<std::string>>("motorType");
-  auto motorDriverCardDeviceNames = config.get<std::vector<std::string>>("motorDriverDeviceName");
-  auto motorDriverCardModuleNames = config.get<std::vector<std::string>>("motorDriverModuleName");
-  auto motorDriverCardIds = config.get<std::vector<uint32_t>>("motorDriverId");
-  auto motorDriverCardConfigFiles = config.get<std::vector<std::string>>("motorDriverConfigFile");
-  auto encoderUnitToStepsRatios = config.get<std::vector<double>>("encoderUnitToStepsRatio");
+  auto nMotors = config.get<uint32_t>("Motors/nMotors");
+  auto motorType = config.get<std::vector<std::string>>("Motors/motorType");
+  auto motorDriverCardDeviceNames = config.get<std::vector<std::string>>("Motors/motorDriverDeviceName");
+  auto motorDriverCardModuleNames = config.get<std::vector<std::string>>("Motors/motorDriverModuleName");
+  auto motorDriverCardIds = config.get<std::vector<uint32_t>>("Motors/motorDriverId");
+  auto motorDriverCardConfigFiles = config.get<std::vector<std::string>>("Motors/motorDriverConfigFile");
+  auto encoderUnitToStepsRatios = config.get<std::vector<double>>("Motors/encoderUnitToStepsRatio");
 
-  auto userUnitToStepsRatios = config.get<std::vector<float>>("userUnitToStepsRatio");
-  auto userPositionUnits = config.get<std::vector<std::string>>("userPositionUnit");
-  auto useDummyMotor = config.get<std::vector<int>>("dummy");
+  auto userUnitToStepsRatios = config.get<std::vector<float>>("Motors/userUnitToStepsRatio");
+  auto userPositionUnits = config.get<std::vector<std::string>>("Motors/userPositionUnit");
+  auto useDummyMotor = config.get<std::vector<int>>("Motors/dummy");
 
   if(motorDriverCardDeviceNames.size() != nMotors || motorDriverCardModuleNames.size() != nMotors ||
       motorDriverCardIds.size() != nMotors || motorDriverCardConfigFiles.size() != nMotors) {
     std::stringstream msg;
     msg << "A mismatch of dimensions in the MotorDriver configuration provided by ";
-    msg << serverConfigFile;
+    msg << SERVER_CONFIG_FILE;
     terminateServer(msg.str());
   }
 
@@ -116,7 +94,7 @@ void StepperMotorServer::defineConnections() {
 
     // Configure motor driver HW
     if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && (useDummyMotor[i] == 0)) {
-      initMotorDriverHW(dMapFileName, motorDriverCardDeviceNames[i]);
+      initMotorDriverHW(std::string{DMAP_FILE_NAME}, motorDriverCardDeviceNames[i]);
     }
 
     // Create a motor driver according to the motor type
@@ -130,31 +108,22 @@ void StepperMotorServer::defineConnections() {
       std::stringstream msg;
       msg << "Unknown motor type \"" << motorType[i]
           << "\" requested in MotorDriver configuration provided by: " << std::endl
-          << serverConfigFile << "." << std::endl;
+          << SERVER_CONFIG_FILE << "." << std::endl;
 
       terminateServer(msg.str());
     }
 
-    motorDriver.emplace_back(
-        this, "Motor" + std::to_string(i + 1), "Driver of motor " + std::to_string(i + 1), motorParameters);
+    motorDriver.emplace_back(this, "Motor" + std::to_string(i + 1), "Driver of motor " + std::to_string(i + 1),
+        motorParameters, "/Trigger/voidTick");
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i]
-              << ". Configuration file: " << motorDriverCardConfigFiles[i] << std::endl;
+              << ". Configuration file: " << motorDriverCardConfigFiles[i]
+              << " Motor is dummy: " << std::to_string(useDummyMotor[i] == 1) << std::endl;
 
     if(useDummyMotor[i] == 1) {
       motorDummy.emplace_back(
-          this, "MotorDummy" + std::to_string(i), "Dummy for motor" + std::to_string(i), motorParameters);
-      motorDriver[i].flatten().findTag("DUMMY").connectTo(motorDummy[i]);
+          this, "Motor" + std::to_string(i + 1), "Dummy for motor " + std::to_string(i), motorParameters);
     }
-
-    // Document module structure and connections
-    //motorDriver[i].dumpGraph("motorDriverModuleGraph" + std::to_string(i) + ".dot");
   }
-
-  findTag("MOT_TRIG").flatten().connectTo(trigger);
-  findTag("MOTOR|MOT_DIAG").connectTo(cs);
-
-  //dumpConnectionGraph();
-
-} /* defineConnections() */
+}

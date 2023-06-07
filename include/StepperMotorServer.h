@@ -1,39 +1,53 @@
-/*
- * StepperMotorServer.h
- *
- *  Created on: Jun 8, 2018
- *      Author: ckampm
- */
+// SPDX-FileCopyrightText: Deutsches Elektronen-Synchrotron DESY, MSK
+// SPDX-License-Identifier: LGPL-3.0-or-later
+#pragma once
 
-#ifndef INCLUDE_STEPPER_MOTOR_SERVER_H_
-#define INCLUDE_STEPPER_MOTOR_SERVER_H_
+#include "ChimeraTK/MotorDriverCard/StepperMotorModule.h"
+#include "MotorDummy.h"
 
 #include <ChimeraTK/ApplicationCore/ApplicationCore.h>
 #include <ChimeraTK/ApplicationCore/ConfigReader.h>
 #include <ChimeraTK/ApplicationCore/PeriodicTrigger.h>
 
-#include "ChimeraTK/MotorDriverCard/StepperMotorModule.h"
-#include "MotorDummy.h"
-
 #include <memory>
 
-static std::string serverConfigFile{"ServerConfiguration.xml"};
+static constexpr std::string_view SERVER_CONFIG_FILE{"ServerConfiguration.xml"};
+static constexpr std::string_view DMAP_FILE_NAME{"devMapFile.dmap"};
 
 namespace ctk = ChimeraTK;
 
 struct StepperMotorServer : public ctk::Application {
-  StepperMotorServer() : Application("steppermotorserver") {}
+  ctk::SetDMapFilePath dmapPathSetter{std::string{DMAP_FILE_NAME}};
+
+  /********************************************************************************************************************/
+
+  struct : ctk::ApplicationModule {
+    using ctk::ApplicationModule::ApplicationModule;
+
+    ctk::ScalarPushInput<uint64_t> trigger{this, "/Trigger/tick", "", ""};
+    ctk::VoidOutput tick{this, "/Trigger/voidTick", ""};
+
+    void mainLoop() final {
+      do {
+        tick.write();
+        trigger.read();
+      } while(true);
+    }
+
+  } triggerConverter{this, ".", ""};
+
+  /********************************************************************************************************************/
+
+  StepperMotorServer();
   ~StepperMotorServer() override { shutdown(); }
 
-  ctk::ConfigReader config{this, "Configuration", serverConfigFile};
+  /********************************************************************************************************************/
 
-  ctk::PeriodicTrigger trigger{this, "trigger", ""};
+  ctk::ConfigReader config{this, ".", std::string{SERVER_CONFIG_FILE}};
+  ctk::PeriodicTrigger trigger{this, "/Trigger", ""};
+
+  /********************************************************************************************************************/
 
   std::vector<ctk::MotorDriver::StepperMotorModule> motorDriver;
   std::vector<MotorDummy> motorDummy;
-
-  ctk::ControlSystemModule cs;
-  void defineConnections() override;
-
-};     /* struct StepperMotorServer */
-#endif /* INCLUDE_STEPPER_MOTOR_SERVER_H_ */
+}; /* struct StepperMotorServer */

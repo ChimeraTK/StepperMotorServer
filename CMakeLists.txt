@@ -1,97 +1,51 @@
 PROJECT(steppermotorserver)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
-
-set(${PROJECT_NAME}_MAJOR_VERSION 00)
-set(${PROJECT_NAME}_MINOR_VERSION 02)
+set(${PROJECT_NAME}_MAJOR_VERSION 01)
+set(${PROJECT_NAME}_MINOR_VERSION 00)
 set(${PROJECT_NAME}_PATCH_VERSION 00)
 include(cmake/set_version_numbers.cmake)
+include(cmake/set_default_build_to_release.cmake)
+include(cmake/set_default_flags.cmake)
+include(cmake/set_control_system_adapter.cmake)
+include(cmake/enable_code_style_check.cmake)
 
-# Set names for output binary and library
-set(BINARY_OUTPUT_NAME "${PROJECT_NAME}")
-
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/set_default_build_to_release.cmake)
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/set_default_flags.cmake)
-
-# add constants for HOST and USER
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSER=\\\"`whoami`\\\" -DHOST=\\\"`hostname`\\\"")
-
-# linker flags
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-dynamic -Wl,--no-as-needed")
-
-include(cmake/add_dependency.cmake)
-add_dependency(ChimeraTK-ApplicationCore 02.00 REQUIRED)
-add_dependency(ChimeraTK-MotorDriverCard-ApplicationModule 00.02 REQUIRED)
-# NOTE The server still depends on the library in order to
+find_package(ChimeraTK-ApplicationCore 03.00 REQUIRED)
+find_package(ChimeraTK-MotorDriverCard-ApplicationModule 00.06 REQUIRED)
+# NOTE: The server still depends on the library in order to
 # use the dummy motor
-add_dependency(mtca4u-MotorDriverCard 01.09 REQUIRED)
-
-
-IF(ADAPTER STREQUAL "OPCUA")
-  message("Building against the OPC UA ControlSystemAdater")
-  add_dependency(ChimeraTK-ControlSystemAdapter-OPCUAAdapter REQUIRED)
-  set(Adapter_LINK_FLAGS ${ChimeraTK-ControlSystemAdapter-OPCUAAdapter_LINK_FLAGS})
-  set(Adapter_LIBRARIES ${ChimeraTK-ControlSystemAdapter-OPCUAAdapter_LIBRARIES})
-ELSEIF(ADAPTER STREQUAL "DOOCS")
-  message("Building against the DOOCS ControlSystemAdater")
-  add_dependency(ChimeraTK-ControlSystemAdapter-DoocsAdapter REQUIRED)
-  set(Adapter_LINK_FLAGS ${ChimeraTK-ControlSystemAdapter-DoocsAdapter_LINK_FLAGS})
-  set(Adapter_LIBRARIES ${ChimeraTK-ControlSystemAdapter-DoocsAdapter_LIBRARIES})
-ELSEIF(ADAPTER STREQUAL "EPICSIOC")
-  message("Building against the EPICS IOC ControlSystemAdater")
-  add_dependency(ChimeraTK-ControlSystemAdapter-EPICS-IOC-Adapter REQUIRED)
-  set(Adapter_LINK_FLAGS ${ChimeraTK-ControlSystemAdapter-EPICS-IOC-Adapter_LINK_FLAGS})
-  set(Adapter_LIBRARIES ${ChimeraTK-ControlSystemAdapter-EPICS-IOC-Adapter_LIBRARIES})
-ELSE()
-  message(FATAL_ERROR "Please select your ControlSystemAdapter to use by passing to the cmake command line:\n"
-                      "   -DADAPTER=DOOCS to build a DOOCS server\n"
-                      "   -DADAPTER=OPCUA to build an OPC UA server\n"
-                      "   -DADAPTER=EPICSIOC to build an EPICS IOC")
-ENDIF()
-
-FIND_PACKAGE(Boost COMPONENTS thread system filesystem unit_test_framework REQUIRED)
-
-# extend compiler flags with flags from dependencies
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ChimeraTK-MotorDriverCard-ApplicationModule_CXX_FLAGS}")
-
-set(CMAKE_LINK_FLAGS "-Wl,--no-as-needed ${Adapter_LINK_FLAGS} ${ChimeraTK-ApplicationCore_LINK_FLAGS}" )
-
-# set include directories
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(SYSTEM ${ChimeraTK-MotorDriverCard-ApplicationModule_INCLUDE_DIRS})
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-set(${PROJECT_NAME}_INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/)
-
+find_package(mtca4u-MotorDriverCard 01.13 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread system filesystem unit_test_framework)
 
 # configure version.h
 configure_file(include/version.h.in ${PROJECT_BINARY_DIR}/version/version.h)
 include_directories(${PROJECT_BINARY_DIR}/version)
 
-# keep the rpath in the installed executable and library to correctly find the dependencies
-if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${BINARY_OUTPUT_NAME}/lib")
-else()
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-endif()
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 # Make object file of the Application's "main" module available
-add_library(objStepperMotorServer OBJECT src/StepperMotorServer.cc)
+add_library(objStepperMotorServer OBJECT src/StepperMotorServer.cc src/MotorDummy.cc include/MotorDummy.h
+                                         include/StepperMotorServer.h)
+target_include_directories(objStepperMotorServer PRIVATE include)
+target_link_libraries(objStepperMotorServer ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
+                                            ChimeraTK::SelectedAdapter
+                                            ChimeraTK::mtca4u-MotorDriverCard
+                                            ChimeraTK::ChimeraTK-ApplicationCore)
 
 # main server executable
 add_executable(${PROJECT_NAME} src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_link_libraries(${PROJECT_NAME} ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${Adapter_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC include ${LIBRARY_HEADER_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_link_libraries(${PROJECT_NAME} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
+                                      ChimeraTK::SelectedAdapter
+                                      ChimeraTK::mtca4u-MotorDriverCard
+                                      ChimeraTK::ChimeraTK-ApplicationCore)
 
 #XML file generation
 add_executable(${PROJECT_NAME}-xmlGenerator src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
-set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES COMPILE_FLAGS "-DGENERATE_XML")
-set_target_properties(${PROJECT_NAME}-xmlGenerator PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-target_link_libraries(${PROJECT_NAME}-xmlGenerator ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES} ${mtca4u-MotorDriverCard_LIBRARIES} ${ChimeraTK-ApplicationCore_LIBRARIES})
-target_include_directories(${PROJECT_NAME}-xmlGenerator PUBLIC include ${LIBRARY_HEADER_DIR})
-
+target_compile_definitions(${PROJECT_NAME}-xmlGenerator PRIVATE GENERATE_XML=1)
+target_include_directories(${PROJECT_NAME}-xmlGenerator PRIVATE include)
+target_link_libraries(${PROJECT_NAME}-xmlGenerator ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
+                                                   ChimeraTK::SelectedAdapter
+                                                   ChimeraTK::mtca4u-MotorDriverCard
+                                                   ChimeraTK::ChimeraTK-ApplicationCore)
 
 # Create the executable for automated unit testing.
 # add the test executable with all test source files
@@ -105,14 +59,9 @@ foreach( testExecutableSrcFile ${testExecutables})
   get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
   add_executable(${executableName} ${testExecutableSrcFile})
   target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
-  target_link_libraries(${executableName}
-    ${ChimeraTK-MotorDriverCard-ApplicationModule_LIBRARIES}
-    ${mtca4u-MotorDriverCard_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${ChimeraTK-ApplicationCore_LIBRARIES}
-  )
-  set_target_properties(${executableName} PROPERTIES LINK_FLAGS "${CMAKE_LINK_FLAGS}")
-  target_include_directories(${executableName} PUBLIC include ${LIBRARY_HEADER_DIR})
+  target_include_directories(${executableName} PRIVATE include)
+  target_link_libraries(${executableName} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule ChimeraTK::SelectedAdapter
+      ChimeraTK::mtca4u-MotorDriverCard ChimeraTK::ChimeraTK-ApplicationCore Boost::unit_test_framework)
   add_test(${executableName} ${executableName})
 endforeach( testExecutableSrcFile )
 
