@@ -1,10 +1,14 @@
+// SPDX-FileCopyrightText: Deutsches Elektronen-Synchrotron DESY, MSK
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testMotorServer
 #include <boost/test/unit_test.hpp>
 using namespace boost::unit_test_framework;
 
-#include <ChimeraTK/ApplicationCore/TestFacility.h>
 #include "StepperMotorServer.h"
+
+#include <ChimeraTK/ApplicationCore/TestFacility.h>
 
 /**********************************************************************************************************************/
 
