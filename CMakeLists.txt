@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(${PROJECT_NAME}_MAJOR_VERSION 01)
 set(${PROJECT_NAME}_MINOR_VERSION 00)
-set(${PROJECT_NAME}_PATCH_VERSION 00)
+set(${PROJECT_NAME}_PATCH_VERSION 01)
 include(cmake/set_version_numbers.cmake)
 include(cmake/set_default_build_to_release.cmake)
 include(cmake/set_default_flags.cmake)
@@ -11,7 +11,7 @@ include(cmake/set_control_system_adapter.cmake)
 include(cmake/enable_code_style_check.cmake)
 
 find_package(ChimeraTK-ApplicationCore 03.00 REQUIRED)
-find_package(ChimeraTK-MotorDriverCard-ApplicationModule 00.06 REQUIRED)
+find_package(ChimeraTK-MotorDriverCard-ApplicationModule 00.07 REQUIRED)
 # NOTE: The server still depends on the library in order to
 # use the dummy motor
 find_package(mtca4u-MotorDriverCard 01.13 REQUIRED)

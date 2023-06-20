@@ -28,8 +28,8 @@ struct StepperMotorServer : public ctk::Application {
     ctk::VoidOutput tick{this, "/Trigger/voidTick", ""};
 
     void mainLoop() final {
-      do {
-        tick.write();
+        do {
+            tick.write();
         trigger.read();
       } while(true);
     }
@@ -48,6 +48,6 @@ struct StepperMotorServer : public ctk::Application {
 
   /********************************************************************************************************************/
 
-  std::vector<ctk::MotorDriver::StepperMotorModule> motorDriver;
+  std::vector<std::shared_ptr<ctk::MotorDriver::StepperMotorModule>> motorDriver;
   std::vector<MotorDummy> motorDummy;
 }; /* struct StepperMotorServer */

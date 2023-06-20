@@ -25,22 +25,6 @@ namespace ctkmot = ctk::MotorDriver;
 static constexpr char basicLinearMotorType[] = "Basic";
 static constexpr char linearMotorWithReferenceType[] = "LinearMotorWithReferenceSwitch";
 
-/**
- *  Hardware initialization
- *  This is called from within defineConnections() because there we have the device name available
- *  and this has to be done per FMC carrier board, not per motor (represented by the ApplicationModules).
- *  TODO Review this once additional driver HW gets supported
- */
-static void initMotorDriverHW(const std::string& dMapFileName, const std::string& deviceAlias) {
-  std::string command{"./initMotorDriverHW.py " + dMapFileName + " " + deviceAlias};
-
-  int result = std::system(command.c_str());
-  if(result != 0) {
-    std::cout << "*** Error calling initialization script " << command << std::endl;
-    std::exit(result);
-  }
-}
-
 /********************************************************************************************************************/
 
 [[noreturn]] static void terminateServer(const std::string& msg) {
@@ -59,6 +43,7 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
   auto nMotors = config.get<uint32_t>("Motors/nMotors");
   auto motorType = config.get<std::vector<std::string>>("Motors/motorType");
   auto motorDriverCardDeviceNames = config.get<std::vector<std::string>>("Motors/motorDriverDeviceName");
+  auto motorDriverCardBspNames = config.get<std::vector<std::string>>("Motors/motorDriverCardName");
   auto motorDriverCardModuleNames = config.get<std::vector<std::string>>("Motors/motorDriverModuleName");
   auto motorDriverCardIds = config.get<std::vector<uint32_t>>("Motors/motorDriverId");
   auto motorDriverCardConfigFiles = config.get<std::vector<std::string>>("Motors/motorDriverConfigFile");
@@ -92,11 +77,6 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
     motorParameters.encoderUnitsConverter =
         std::make_shared<ctkmot::utility::ScalingEncoderStepsConverter>(encoderUnitToStepsRatios[i]);
 
-    // Configure motor driver HW
-    if(initializedMotorDriverHW.count(motorDriverCardDeviceNames[i]) == 0 && (useDummyMotor[i] == 0)) {
-      initMotorDriverHW(std::string{DMAP_FILE_NAME}, motorDriverCardDeviceNames[i]);
-    }
-
     // Create a motor driver according to the motor type
     if(motorType[i] == basicLinearMotorType) {
       motorParameters.motorType = ctkmot::StepperMotorType::BASIC;
@@ -113,8 +93,10 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
       terminateServer(msg.str());
     }
 
-    motorDriver.emplace_back(this, "Motor" + std::to_string(i + 1), "Driver of motor " + std::to_string(i + 1),
-        motorParameters, "/Trigger/voidTick");
+    auto initCmd = std::string{"./initMotorDriverHW.py "} + std::string{DMAP_FILE_NAME} + " " +
+        motorDriverCardDeviceNames[i] + " " + motorDriverCardBspNames[i];
+    motorDriver.emplace_back(std::make_shared<ctk::MotorDriver::StepperMotorModule>(this, "Motor" + std::to_string(i + 1), "Driver of motor " + std::to_string(i + 1),
+        motorParameters, "/Trigger/voidTick", initCmd));
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i]
