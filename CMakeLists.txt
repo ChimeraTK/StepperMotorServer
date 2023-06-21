@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(${PROJECT_NAME}_MAJOR_VERSION 01)
 set(${PROJECT_NAME}_MINOR_VERSION 00)
-set(${PROJECT_NAME}_PATCH_VERSION 02)
+set(${PROJECT_NAME}_PATCH_VERSION 03)
 include(cmake/set_version_numbers.cmake)
 include(cmake/set_default_build_to_release.cmake)
 include(cmake/set_default_flags.cmake)
@@ -76,6 +76,7 @@ FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/ServerConfiguration.xml DESTINATION ${PROJECT_BINARY_DIR})
 FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorProxy.xlmap DESTINATION ${PROJECT_BINARY_DIR})
 
 
 IF(ADAPTER STREQUAL "DOOCS")
