@@ -28,8 +28,8 @@ struct StepperMotorServer : public ctk::Application {
     ctk::VoidOutput tick{this, "/Trigger/voidTick", ""};
 
     void mainLoop() final {
-        do {
-            tick.write();
+      do {
+        tick.write();
         trigger.read();
       } while(true);
     }
