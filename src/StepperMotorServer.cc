@@ -95,8 +95,9 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
 
     auto initCmd = std::string{"./initMotorDriverHW.py "} + std::string{DMAP_FILE_NAME} + " " +
         motorDriverCardDeviceNames[i] + " " + motorDriverCardBspNames[i];
-    motorDriver.emplace_back(std::make_shared<ctk::MotorDriver::StepperMotorModule>(this, "Motor" + std::to_string(i + 1), "Driver of motor " + std::to_string(i + 1),
-        motorParameters, "/Trigger/voidTick", initCmd));
+    motorDriver.emplace_back(
+        std::make_shared<ctk::MotorDriver::StepperMotorModule>(this, "Motor" + std::to_string(i + 1),
+            "Driver of motor " + std::to_string(i + 1), motorParameters, "/Trigger/voidTick", initCmd));
 
     std::cout << "*** Created motor driver " << motorDriverCardIds[i] << " of card " << motorDriverCardModuleNames[i]
               << " on device " << motorDriverCardDeviceNames[i]
