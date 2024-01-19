@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.16)
 set(${PROJECT_NAME}_MAJOR_VERSION 01)
 set(${PROJECT_NAME}_MINOR_VERSION 00)
 set(${PROJECT_NAME}_PATCH_VERSION 03)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
 include(cmake/set_version_numbers.cmake)
 include(cmake/set_default_build_to_release.cmake)
 include(cmake/set_default_flags.cmake)
@@ -47,36 +50,45 @@ target_link_libraries(${PROJECT_NAME}-xmlGenerator ChimeraTK::ChimeraTK-MotorDri
                                                    ChimeraTK::mtca4u-MotorDriverCard
                                                    ChimeraTK::ChimeraTK-ApplicationCore)
 
-# Create the executable for automated unit testing.
-# add the test executable with all test source files
-ENABLE_TESTING()
+option(BUILD_TESTS "Build test programs" ON)
+if (BUILD_TESTS)
+    # We need this for the tests
+    find_package(Python 3.0 COMPONENTS Interpreter)
+    find_package(PythonModule REQUIRED COMPONENTS mtca4u)
 
-aux_source_directory(${CMAKE_SOURCE_DIR}/tests/executables_src testExecutables)
-include_directories(${CMAKE_SOURCE_DIR}/test)
+    add_test(${PROJECT_NAME}-xmlGenerator ${PROJECT_NAME}-xmlGenerator)
 
-foreach( testExecutableSrcFile ${testExecutables})
-  #NAME_WE means the base name without path and (longest) extension
-  get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
-  add_executable(${executableName} ${testExecutableSrcFile})
-  target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
-  target_include_directories(${executableName} PRIVATE include)
-  target_link_libraries(${executableName} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule ChimeraTK::SelectedAdapter
-      ChimeraTK::mtca4u-MotorDriverCard ChimeraTK::ChimeraTK-ApplicationCore Boost::unit_test_framework)
-  add_test(${executableName} ${executableName})
-endforeach( testExecutableSrcFile )
+    # Create the executable for automated unit testing.
+    # add the test executable with all test source files
+    ENABLE_TESTING()
+
+    aux_source_directory(${CMAKE_SOURCE_DIR}/tests/executables_src testExecutables)
+    include_directories(${CMAKE_SOURCE_DIR}/test)
+
+    foreach( testExecutableSrcFile ${testExecutables})
+      #NAME_WE means the base name without path and (longest) extension
+      get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
+      add_executable(${executableName} ${testExecutableSrcFile})
+      target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
+      target_include_directories(${executableName} PRIVATE include)
+      target_link_libraries(${executableName} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule ChimeraTK::SelectedAdapter
+          ChimeraTK::mtca4u-MotorDriverCard ChimeraTK::ChimeraTK-ApplicationCore Boost::unit_test_framework)
+      add_test(${executableName} ${executableName})
+    endforeach( testExecutableSrcFile )
 
 
-# enable code coverate report
-include(cmake/enable_code_coverage_report.cmake)
+    # enable code coverate report
+    include(cmake/enable_code_coverage_report.cmake)
 
 
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/ServerConfiguration.xml DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
-FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorProxy.xlmap DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/ServerConfiguration.xml DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+    FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorProxy.xlmap DESTINATION ${PROJECT_BINARY_DIR})
+endif()
 
 
 IF(ADAPTER STREQUAL "DOOCS")
