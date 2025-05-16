@@ -11,10 +11,10 @@
 MotorDummy::MotorDummy(ChimeraTK::ModuleGroup* owner, const std::string& name, const std::string& description,
     const ChimeraTK::MotorDriver::StepperMotorParameters& dp)
 : ctk::ApplicationModule(owner, name, description),
-  _motorControlerDummy(boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(
-      mtca4u::MotorDriverCardFactory::instance()
-          .createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)
-          ->getMotorControler(dp.driverId))) {}
+  _motorControlerDummy(
+      boost::dynamic_pointer_cast<mtca4u::MotorControlerDummy>(mtca4u::MotorDriverCardFactory::instance()
+              .createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)
+              ->getMotorControler(dp.driverId))) {}
 
 /********************************************************************************************************************/
 

@@ -6,7 +6,6 @@
 #include "ChimeraTK/MotorDriverCard/StepperMotor.h"
 #include "mtca4u/MotorDriverCard/MotorDriverCardFactory.h"
 #include "version.h"
-#include <unordered_set>
 
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
 #include <ChimeraTK/DMapFileParser.h>
@@ -17,6 +16,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace ctkmot = ctk::MotorDriver;

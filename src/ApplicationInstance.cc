@@ -4,6 +4,7 @@
 #include "StepperMotorServer.h"
 
 #include <ChimeraTK/ApplicationCore/EnableXMLGenerator.h>
+#include <ChimeraTK/ControlSystemAdapter/ApplicationFactory.h>
 
 /// The Server instance
-static StepperMotorServer server;
+static ChimeraTK::ApplicationFactory<StepperMotorServer> serverFactory;
