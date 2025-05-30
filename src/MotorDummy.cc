@@ -6,7 +6,7 @@
 #include <mtca4u/MotorDriverCard/MotorDriverCard.h>
 #include <mtca4u/MotorDriverCard/MotorDriverCardFactory.h>
 
-/********************************************************************************************************************/
+/**********************************************************************************************************************/
 
 MotorDummy::MotorDummy(ChimeraTK::ModuleGroup* owner, const std::string& name, const std::string& description,
     const ChimeraTK::MotorDriver::StepperMotorParameters& dp)
@@ -16,7 +16,7 @@ MotorDummy::MotorDummy(ChimeraTK::ModuleGroup* owner, const std::string& name, c
               .createMotorDriverCard(dp.deviceName, dp.moduleName, dp.configFileName)
               ->getMotorControler(dp.driverId))) {}
 
-/********************************************************************************************************************/
+/**********************************************************************************************************************/
 
 void MotorDummy::mainLoop() {
   // FIXME HACK: enabled this permanently because there is no relation between StepperMotor and the dummy of the library

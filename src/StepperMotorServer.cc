@@ -25,14 +25,14 @@ namespace ctkmot = ctk::MotorDriver;
 static constexpr char basicLinearMotorType[] = "Basic";
 static constexpr char linearMotorWithReferenceType[] = "LinearMotorWithReferenceSwitch";
 
-/********************************************************************************************************************/
+/**********************************************************************************************************************/
 
 [[noreturn]] static void terminateServer(const std::string& msg) {
   std::cout << std::endl << "!!! Terminating the server!" << std::endl << msg << std::endl;
   exit(1);
 }
 
-/********************************************************************************************************************/
+/**********************************************************************************************************************/
 
 StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
   std::cout << "****************************************************************" << std::endl;
