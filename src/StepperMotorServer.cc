@@ -39,6 +39,8 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
   std::cout << "*** ChimeraTK Stepper Motor Server version " << AppVersion::major << "." << AppVersion::minor << "."
             << AppVersion::patch << std::endl;
 
+  auto& config = appConfig();
+
   // Get and validate motor configuration
   auto nMotors = config.get<uint32_t>("Motors/nMotors");
   auto motorType = config.get<std::vector<std::string>>("Motors/motorType");
@@ -57,7 +59,7 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
       motorDriverCardIds.size() != nMotors || motorDriverCardConfigFiles.size() != nMotors) {
     std::stringstream msg;
     msg << "A mismatch of dimensions in the MotorDriver configuration provided by ";
-    msg << SERVER_CONFIG_FILE;
+    msg << "steppermotorserver-config.xml";
     terminateServer(msg.str());
   }
 
@@ -88,7 +90,7 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
       std::stringstream msg;
       msg << "Unknown motor type \"" << motorType[i]
           << "\" requested in MotorDriver configuration provided by: " << std::endl
-          << SERVER_CONFIG_FILE << "." << std::endl;
+          << "steppermotorserver-config.xml." << std::endl;
 
       terminateServer(msg.str());
     }
