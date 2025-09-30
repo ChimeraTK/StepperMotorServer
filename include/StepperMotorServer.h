@@ -11,7 +11,6 @@
 
 #include <memory>
 
-static constexpr std::string_view SERVER_CONFIG_FILE{"ServerConfiguration.xml"};
 static constexpr std::string_view DMAP_FILE_NAME{"devMapFile.dmap"};
 
 namespace ctk = ChimeraTK;
@@ -43,7 +42,6 @@ struct StepperMotorServer : public ctk::Application {
 
   /********************************************************************************************************************/
 
-  ctk::ConfigReader config{this, ".", std::string{SERVER_CONFIG_FILE}};
   ctk::PeriodicTrigger trigger{this, "/Trigger", ""};
 
   /********************************************************************************************************************/
