@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 PROJECT(steppermotorserver)
 
-set(${PROJECT_NAME}_MAJOR_VERSION 01)
+set(${PROJECT_NAME}_MAJOR_VERSION 02)
 set(${PROJECT_NAME}_MINOR_VERSION 00)
-set(${PROJECT_NAME}_PATCH_VERSION 05)
+set(${PROJECT_NAME}_PATCH_VERSION 00)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
@@ -52,42 +52,42 @@ target_link_libraries(${PROJECT_NAME}-xmlGenerator ChimeraTK::ChimeraTK-MotorDri
 
 option(BUILD_TESTS "Build test programs" ON)
 if (BUILD_TESTS)
-    # We need this for the tests
-    find_package(Python 3.0 COMPONENTS Interpreter)
-    find_package(PythonModule REQUIRED COMPONENTS mtca4u)
+  # We need this for the tests
+  find_package(Python 3.0 COMPONENTS Interpreter)
+  find_package(PythonModule REQUIRED COMPONENTS deviceaccess)
 
-    add_test(${PROJECT_NAME}-xmlGenerator ${PROJECT_NAME}-xmlGenerator)
+  add_test(${PROJECT_NAME}-xmlGenerator ${PROJECT_NAME}-xmlGenerator)
 
-    # Create the executable for automated unit testing.
-    # add the test executable with all test source files
-    ENABLE_TESTING()
+  # Create the executable for automated unit testing.
+  # add the test executable with all test source files
+  ENABLE_TESTING()
 
-    aux_source_directory(${CMAKE_SOURCE_DIR}/tests/executables_src testExecutables)
-    include_directories(${CMAKE_SOURCE_DIR}/test)
+  aux_source_directory(${CMAKE_SOURCE_DIR}/tests/executables_src testExecutables)
+  include_directories(${CMAKE_SOURCE_DIR}/test)
 
-    foreach( testExecutableSrcFile ${testExecutables})
-      #NAME_WE means the base name without path and (longest) extension
-      get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
-      add_executable(${executableName} ${testExecutableSrcFile})
-      target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
-      target_include_directories(${executableName} PRIVATE include)
-      target_link_libraries(${executableName} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule ChimeraTK::SelectedAdapter
+  foreach( testExecutableSrcFile ${testExecutables})
+    #NAME_WE means the base name without path and (longest) extension
+    get_filename_component(executableName ${testExecutableSrcFile} NAME_WE)
+    add_executable(${executableName} ${testExecutableSrcFile})
+    target_sources(${executableName} PRIVATE $<TARGET_OBJECTS:objStepperMotorServer>)
+    target_include_directories(${executableName} PRIVATE include)
+    target_link_libraries(${executableName} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule ChimeraTK::SelectedAdapter
           ChimeraTK::mtca4u-MotorDriverCard ChimeraTK::ChimeraTK-ApplicationCore Boost::unit_test_framework)
-      add_test(${executableName} ${executableName})
-    endforeach( testExecutableSrcFile )
+    add_test(${executableName} ${executableName})
+  endforeach( testExecutableSrcFile )
 
 
-    # enable code coverate report
-    include(cmake/enable_code_coverage_report.cmake)
+  # enable code coverate report
+  include(cmake/enable_code_coverage_report.cmake)
 
 
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
-    FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorProxy.xlmap DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/devMapFile.dmap DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.map DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/newer_firmware_mapfile.map DESTINATION ${PROJECT_BINARY_DIR})
   FILE( COPY ${CMAKE_SOURCE_DIR}/config/steppermotorserver-config.xml DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorConfig.xml DESTINATION ${PROJECT_BINARY_DIR})
+  FILE( COPY ${CMAKE_SOURCE_DIR}/config/motorProxy.xlmap DESTINATION ${PROJECT_BINARY_DIR})
 endif()
 
 
@@ -107,7 +107,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
     install(FILES config/devMapFile.dmap DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
     install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
-    
+
     install(FILES config/ServerConfiguration.xml DESTINATION ${PROJECT_NAME})
     install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
     install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
