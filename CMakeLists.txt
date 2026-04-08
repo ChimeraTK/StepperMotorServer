@@ -101,23 +101,6 @@ FILE( COPY ${CMAKE_SOURCE_DIR}/config/initMotorDriverHW.py DESTINATION ${PROJECT
 if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${PROJECT_NAME}/bin)
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION ${PROJECT_NAME}/bin)
-
-  # if no configuration exists, prepare configuration for dummy system
-  if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/${PROJECT_NAME}.conf")
-    install(FILES config/devMapFile.dmap DESTINATION ${PROJECT_NAME})
-    install(FILES config/DFMC_MD22_test.mapp DESTINATION ${PROJECT_NAME})
-    install(FILES config/DFMC_MD22_test.map DESTINATION ${PROJECT_NAME})
-
-    install(FILES config/ServerConfiguration.xml DESTINATION ${PROJECT_NAME})
-    install(PROGRAMS config/initMotorDriverHW.py DESTINATION ${PROJECT_NAME} )
-    install(FILES config/${PROJECT_NAME}.conf DESTINATION ${PROJECT_NAME})
-    #install(FILES config/${PROJECT_NAME}-DoocsVariableConfig.xml DESTINATION ${PROJECT_NAME}) # Do not export until adapted to internal structure
-    install(FILES config/RPC_LIBNO DESTINATION ${PROJECT_NAME})
-    install(CODE "
-         EXECUTE_PROCESS(COMMAND ln -sf bin/${PROJECT_NAME} ${PROJECT_NAME}
-                         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
-    ")
-  endif()
 else()
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
   install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
