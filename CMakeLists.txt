@@ -34,21 +34,21 @@ target_link_libraries(objStepperMotorServer ChimeraTK::ChimeraTK-MotorDriverCard
                                             ChimeraTK::ChimeraTK-ApplicationCore)
 
 # main server executable
-add_executable(${PROJECT_NAME} src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
-target_include_directories(${PROJECT_NAME} PRIVATE include)
-target_link_libraries(${PROJECT_NAME} ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
-                                      ChimeraTK::SelectedAdapter
-                                      ChimeraTK::mtca4u-MotorDriverCard
-                                      ChimeraTK::ChimeraTK-ApplicationCore)
+add_executable(stepper_motor_server src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
+target_include_directories(stepper_motor_server PRIVATE include)
+target_link_libraries(stepper_motor_server ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
+                                          ChimeraTK::SelectedAdapter
+                                          ChimeraTK::mtca4u-MotorDriverCard
+                                          ChimeraTK::ChimeraTK-ApplicationCore)
 
 #XML file generation
-add_executable(${PROJECT_NAME}-xmlGenerator src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
-target_compile_definitions(${PROJECT_NAME}-xmlGenerator PRIVATE GENERATE_XML=1)
-target_include_directories(${PROJECT_NAME}-xmlGenerator PRIVATE include)
-target_link_libraries(${PROJECT_NAME}-xmlGenerator ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
-                                                   ChimeraTK::SelectedAdapter
-                                                   ChimeraTK::mtca4u-MotorDriverCard
-                                                   ChimeraTK::ChimeraTK-ApplicationCore)
+add_executable(stepper_motor_server-xmlGenerator src/ApplicationInstance.cc $<TARGET_OBJECTS:objStepperMotorServer>)
+target_compile_definitions(stepper_motor_server-xmlGenerator PRIVATE GENERATE_XML=1)
+target_include_directories(stepper_motor_server-xmlGenerator PRIVATE include)
+target_link_libraries(stepper_motor_server-xmlGenerator ChimeraTK::ChimeraTK-MotorDriverCard-ApplicationModule
+                                                       ChimeraTK::SelectedAdapter
+                                                       ChimeraTK::mtca4u-MotorDriverCard
+                                                       ChimeraTK::ChimeraTK-ApplicationCore)
 
 option(BUILD_TESTS "Build test programs" ON)
 if (BUILD_TESTS)
@@ -56,7 +56,7 @@ if (BUILD_TESTS)
   find_package(Python 3.0 COMPONENTS Interpreter)
   find_package(PythonModule REQUIRED COMPONENTS deviceaccess)
 
-  add_test(${PROJECT_NAME}-xmlGenerator ${PROJECT_NAME}-xmlGenerator)
+  add_test(stepper_motor_server-xmlGenerator stepper_motor_server-xmlGenerator)
 
   # Create the executable for automated unit testing.
   # add the test executable with all test source files
@@ -99,11 +99,11 @@ FILE( COPY ${CMAKE_SOURCE_DIR}/config/initMotorDriverHW.py DESTINATION ${PROJECT
 
 # Install the executable and the RPC_LIBNO file
 if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/export/doocs/server")
-  install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${PROJECT_NAME}/bin)
-  install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION ${PROJECT_NAME}/bin)
+  install(TARGETS stepper_motor_server RUNTIME DESTINATION stepper_motor_server/bin)
+  install(TARGETS stepper_motor_server-xmlGenerator RUNTIME DESTINATION stepper_motor_server/bin)
 else()
-  install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-  install(TARGETS ${PROJECT_NAME}-xmlGenerator RUNTIME DESTINATION bin)
+  install(TARGETS stepper_motor_server RUNTIME DESTINATION bin)
+  install(TARGETS stepper_motor_server-xmlGenerator RUNTIME DESTINATION bin)
 endif()
 
 include(cmake/enable_doxygen_documentation.cmake)
