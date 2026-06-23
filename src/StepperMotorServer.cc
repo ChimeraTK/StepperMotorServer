@@ -24,7 +24,7 @@ namespace ctkmot = ctk::MotorDriver;
 // Definition of supported motor types
 static constexpr char basicLinearMotorType[] = "Basic";
 static constexpr char linearMotorWithReferenceType[] = "LinearMotorWithReferenceSwitch";
-static constexpr char rotaryMotorWithReferenceType[] = "RotaryMotorWithReferenceSwitch";
+static constexpr char rotationalMotorWithCentreSwitchType[] = "RotationalMotorWithCentreSwitch";
 
 /**********************************************************************************************************************/
 
@@ -87,7 +87,7 @@ StepperMotorServer::StepperMotorServer() : Application("steppermotorserver") {
     else if(motorType[i] == linearMotorWithReferenceType) {
       motorParameters.motorType = ctkmot::StepperMotorType::LINEAR;
     }
-    else if(motorType[i] == rotaryMotorWithReferenceType) {
+    else if(motorType[i] == rotationalMotorWithCentreSwitchType) {
       motorParameters.motorType = ctkmot::StepperMotorType::ROTARY;
     }
     else {
